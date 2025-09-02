@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  
+  <GeneratedLocationDef>
+    <defName>LAO_Asteroids</defName>
+    <worldObjectDef>AsteroidBasic</worldObjectDef>
+    <layerDefs>
+      <li>LAO_Troposphere</li>
+      <li>LAO_Stratosphere</li>
+      <li>LAO_Mesosphere</li>
+      <li>LAO_HighOrbit</li>
+    </layerDefs>
+    <preciousResources>
+      <li>MineableGold</li>
+      <li>MineableSilver</li>
+      <li>MineableSteel</li>
+      <li>MineableUranium</li>
+      <li>MineablePlasteel</li>
+      <li>MineableComponentsIndustrial</li>
+      <li>MineableJade</li>
+    </preciousResources>
+  </GeneratedLocationDef>
+  
+</Defs>

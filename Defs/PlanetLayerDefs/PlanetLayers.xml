@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  
+  <!-- <PlanetLayerDef Name="OrbitLayer" Abstract="True"> -->
+    <!-- <layerType>OrbitLayer</layerType> -->
+    <!-- <elevationString>200km</elevationString> -->
+    <!-- <defaultBiome>Space</defaultBiome> -->
+    <!-- <defaultMapWorldObject>Space</defaultMapWorldObject> -->
+    <!-- <alwaysRaycastable>false</alwaysRaycastable> -->
+    <!-- <obstructsExpandingIcons>false</obstructsExpandingIcons> -->
+    <!-- <onlyAllowWhitelistedIncidents>true</onlyAllowWhitelistedIncidents> -->
+    <!-- <onlyAllowWhitelistedGameConditions>true</onlyAllowWhitelistedGameConditions> -->
+    <!-- <onlyAllowWhitelistedArrivals>true</onlyAllowWhitelistedArrivals> -->
+    <!-- <onlyAllowWhitelistedArrivalModes>true</onlyAllowWhitelistedArrivalModes> -->
+    <!-- <viewGizmoTexPath>UI/Commands/ViewOrbit</viewGizmoTexPath> -->
+    <!-- <canFormCaravans>false</canFormCaravans> -->
+    <!-- <isSpace>true</isSpace> -->
+    <!-- <ignoreNoBuildArea>true</ignoreNoBuildArea> -->
+    <!-- <settlementsPer100kTiles>1000~1000</settlementsPer100kTiles> -->
+    <!-- <viewAngleSettlementsFactorCurve> -->
+      <!-- <points> -->
+        <!-- <li>(0, 1)</li> -->
+        <!-- <li>(0.3, 1)</li> -->
+        <!-- <li>(0.5, 0.75)</li> -->
+        <!-- <li>(1, 0.5)</li> -->
+      <!-- </points> -->
+    <!-- </viewAngleSettlementsFactorCurve> -->
+    <!-- <settlementWorldObjectDef>SpaceSettlement</settlementWorldObjectDef> -->
+    <!-- <destroyedSettlementWorldObjectDef>DestroyedSpaceSettlement</destroyedSettlementWorldObjectDef> -->
+    <!-- <raidPointsFactor>0.85</raidPointsFactor> -->
+    <!-- <lineWidthFactor>7.5</lineWidthFactor> -->
+    <!-- <gerundLabel>in</gerundLabel> -->
+    <!-- <worldGenSteps> -->
+      <!-- <li>Tiles</li> -->
+      <!-- <li>Factions</li> -->
+    <!-- </worldGenSteps> -->
+    <!-- <worldDrawLayers> -->
+      <!-- <li>WorldDrawLayer_ClosestTile</li> -->
+    <!-- </worldDrawLayers> -->
+    <!-- <worldTabs> -->
+      <!-- <li>WITab_Orbit</li> -->
+      <!-- <li>WITab_Planet</li> -->
+    <!-- </worldTabs> -->
+  <!-- </PlanetLayerDef> -->
+  
+  <PlanetLayerDef Name="LAO_LowOrbitLayer" ParentName="OrbitLayer" Abstract="True">
+    <!-- <layerType>OrbitLayer</layerType> -->
+    <defaultBiome>TemperateForest</defaultBiome>
+    <defaultMapWorldObject>Space</defaultMapWorldObject>
+    <!-- <alwaysRaycastable>false</alwaysRaycastable> -->
+    <!-- <obstructsExpandingIcons>false</obstructsExpandingIcons> -->
+    <!-- <onlyAllowWhitelistedIncidents>true</onlyAllowWhitelistedIncidents> -->
+    <!-- <onlyAllowWhitelistedGameConditions>true</onlyAllowWhitelistedGameConditions> -->
+    <!-- <onlyAllowWhitelistedArrivals>true</onlyAllowWhitelistedArrivals> -->
+    <!-- <onlyAllowWhitelistedArrivalModes>true</onlyAllowWhitelistedArrivalModes> -->
+    <viewGizmoTexPath>UI/Commands/ViewOrbit</viewGizmoTexPath>
+    <!-- <canFormCaravans>false</canFormCaravans> -->
+    <isSpace>false</isSpace>
+    <!-- <ignoreNoBuildArea>true</ignoreNoBuildArea> -->
+    <!-- <settlementsPer100kTiles>1000~1000</settlementsPer100kTiles> -->
+    <!-- <viewAngleSettlementsFactorCurve> -->
+      <!-- <points> -->
+        <!-- <li>(0, 1)</li> -->
+        <!-- <li>(0.3, 1)</li> -->
+        <!-- <li>(0.5, 0.75)</li> -->
+        <!-- <li>(1, 0.5)</li> -->
+      <!-- </points> -->
+    <!-- </viewAngleSettlementsFactorCurve> -->
+    <settlementWorldObjectDef>SpaceSettlement</settlementWorldObjectDef>
+    <destroyedSettlementWorldObjectDef>DestroyedSpaceSettlement</destroyedSettlementWorldObjectDef>
+    <!-- <raidPointsFactor>0.85</raidPointsFactor> -->
+    <lineWidthFactor>7.5</lineWidthFactor>
+    <!-- <gerundLabel>in</gerundLabel> -->
+    <worldGenSteps Inherit="False">
+      <li>Tiles</li>
+      <!-- <li>Factions</li> -->
+    </worldGenSteps>
+    <!-- <worldDrawLayers> -->
+      <!-- <li>WorldDrawLayer_ClosestTile</li> -->
+    <!-- </worldDrawLayers> -->
+    <worldTabs Inherit="False">
+      <!-- <li>WITab_Orbit</li> -->
+      <li>WITab_Planet</li>
+    </worldTabs>
+  </PlanetLayerDef>
+  
+  <PlanetLayerDef ParentName="OrbitLayer">
+    <defName>LAO_Troposphere</defName>
+    <label>troposphere</label>
+    <viewGizmoTooltip>View locations that are orbiting the planet.</viewGizmoTooltip>
+    <elevationString>20km</elevationString>
+    <!-- <defaultBiome>Orbit</defaultBiome> -->
+    <rangeDistanceFactor>20</rangeDistanceFactor>
+    <raidPointsFactor>0.98</raidPointsFactor>
+  </PlanetLayerDef>
+  
+  <PlanetLayerDef ParentName="OrbitLayer">
+    <defName>LAO_Stratosphere</defName>
+    <label>stratosphere</label>
+    <viewGizmoTooltip>View locations that are orbiting the planet.</viewGizmoTooltip>
+    <elevationString>50km</elevationString>
+    <!-- <defaultBiome>Orbit</defaultBiome> -->
+    <rangeDistanceFactor>18.5</rangeDistanceFactor>
+    <raidPointsFactor>0.96</raidPointsFactor>
+  </PlanetLayerDef>
+  
+  <PlanetLayerDef ParentName="OrbitLayer">
+    <defName>LAO_Mesosphere</defName>
+    <label>mesosphere</label>
+    <viewGizmoTooltip>View locations that are orbiting the planet.</viewGizmoTooltip>
+    <elevationString>80km</elevationString>
+    <!-- <defaultBiome>Orbit</defaultBiome> -->
+    <rangeDistanceFactor>17</rangeDistanceFactor>
+    <raidPointsFactor>0.94</raidPointsFactor>
+  </PlanetLayerDef>
+  
+  <PlanetLayerDef ParentName="OrbitLayer">
+    <defName>LAO_HighOrbit</defName>
+    <label>high orbit</label>
+    <viewGizmoTooltip>View locations that are orbiting the planet.</viewGizmoTooltip>
+    <elevationString>500km</elevationString>
+    <defaultBiome>Orbit</defaultBiome>
+    <rangeDistanceFactor>19</rangeDistanceFactor>
+    <raidPointsFactor>0.63</raidPointsFactor>
+  </PlanetLayerDef>
+  
+</Defs>
