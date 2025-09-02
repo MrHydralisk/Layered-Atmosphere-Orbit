@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+
+	<Operation Class="PatchOperationSequence">
+		<operations>
+			<li Class="PatchOperationConditional">
+				<xpath>Defs/PlanetLayerDef[defName ="Surface"]/modExtensions</xpath>
+				<nomatch Class="PatchOperationAdd">
+					<xpath>Defs/PlanetLayerDef[defName ="Surface"]</xpath>
+					<order>Append</order>
+					<value>
+						<modExtensions>
+							<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+								<layerType>surface</layerType>
+								<elevation>0</elevation>
+							</li>
+						</modExtensions>
+					</value>
+				</nomatch>
+				<match Class="PatchOperationAdd">
+					<xpath>Defs/PlanetLayerDef[defName ="Surface"]/modExtensions</xpath>
+					<order>Append</order>
+					<value>
+						<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+							<layerType>surface</layerType>
+							<elevation>0</elevation>
+						</li>
+					</value>
+				</match>
+			</li>
+			<li Class="PatchOperationConditional">
+				<xpath>Defs/PlanetLayerDef[defName ="Orbit"]/modExtensions</xpath>
+				<nomatch Class="PatchOperationAdd">
+					<xpath>Defs/PlanetLayerDef[defName ="Orbit"]</xpath>
+					<order>Append</order>
+					<value>
+						<modExtensions>
+							<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+								<layerType>orbit</layerType>
+								<elevation>200</elevation>
+							</li>
+						</modExtensions>
+					</value>
+				</nomatch>
+				<match Class="PatchOperationAdd">
+					<xpath>Defs/PlanetLayerDef[defName ="Orbit"]/modExtensions</xpath>
+					<order>Append</order>
+					<value>
+						<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+							<layerType>orbit</layerType>
+							<elevation>200</elevation>
+						</li>
+					</value>
+				</match>
+			</li>
+		</operations>
+	</Operation>
+
+</Patch>

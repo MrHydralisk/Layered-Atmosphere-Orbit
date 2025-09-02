@@ -42,29 +42,39 @@ namespace LayeredAtmosphereOrbit
                 }
             }
             AccessTools.Field(typeof(Scenario), "parts").SetValue(scenario, parts);
-            List<ScenPart_PlanetLayer> planetLayers = new List<ScenPart_PlanetLayer>();
+            List<(ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension)> planetLayers = new List<(ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension)>();
             foreach (ScenPart scenPart in scenario.AllParts)
             {
                 if (scenPart is ScenPart_PlanetLayer scenPart_PlanetLayer)
                 {
-                    planetLayers.Add(scenPart_PlanetLayer);
+                    planetLayers.Add((scenPart_PlanetLayer, scenPart_PlanetLayer.layer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>() ?? new LayeredAtmosphereOrbitDefModExtension()));
                 }
             }
-            planetLayers.SortBy((ScenPart_PlanetLayer sppl) => sppl.Settings.radius);
+            planetLayers.SortBy((spLayer) => spLayer.Item2.elevation);
             for (int i = 1; i < planetLayers.Count; i++)
             {
-                ScenPart_PlanetLayer scenPart_PlanetLayerFrom = planetLayers[i - 1];
-                ScenPart_PlanetLayer scenPart_PlanetLayerTo = planetLayers[i];
-                Log.Message($"[{i}] {scenPart_PlanetLayerFrom.Label} [{scenPart_PlanetLayerFrom.Settings.radius}] --- {scenPart_PlanetLayerTo.Label} [{scenPart_PlanetLayerTo.Settings.radius}]");
-                if (!scenPart_PlanetLayerFrom.connections.Any((LayerConnection lc) => lc.tag == scenPart_PlanetLayerTo.tag))
+                (ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension) spPlanetLayerFrom = planetLayers[i - 1];
+                (ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension) spPlanetLayerTo = planetLayers[i];
+                Log.Message($"[{i}] {spPlanetLayerFrom.Item1.Label} [{spPlanetLayerFrom.Item2.elevation}] --- {spPlanetLayerTo.Item1.Label} [{spPlanetLayerTo.Item2.elevation}]");
+                if (!spPlanetLayerFrom.Item1.connections.Any((LayerConnection lc) => lc.tag == spPlanetLayerTo.Item1.tag))
                 {
-                    scenPart_PlanetLayerFrom.connections.Add(new LayerConnection() { tag = scenPart_PlanetLayerTo.tag, zoomMode = LayerConnection.ZoomMode.ZoomOut });
+                    spPlanetLayerFrom.Item1.connections.Add(new LayerConnection() { tag = spPlanetLayerTo.Item1.tag, zoomMode = LayerConnection.ZoomMode.ZoomOut });
                 }
-                if (!scenPart_PlanetLayerTo.connections.Any((LayerConnection lc) => lc.tag == scenPart_PlanetLayerFrom.tag))
+                if (!spPlanetLayerTo.Item1.connections.Any((LayerConnection lc) => lc.tag == spPlanetLayerFrom.Item1.tag))
                 {
-                    scenPart_PlanetLayerTo.connections.Add(new LayerConnection() { tag = scenPart_PlanetLayerFrom.tag, zoomMode = LayerConnection.ZoomMode.ZoomIn });
+                    spPlanetLayerTo.Item1.connections.Add(new LayerConnection() { tag = spPlanetLayerFrom.Item1.tag, zoomMode = LayerConnection.ZoomMode.ZoomIn });
                 }
             }
+        }
+
+        public static float DistanceToReachPlanetLayer(PlanetLayerDef from, PlanetLayerDef to)
+        {
+            return to.Elevation() - from.Elevation();
+        }
+
+        public static float Elevation(this PlanetLayerDef planetLayer)
+        {
+            return planetLayer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.elevation ?? 200;
         }
     }
 }
