@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace LayeredAtmosphereOrbit
@@ -13,9 +14,8 @@ namespace LayeredAtmosphereOrbit
             {
                 if (planetLayersLAOCached == null)
                 {
-                    string[] planetLayerDefNames = { "LAO_Troposphere", "LAO_Stratosphere", "LAO_Mesosphere", "LAO_HighOrbit" };
                     planetLayersLAOCached = new List<ScenPart_PlanetLayer>();
-                    foreach (string defName in planetLayerDefNames)
+                    foreach (string defName in LAOMod.Settings.AutoAddLayersDefNames)
                     {
                         ScenPart_PlanetLayerFixed scenPart_LAOPlanetLayer = new ScenPart_PlanetLayerFixed();
                         scenPart_LAOPlanetLayer.def = DefDatabase<ScenPartDef>.GetNamed(defName);
@@ -63,6 +63,29 @@ namespace LayeredAtmosphereOrbit
                 if (!spPlanetLayerTo.Item1.connections.Any((LayerConnection lc) => lc.tag == spPlanetLayerFrom.Item1.tag))
                 {
                     spPlanetLayerTo.Item1.connections.Add(new LayerConnection() { tag = spPlanetLayerFrom.Item1.tag, zoomMode = LayerConnection.ZoomMode.ZoomIn });
+                }
+            }
+            if (LAOMod.Settings.UseFuelCostBetweenLayers)
+            {
+                for (int i = 0; i < planetLayers.Count; i++)
+                {
+                    (ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension) spPlanetLayerFrom = planetLayers[i];
+                    if (spPlanetLayerFrom.Item1.connections.NullOrEmpty())
+                    {
+                        continue;
+                    }
+                    for (int j = 0; j < spPlanetLayerFrom.Item1.connections.Count; j++)
+                    {
+                        LayerConnection layerConnection = spPlanetLayerFrom.Item1.connections[j];
+                        if (layerConnection.zoomMode == LayerConnection.ZoomMode.ZoomOut)
+                        {
+                            int indexTo = planetLayers.FindIndex(pl => pl.Item1.tag == layerConnection.tag);
+                            if (indexTo > -1)
+                            {
+                                layerConnection.fuelCost = (planetLayers[indexTo].Item2.elevation - spPlanetLayerFrom.Item1.layer.Elevation()) * LAOMod.Settings.FuelPerKm;
+                            }
+                        }
+                    }
                 }
             }
         }

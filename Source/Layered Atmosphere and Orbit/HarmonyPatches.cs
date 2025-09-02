@@ -22,6 +22,15 @@ namespace LayeredAtmosphereOrbit
             Harmony val = new Harmony("rimworld.mrhydralisk.LayeredAtmosphereOrbit");
 
             {
+                List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
+                foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+                {
+                    LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+                    if (laoDefModExtension?.isOptionToAutoAdd ?? false)
+                    {
+                        LAOMod.AutoAddLayerOptions.Add(planetLayerDef);
+                    }
+                }
                 foreach (Scenario scenario in ScenarioLister.AllScenarios())
                 {
                     LayeredAtmosphereOrbitUtility.TryAddPlanetLayerts(scenario);
@@ -34,14 +43,14 @@ namespace LayeredAtmosphereOrbit
         public static void WG_GetGizmos_Postfix(ref IEnumerable<Gizmo> __result, WorldGrid __instance, Dictionary<int, PlanetLayer> ___planetLayers)
         {
             List<Gizmo> NGizmos = __result.ToList();
-            if (___planetLayers.Count > 1)
+            if (Current.ProgramState != ProgramState.Entry && ___planetLayers.Count > 1)
             {
+                PlanetLayer currentLayer = PlanetLayer.Selected;
                 Command_Action command_Action = new Command_Action
                 {
-                    defaultLabel = "Layer",
-                    hotKey = KeyBindingDefOf.Misc1,
-                    defaultDesc = "All layers",
-                    icon = ContentFinder<Texture2D>.Get("UI/Commands/ViewPlanet"),
+                    defaultLabel = "LayeredAtmosphereOrbit.WorldGrid.Gizmo.SelectPlanerLayer.Label".Translate(),
+                    defaultDesc = "LayeredAtmosphereOrbit.WorldGrid.Gizmo.SelectPlanerLayer.Desc".Translate(currentLayer.Def.label, currentLayer.Def.viewGizmoTooltip),
+                    icon = currentLayer.Def.ViewGizmoTexture,
                     action = delegate
                     {
                         List<FloatMenuOption> floatMenuOptions = new List<FloatMenuOption>();

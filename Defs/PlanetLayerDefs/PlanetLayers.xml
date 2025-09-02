@@ -94,6 +94,7 @@
 		<raidPointsFactor>0.98</raidPointsFactor>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<layerType>atmosphere</layerType>
 				<elevation>20</elevation>
 			</li>
@@ -110,6 +111,7 @@
 		<raidPointsFactor>0.96</raidPointsFactor>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<layerType>atmosphere</layerType>
 				<elevation>50</elevation>
 			</li>
@@ -126,6 +128,7 @@
 		<raidPointsFactor>0.94</raidPointsFactor>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<layerType>atmosphere</layerType>
 				<elevation>80</elevation>
 			</li>
@@ -142,6 +145,7 @@
 		<raidPointsFactor>0.63</raidPointsFactor>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<layerType>orbit</layerType>
 				<elevation>500</elevation>
 			</li>

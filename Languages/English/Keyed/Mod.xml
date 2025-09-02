@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+	<LayeredAtmosphereOrbit.Settings.Title>Layered Atmosphere and Orbit</LayeredAtmosphereOrbit.Settings.Title>
+	
+	<LayeredAtmosphereOrbit.Settings.UseFuelCostBetweenLayers>Add fuel cost to travel between layers based on distance in km. (Vanilla is disabled.)</LayeredAtmosphereOrbit.Settings.UseFuelCostBetweenLayers>
+	<LayeredAtmosphereOrbit.Settings.FuelPerKm>Fuel cost to travel between layers: {0} per km. (Vanilla is 0.)</LayeredAtmosphereOrbit.Settings.FuelPerKm>
+	
+	<LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Total>Planet Layers that will be added: (Require game restart.)</LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Total>
+	<LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Option>- {0}</LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Option>
+	<LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.OptionOutdated>- {0} [Missing]</LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.OptionOutdated>
+	
+</LanguageData>

@@ -6,6 +6,7 @@ namespace LayeredAtmosphereOrbit
 {
     public class LayeredAtmosphereOrbitDefModExtension : DefModExtension
     {
+        public bool isOptionToAutoAdd = false;
         public OrbitType layerType = OrbitType.orbit;
         public float elevation = 200;
     }
