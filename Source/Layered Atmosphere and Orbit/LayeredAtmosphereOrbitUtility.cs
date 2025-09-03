@@ -47,7 +47,12 @@ namespace LayeredAtmosphereOrbit
             {
                 if (scenPart is ScenPart_PlanetLayer scenPart_PlanetLayer)
                 {
-                    planetLayers.Add((scenPart_PlanetLayer, scenPart_PlanetLayer.layer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>() ?? new LayeredAtmosphereOrbitDefModExtension()));
+                    LayeredAtmosphereOrbitDefModExtension laoDefModExtension = scenPart_PlanetLayer.layer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+                    if ((laoDefModExtension?.layerType ?? OrbitType.unknown) == OrbitType.unknown)
+                    {
+                        Log.Error($"Planet Layer {scenPart_PlanetLayer?.def?.defName ?? "---"} missing proper LayeredAtmosphereOrbitDefModExtension. Can continue playing without issues, but ask developer to add it with patch. Layer is from mod {scenPart_PlanetLayer?.def?.modContentPack?.Name ?? "---"} [{scenPart_PlanetLayer?.def?.modContentPack?.PackageId ?? "---"}].");
+                    }
+                    planetLayers.Add((scenPart_PlanetLayer, laoDefModExtension));
                 }
             }
             planetLayers.SortBy((spLayer) => spLayer.Item2.elevation);
