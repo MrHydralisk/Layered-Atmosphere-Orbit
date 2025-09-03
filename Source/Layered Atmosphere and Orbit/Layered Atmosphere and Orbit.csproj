@@ -37,10 +37,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefOfLocal.cs" />
+    <Compile Include="GenStep\GenStep_Atmosphere.cs" />
+    <Compile Include="GenStep\GenStep_FloatingIslandCollapsing.cs" />
+    <Compile Include="GenStep\GenStep_FloatingIslandGiantPlain.cs" />
+    <Compile Include="GenStep\GenStep_FloatingIslandGiant.cs" />
+    <Compile Include="GenStep\GenStep_FloatingIslandDebug.cs" />
     <Compile Include="LAOMod.cs" />
     <Compile Include="GameComponent_LayeredAtmosphereOrbit.cs" />
     <Compile Include="LAOSettings.cs" />
-    <Compile Include="GenStep_FloatingIsland.cs" />
+    <Compile Include="GenStep\GenStep_FloatingIsland.cs" />
+    <Compile Include="AtmosphereMapParent.cs" />
     <Compile Include="SectionLayer_TerrainEdgesFloatingIslands.cs" />
     <Compile Include="OrbitType.cs" />
     <Compile Include="LayeredAtmosphereOrbitDefModExtension.cs" />
@@ -58,16 +65,16 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-	<Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.ShouldDrawRockEdges" />
-	<Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.DrawEdges" />
-	<Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.DrawCorners" />
-	<Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.ShouldDrawPassthrough" />
-	<Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.DrawLoop" />
-	<Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.ShouldDrawLoop" />
-	<Publicize Include="Assembly-CSharp:RimWorld.Scenario.parts" />
-	<Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.SpawnAsteroid" />
-	<Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.GenerateRuins" />
-	<Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.GenerateArcheanTree" />
+    <Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.ShouldDrawRockEdges" />
+    <Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.DrawEdges" />
+    <Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.DrawCorners" />
+    <Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.ShouldDrawPassthrough" />
+    <Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.DrawLoop" />
+    <Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.ShouldDrawLoop" />
+    <Publicize Include="Assembly-CSharp:RimWorld.Scenario.parts" />
+    <Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.SpawnAsteroid" />
+    <Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.GenerateRuins" />
+    <Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.GenerateArcheanTree" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

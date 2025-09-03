@@ -9,6 +9,7 @@ using Verse;
 using Verse.Noise;
 using HarmonyLib;
 using System.Reflection;
+using System;
 
 namespace LayeredAtmosphereOrbit
 {
@@ -22,33 +23,8 @@ namespace LayeredAtmosphereOrbit
 
         public float archeanTreeChance;
 
-        private const float FloorThreshold = 0.5f;
-
-        private const float RuinsRadius = 0.2f;
-
-        private const float MacroFrequency = 0.006f;
-
-        private const float MicroFrequency = 0.05f;
-
-        private const float MacroBlend = 0.8f;
-
-        private const float MicroBlend = 0.85f;
-
-        private const float SquashScale = 0.65f;
-
-        private const float Exponent = 0.2f;
-
-        private const float CaveBranchChance = 0.05f;
-
-        private const float CaveWidthOffsetPerCell = 0.015f;
-
-        private const float CaveMinTunnelWidth = 0.5f;
-
-        private const int TreeAreaRadiusSize = 11;
-
-        private const float CaveDirectionNoiseFrequency = 0.002f;
-
-        private static readonly IntRange RuinsSize = new IntRange(6, 10);
+        public virtual float FloorThreshold => 0.5f;
+        public virtual float WallThreshold => 0.7f;
 
         private ModuleBase innerNoise;
 
@@ -76,7 +52,7 @@ namespace LayeredAtmosphereOrbit
             }
         }
 
-        private static void SpawnFloatingIsland(Map map)
+        protected virtual void SpawnFloatingIsland(Map map)
         {
             using (map.pathing.DisableIncrementalScope())
             {
@@ -84,21 +60,21 @@ namespace LayeredAtmosphereOrbit
                 {
                     float num = MapGenerator.Elevation[allCell];
                     float num2 = MapGenerator.Caves[allCell];
-                    if (num > 0.5f)
+                    if (num > FloorThreshold)
                     {
                         map.terrainGrid.SetTerrain(allCell, ThingDefOf.Slate.building.naturalTerrain);
                     }
-                    if (num > 0.7f && num2 == 0f)
+                    if (num > WallThreshold && num2 == 0f)
                     {
                         GenSpawn.Spawn(ThingDefOf.Slate, allCell, map);
                     }
-                    if (num > 0.7f)
+                    if (num > WallThreshold)
                     {
                         map.roofGrid.SetRoof(allCell, RoofDefOf.RoofRockThin);
                     }
                 }
                 HashSet<IntVec3> mainIsland = new HashSet<IntVec3>();
-                map.floodFiller.FloodFill(map.Center, (IntVec3 x) => x.GetTerrain(map) != TerrainDefOf.Space, delegate (IntVec3 x)
+                map.floodFiller.FloodFill(map.Center, (IntVec3 x) => x.GetTerrain(map) != DefOfLocal.LAO_Air, delegate (IntVec3 x)
                 {
                     mainIsland.Add(x);
                 });
@@ -108,7 +84,7 @@ namespace LayeredAtmosphereOrbit
                     {
                         continue;
                     }
-                    map.terrainGrid.SetTerrain(allCell2, TerrainDefOf.Space);
+                    map.terrainGrid.SetTerrain(allCell2, DefOfLocal.LAO_Air);
                     map.roofGrid.SetRoof(allCell2, null);
                     foreach (Thing item in allCell2.GetThingList(map).ToList())
                     {
@@ -124,6 +100,12 @@ namespace LayeredAtmosphereOrbit
             foreach (IntVec3 allCell in map.AllCells)
             {
                 MapGenerator.Elevation[allCell] = innerNoise.GetValue(allCell);
+                int distToEdge = allCell.DistanceToEdge(map);
+                if (distToEdge <= 6)
+                {
+                    MapGenerator.Elevation[allCell] *= Mathf.Max(0, (distToEdge - 1f) / 5);
+
+                }
             }
         }
 
@@ -204,123 +186,5 @@ namespace LayeredAtmosphereOrbit
             }
             return false;
         }
-
-        //private static void GenerateArcheanTree(Map map, GenStepParams parms)
-        //{
-        //    if (!MapGenUtility.TryGetRandomClearRect(23, 23, out var rect, -1, -1, RectValidator, 0.59999996f, float.MaxValue) && !MapGenUtility.TryGetRandomClearRect(23, 23, out rect, -1, -1, RectValidator, -1f, float.MaxValue))
-        //    {
-        //        return;
-        //    }
-        //    int num = 5;
-        //    foreach (IntVec3 cell in rect.Cells)
-        //    {
-        //        float magnitude = (cell - rect.CenterCell).Magnitude;
-        //        if (magnitude < 8f || (magnitude < 9f && Rand.Chance(0.25f)))
-        //        {
-        //            cell.GetEdifice(map)?.Destroy();
-        //            map.roofGrid.SetRoof(cell, null);
-        //        }
-        //        if (magnitude < (float)num || (magnitude < (float)num + 1.9f && Rand.Chance(0.25f)))
-        //        {
-        //            map.terrainGrid.SetTerrain(cell, TerrainDefOf.SoilRich);
-        //        }
-        //    }
-        //    WildPlantSpawner.SpawnPlant(ThingDefOf.Plant_TreeArchean, map, rect.CenterCell, setRandomGrowth: false).Growth = 1f;
-        //    RCellFinder.TryFindRandomCellsNear(rect.CenterCell, 6, map, Validator, out var cells, 4, 7);
-        //    for (int i = 0; i < cells.Count; i++)
-        //    {
-        //        IntVec3 intVec = cells[i];
-        //        if (i == 0)
-        //        {
-        //            RoomGenUtility.SpawnCrate(ThingDefOf.SealedCrate, intVec, map, Rot4.North, ThingSetMakerDefOf.Reward_ArcheanSeed);
-        //        }
-        //        else
-        //        {
-        //            GenSpawn.Spawn(ThingDefOf.AncientSpacerCrate, intVec, map, Rot4.North);
-        //        }
-        //    }
-        //    bool RectValidator(CellRect r)
-        //    {
-        //        for (int j = 0; j < map.layoutStructureSketches.Count; j++)
-        //        {
-        //            CellRect container = map.layoutStructureSketches[j].structureLayout.container;
-        //            if (container.ExpandedBy(5).Overlaps(r))
-        //            {
-        //                return false;
-        //            }
-        //        }
-        //        foreach (IntVec3 cell2 in r.Cells)
-        //        {
-        //            if (!cell2.GetTerrain(map).affordances.Contains(TerrainAffordanceDefOf.Medium))
-        //            {
-        //                return false;
-        //            }
-        //        }
-        //        return true;
-        //    }
-        //    bool Validator(IntVec3 cell)
-        //    {
-        //        if (rect.Contains(cell) && cell.GetEdifice(map) == null && cell.GetPlant(map) == null)
-        //        {
-        //            return (cell - rect.CenterCell).Magnitude >= 2.9f;
-        //        }
-        //        return false;
-        //    }
-        //}
-
-        //private static void GenerateRuins(Map map, GenStepParams parms)
-        //{
-        //    IntVec2 size = new IntVec2(RuinsSize.RandomInRange, RuinsSize.RandomInRange);
-        //    IntVec3 intVec = IntVec3.Invalid;
-        //    Rot4 rot2 = Rot4.North;
-        //    for (int i = 0; i < 10; i++)
-        //    {
-        //        float num = Rand.Range(0f, 0.2f);
-        //        Vector3 vect = new Vector3(Mathf.RoundToInt((float)map.Size.x * num), 0f, 0f).RotatedBy(Rand.Range(0f, 360f));
-        //        IntVec3 intVec2 = map.Center + vect.ToIntVec3();
-        //        rot2 = Rot4.Random;
-        //        for (int j = 0; j < 2; j++)
-        //        {
-        //            if (i == 1)
-        //            {
-        //                rot2 = rot2.Rotated(RotationDirection.Clockwise);
-        //            }
-        //            if (IsValidPoint(intVec2, rot2))
-        //            {
-        //                intVec = intVec2;
-        //                break;
-        //            }
-        //        }
-        //    }
-        //    if (!(intVec == IntVec3.Invalid))
-        //    {
-        //        CellRect cellRect = intVec.RectAbout(size, rot2);
-        //        StructureGenParams parms2 = new StructureGenParams
-        //        {
-        //            size = cellRect.Size
-        //        };
-        //        LayoutWorker worker = LayoutDefOf.SpaceRuins.Worker;
-        //        LayoutStructureSketch layoutStructureSketch = worker.GenerateStructureSketch(parms2);
-        //        SketchResolveParams parms3 = new SketchResolveParams
-        //        {
-        //            sketch = layoutStructureSketch.layoutSketch,
-        //            destroyChanceExp = 1.5f
-        //        };
-        //        SketchResolverDefOf.DamageBuildingsLight.Resolve(parms3);
-        //        map.layoutStructureSketches.Add(layoutStructureSketch);
-        //        worker.Spawn(layoutStructureSketch, map, cellRect.Min);
-        //    }
-        //    bool IsValidPoint(IntVec3 p, Rot4 rot)
-        //    {
-        //        foreach (IntVec3 item in p.RectAbout(size, rot))
-        //        {
-        //            if (MapGenerator.Elevation[item] < 0.7f)
-        //            {
-        //                return false;
-        //            }
-        //        }
-        //        return true;
-        //    }
-        //}
     }
 }

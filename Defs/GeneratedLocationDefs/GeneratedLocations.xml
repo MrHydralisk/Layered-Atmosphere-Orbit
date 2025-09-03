@@ -2,11 +2,66 @@
 <Defs>
   
   <GeneratedLocationDef>
-    <defName>LAO_Atmosphere</defName>
-    <worldObjectDef>LAO_FloatingIsland</worldObjectDef>
+    <defName>LAO_FloatingIslandGiant</defName>
+    <worldObjectDef>LAO_FloatingIslandGiant</worldObjectDef>
     <layerDefs>
       <li>LAO_Troposphere</li>
+    </layerDefs>
+    <preciousResources>
+      <li>MineableGold</li>
+      <li>MineableSilver</li>
+      <li>MineableSteel</li>
+      <li>MineableUranium</li>
+      <li>MineablePlasteel</li>
+      <li>MineableComponentsIndustrial</li>
+      <li>MineableJade</li>
+    </preciousResources>
+  </GeneratedLocationDef>
+  
+  <GeneratedLocationDef>
+    <defName>LAO_FloatingIslandGiantPlain</defName>
+    <worldObjectDef>LAO_FloatingIslandGiantPlain</worldObjectDef>
+    <layerDefs>
+      <li>LAO_Troposphere</li>
+    </layerDefs>
+    <preciousResources>
+      <li>MineableGold</li>
+      <li>MineableSilver</li>
+      <li>MineableSteel</li>
+      <li>MineableUranium</li>
+      <li>MineablePlasteel</li>
+      <li>MineableComponentsIndustrial</li>
+      <li>MineableJade</li>
+    </preciousResources>
+  </GeneratedLocationDef>
+  
+  
+  
+  <GeneratedLocationDef>
+    <defName>LAO_FloatingIsland</defName>
+    <worldObjectDef>LAO_FloatingIsland</worldObjectDef>
+    <layerDefs>
+      <!-- <li>LAO_Troposphere</li> -->
       <li>LAO_Stratosphere</li>
+      <!-- <li>LAO_Mesosphere</li> -->
+    </layerDefs>
+    <preciousResources>
+      <li>MineableGold</li>
+      <li>MineableSilver</li>
+      <li>MineableSteel</li>
+      <li>MineableUranium</li>
+      <li>MineablePlasteel</li>
+      <li>MineableComponentsIndustrial</li>
+      <li>MineableJade</li>
+    </preciousResources>
+  </GeneratedLocationDef>
+  
+  
+  
+  <GeneratedLocationDef>
+    <defName>LAO_FloatingIslandCollapsing</defName>
+    <worldObjectDef>LAO_FloatingIslandCollapsing</worldObjectDef>
+    <layerDefs>
       <li>LAO_Mesosphere</li>
     </layerDefs>
     <preciousResources>
@@ -19,6 +74,8 @@
       <li>MineableJade</li>
     </preciousResources>
   </GeneratedLocationDef>
+  
+  
   
   <GeneratedLocationDef>
     <defName>LAO_AsteroidPrecious</defName>

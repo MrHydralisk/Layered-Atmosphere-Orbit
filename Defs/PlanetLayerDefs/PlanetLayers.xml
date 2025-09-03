@@ -46,7 +46,7 @@
 	<PlanetLayerDef Name="LAO_LowOrbitLayer" ParentName="OrbitLayer" Abstract="True">
 		<!-- <layerType>OrbitLayer</layerType> -->
 		<defaultBiome>TemperateForest</defaultBiome>
-		<defaultMapWorldObject>Space</defaultMapWorldObject>
+		<defaultMapWorldObject>LAO_Atmosphere</defaultMapWorldObject>
 		<!-- <alwaysRaycastable>false</alwaysRaycastable> -->
 		<!-- <obstructsExpandingIcons>false</obstructsExpandingIcons> -->
 		<!-- <onlyAllowWhitelistedIncidents>true</onlyAllowWhitelistedIncidents> -->
@@ -89,7 +89,6 @@
 		<label>troposphere</label>
 		<viewGizmoTooltip>View locations that are orbiting the planet.</viewGizmoTooltip>
 		<elevationString>20km</elevationString>
-		<!-- <defaultBiome>Orbit</defaultBiome> -->
 		<rangeDistanceFactor>20</rangeDistanceFactor>
 		<raidPointsFactor>0.98</raidPointsFactor>
 		<modExtensions>
@@ -106,7 +105,6 @@
 		<label>stratosphere</label>
 		<viewGizmoTooltip>View locations that are orbiting the planet.</viewGizmoTooltip>
 		<elevationString>50km</elevationString>
-		<!-- <defaultBiome>Orbit</defaultBiome> -->
 		<rangeDistanceFactor>18.5</rangeDistanceFactor>
 		<raidPointsFactor>0.96</raidPointsFactor>
 		<modExtensions>
@@ -123,7 +121,6 @@
 		<label>mesosphere</label>
 		<viewGizmoTooltip>View locations that are orbiting the planet.</viewGizmoTooltip>
 		<elevationString>80km</elevationString>
-		<!-- <defaultBiome>Orbit</defaultBiome> -->
 		<rangeDistanceFactor>17</rangeDistanceFactor>
 		<raidPointsFactor>0.94</raidPointsFactor>
 		<modExtensions>

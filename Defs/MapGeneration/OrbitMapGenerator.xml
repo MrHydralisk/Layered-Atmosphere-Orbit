@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+	<MapGeneratorDef ParentName="SpaceMapGenerator">
+		<defName>LAO_AsteroidPrecious</defName>
+		<label>basic asteroid</label>
+		<genSteps>
+			<li>LAO_AsteroidPrecious</li>
+			<li>AsteroidBasicTransportPods</li>
+			<li>AncientMiningCharge_Asteroid</li>
+			<li>AncientExplosivesCrate_Asteroid</li>
+			<li>AncientDrillPlatform_Asteroid</li>
+			<li>AncientTuneller_Asteroid</li>
+			<li>MechShipChunk_Asteroid</li>
+			<li>RockChunks</li>
+		</genSteps>
+	</MapGeneratorDef>
+  
+</Defs>

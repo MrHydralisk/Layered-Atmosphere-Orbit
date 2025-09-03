@@ -1,15 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
+	<!-- Atmosphere -->
+  
+	<WorldObjectDef ParentName="SpaceBase">
+		<defName>LAO_Atmosphere</defName>
+		<label>atmosphere</label>
+		<worldObjectClass>LayeredAtmosphereOrbit.AtmosphereMapParent</worldObjectClass>
+		<canResizeToGravship>true</canResizeToGravship>
+	</WorldObjectDef>
+
 	<WorldObjectDef ParentName="GeneratedAsteroid">
 		<defName>LAO_FloatingIsland</defName>
-		<label>floating island</label><!-- hidden -->
-		<!-- <worldObjectClass>BasicAsteroidMapParent</worldObjectClass> -->
+		<label>floating island</label>
 		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
 		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
 		<fullyExpandedInSpace>false</fullyExpandedInSpace>
 		<mapGenerator>LAO_FloatingIsland</mapGenerator>
 	</WorldObjectDef>
+
+	<WorldObjectDef ParentName="GeneratedAsteroid">
+		<defName>LAO_FloatingIslandGiant</defName>
+		<label>giant floating island</label>
+		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
+		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
+		<fullyExpandedInSpace>false</fullyExpandedInSpace>
+		<mapGenerator>LAO_FloatingIslandGiant</mapGenerator>
+	</WorldObjectDef>
+
+	<WorldObjectDef ParentName="GeneratedAsteroid">
+		<defName>LAO_FloatingIslandGiantPlain</defName>
+		<label>giant floating island plain</label>
+		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
+		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
+		<fullyExpandedInSpace>false</fullyExpandedInSpace>
+		<mapGenerator>LAO_FloatingIslandGiantPlain</mapGenerator>
+	</WorldObjectDef>
+
+	<WorldObjectDef ParentName="GeneratedAsteroid">
+		<defName>LAO_FloatingIslandCollapsing</defName>
+		<label>collapsing floating island</label>
+		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
+		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
+		<fullyExpandedInSpace>false</fullyExpandedInSpace>
+		<mapGenerator>LAO_FloatingIslandCollapsing</mapGenerator>
+	</WorldObjectDef>
+
+	<WorldObjectDef ParentName="GeneratedAsteroid">
+		<defName>LAO_FloatingIslandDebug</defName>
+		<label>floating island debug</label>
+		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
+		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
+		<fullyExpandedInSpace>false</fullyExpandedInSpace>
+		<mapGenerator>LAO_FloatingIslandDebug</mapGenerator>
+	</WorldObjectDef>
+	
+	<!-- Orbit -->
 
 	<WorldObjectDef ParentName="GeneratedAsteroid">
 		<defName>LAO_AsteroidPrecious</defName>
