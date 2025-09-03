@@ -1,15 +1,10 @@
-﻿using RimWorld.Planet;
-using RimWorld.SketchGen;
-using RimWorld;
+﻿using RimWorld;
+using RimWorld.Planet;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using UnityEngine;
 using Verse;
 using Verse.Noise;
-using HarmonyLib;
-using System.Reflection;
-using System;
 
 namespace LayeredAtmosphereOrbit
 {
@@ -22,6 +17,17 @@ namespace LayeredAtmosphereOrbit
         public float ruinsChance;
 
         public float archeanTreeChance;
+
+        public static SimpleCurve edgeElevationMult = new SimpleCurve
+        {
+            new CurvePoint(0, 0),
+            new CurvePoint(1, 0.2f),
+            new CurvePoint(2, 0.6f),
+            new CurvePoint(3, 0.8f),
+            new CurvePoint(4, 0.9f),
+            new CurvePoint(5, 0.95f),
+            new CurvePoint(6, 1f)
+        };
 
         public virtual float FloorThreshold => 0.5f;
         public virtual float WallThreshold => 0.7f;
@@ -46,7 +52,7 @@ namespace LayeredAtmosphereOrbit
                 }
                 if (Rand.Chance(archeanTreeChance))
                 {
-                    GenStep_Asteroid.GenerateArcheanTree(map, parms );
+                    GenStep_Asteroid.GenerateArcheanTree(map, parms);
                 }
                 map.OrbitalDebris = OrbitalDebrisDefOf.Asteroid;
             }
@@ -101,10 +107,9 @@ namespace LayeredAtmosphereOrbit
             {
                 MapGenerator.Elevation[allCell] = innerNoise.GetValue(allCell);
                 int distToEdge = allCell.DistanceToEdge(map);
-                if (distToEdge <= 6)
+                if (MapGenerator.Elevation[allCell] > 0 && distToEdge <= 6)
                 {
-                    MapGenerator.Elevation[allCell] *= Mathf.Max(0, (distToEdge - 1f) / 5);
-
+                    MapGenerator.Elevation[allCell] = MapGenerator.Elevation[allCell] * edgeElevationMult.Evaluate(distToEdge);
                 }
             }
         }

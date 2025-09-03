@@ -93,6 +93,7 @@
 		<raidPointsFactor>0.98</raidPointsFactor>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<layerType>atmosphere</layerType>
 				<elevation>20</elevation>
@@ -109,6 +110,7 @@
 		<raidPointsFactor>0.96</raidPointsFactor>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<layerType>atmosphere</layerType>
 				<elevation>50</elevation>
@@ -125,6 +127,7 @@
 		<raidPointsFactor>0.94</raidPointsFactor>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<layerType>atmosphere</layerType>
 				<elevation>80</elevation>
@@ -142,6 +145,7 @@
 		<raidPointsFactor>0.63</raidPointsFactor>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<layerType>orbit</layerType>
 				<elevation>500</elevation>
