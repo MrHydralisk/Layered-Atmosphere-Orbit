@@ -40,15 +40,34 @@
     <Compile Include="LAOMod.cs" />
     <Compile Include="GameComponent_LayeredAtmosphereOrbit.cs" />
     <Compile Include="LAOSettings.cs" />
+    <Compile Include="GenStep_FloatingIsland.cs" />
+    <Compile Include="SectionLayer_TerrainEdgesFloatingIslands.cs" />
     <Compile Include="OrbitType.cs" />
     <Compile Include="LayeredAtmosphereOrbitDefModExtension.cs" />
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="LayeredAtmosphereOrbitUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Krafs.Publicizer">
+      <Version>2.3.0</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Krafs.Rimworld.Ref">
       <Version>1.6.4566</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+	<Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.ShouldDrawRockEdges" />
+	<Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.DrawEdges" />
+	<Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.DrawCorners" />
+	<Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.ShouldDrawPassthrough" />
+	<Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.DrawLoop" />
+	<Publicize Include="Assembly-CSharp:RimWorld.SectionLayer_TerrainEdges.ShouldDrawLoop" />
+	<Publicize Include="Assembly-CSharp:RimWorld.Scenario.parts" />
+	<Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.SpawnAsteroid" />
+	<Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.GenerateRuins" />
+	<Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.GenerateArcheanTree" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

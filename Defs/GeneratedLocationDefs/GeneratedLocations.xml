@@ -3,7 +3,7 @@
   
   <GeneratedLocationDef>
     <defName>LAO_Atmosphere</defName>
-    <worldObjectDef>LAO_AtmosphereOrbitalItemStash</worldObjectDef>
+    <worldObjectDef>LAO_FloatingIsland</worldObjectDef>
     <layerDefs>
       <li>LAO_Troposphere</li>
       <li>LAO_Stratosphere</li>

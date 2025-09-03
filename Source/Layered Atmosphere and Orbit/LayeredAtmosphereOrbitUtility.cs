@@ -2,6 +2,7 @@
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Verse;
 
 namespace LayeredAtmosphereOrbit
@@ -33,7 +34,7 @@ namespace LayeredAtmosphereOrbit
 
         public static void TryAddPlanetLayerts(Scenario scenario)
         {
-            List<ScenPart> parts = AccessTools.Field(typeof(Scenario), "parts").GetValue(scenario) as List<ScenPart>;
+            List<ScenPart> parts = scenario.parts;
             foreach (ScenPart_PlanetLayer sppl in planetLayersLAO)
             {
                 if (!parts.Any((ScenPart sp) => sp.def == sppl.def))
@@ -41,7 +42,7 @@ namespace LayeredAtmosphereOrbit
                     parts.Add(sppl);
                 }
             }
-            AccessTools.Field(typeof(Scenario), "parts").SetValue(scenario, parts);
+            scenario.parts = parts;
             List<(ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension)> planetLayers = new List<(ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension)>();
             foreach (ScenPart scenPart in scenario.AllParts)
             {
