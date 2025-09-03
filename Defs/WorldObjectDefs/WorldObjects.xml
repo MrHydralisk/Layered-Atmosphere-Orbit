@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+	<WorldObjectDef ParentName="GeneratedAsteroid">
+		<defName>LAO_AtmosphereOrbitalItemStash</defName>
+		<label>orbital item stash</label><!-- hidden -->
+		<worldObjectClass>BasicAsteroidMapParent</worldObjectClass>
+		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
+		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
+		<fullyExpandedInSpace>false</fullyExpandedInSpace>
+		<mapGenerator>OrbitalItemStash</mapGenerator>
+	</WorldObjectDef>
+
+	<WorldObjectDef ParentName="GeneratedAsteroid">
+		<defName>LAO_AsteroidPrecious</defName>
+		<label>basic asteroid</label>
+		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
+		<mapGenerator>LAO_AsteroidPrecious</mapGenerator>
+	</WorldObjectDef>
+
+</Defs>

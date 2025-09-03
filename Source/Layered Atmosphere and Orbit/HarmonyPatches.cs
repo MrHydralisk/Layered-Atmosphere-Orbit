@@ -38,6 +38,8 @@ namespace LayeredAtmosphereOrbit
             }
             
             val.Patch(AccessTools.Method(typeof(WorldGrid), "GetGizmos"), postfix: new HarmonyMethod(patchType, "WG_GetGizmos_Postfix"));
+            val.Patch(AccessTools.Method(typeof(ExpandableWorldObjectsUtility), "TransitionPct"), postfix: new HarmonyMethod(patchType, "EWOU_TransitionPct_Postfix"));
+            val.Patch(AccessTools.Property(typeof(WorldObject), "VisibleInBackground").GetGetMethod(), postfix: new HarmonyMethod(patchType, "WO_VisibleInBackground_Postfix"));
         }
 
         public static void WG_GetGizmos_Postfix(ref IEnumerable<Gizmo> __result, WorldGrid __instance, Dictionary<int, PlanetLayer> ___planetLayers)
@@ -76,6 +78,19 @@ namespace LayeredAtmosphereOrbit
                 NGizmos.Insert(1, command_Action);
             }
             __result = NGizmos;
+        }
+
+        public static void EWOU_TransitionPct_Postfix(ref float __result, WorldObject wo)
+        {
+            if (__result == 1 && wo.Tile.Layer != Find.WorldSelector.SelectedLayer)
+            {
+                __result = wo.Tile.Layer.Def.VisibleInBackgroundOfCurrentLayer();
+            }
+        }
+
+        public static void WO_VisibleInBackground_Postfix(ref bool __result, WorldObject __instance)
+        {
+            __result = __result || __instance.Tile.LayerDef.VisibleInBackgroundOfCurrentLayer() > 0;
         }
     }
 }

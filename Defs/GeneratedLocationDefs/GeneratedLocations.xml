@@ -2,12 +2,28 @@
 <Defs>
   
   <GeneratedLocationDef>
-    <defName>LAO_Asteroids</defName>
-    <worldObjectDef>AsteroidBasic</worldObjectDef>
+    <defName>LAO_Atmosphere</defName>
+    <worldObjectDef>LAO_AtmosphereOrbitalItemStash</worldObjectDef>
     <layerDefs>
       <li>LAO_Troposphere</li>
       <li>LAO_Stratosphere</li>
       <li>LAO_Mesosphere</li>
+    </layerDefs>
+    <preciousResources>
+      <li>MineableGold</li>
+      <li>MineableSilver</li>
+      <li>MineableSteel</li>
+      <li>MineableUranium</li>
+      <li>MineablePlasteel</li>
+      <li>MineableComponentsIndustrial</li>
+      <li>MineableJade</li>
+    </preciousResources>
+  </GeneratedLocationDef>
+  
+  <GeneratedLocationDef>
+    <defName>LAO_AsteroidPrecious</defName>
+    <worldObjectDef>LAO_AsteroidPrecious</worldObjectDef>
+    <layerDefs>
       <li>LAO_HighOrbit</li>
     </layerDefs>
     <preciousResources>

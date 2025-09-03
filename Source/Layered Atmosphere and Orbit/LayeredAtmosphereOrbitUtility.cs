@@ -99,5 +99,27 @@ namespace LayeredAtmosphereOrbit
         {
             return planetLayer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.elevation ?? 200;
         }
+
+        public static OrbitType LayerOrbitType(this PlanetLayerDef planetLayer)
+        {
+            return planetLayer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.layerType ?? OrbitType.unknown;
+        }
+
+        public static float VisibleInBackgroundOfCurrentLayer(this PlanetLayerDef planetLayer)
+        {
+            OrbitType currentOrbitType = Find.WorldSelector.SelectedLayer.Def.LayerOrbitType();
+            if (planetLayer.LayerOrbitType() == OrbitType.atmosphere)
+            {
+                if (currentOrbitType == OrbitType.surface)
+                {
+                    return 0.3f;
+                }
+                else if (currentOrbitType == OrbitType.atmosphere)
+                {
+                    return 0.6f;
+                }
+            }
+            return 0;
+        }
     }
 }

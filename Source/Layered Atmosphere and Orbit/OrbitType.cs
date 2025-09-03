@@ -6,6 +6,7 @@ namespace LayeredAtmosphereOrbit
 {
     public enum OrbitType
     {
+        unknown,
         surface,
         atmosphere,
         orbit

@@ -2,7 +2,7 @@
 <Defs>
   
   <PlanetLayerSettingsDef Name="LAO_OrbitLayerBase" Abstract="True">
-    <defName>Orbit</defName>
+    <defName>LAO_Orbit</defName>
     <label>Default orbit</label>
     <settings>
       <radius>130</radius>
