@@ -48,6 +48,7 @@
     <Compile Include="LAOSettings.cs" />
     <Compile Include="GenStep\GenStep_FloatingIsland.cs" />
     <Compile Include="AtmosphereMapParent.cs" />
+    <Compile Include="PlanetLayerGroupDef.cs" />
     <Compile Include="SectionLayer_TerrainEdgesFloatingIslands.cs" />
     <Compile Include="OrbitType.cs" />
     <Compile Include="LayeredAtmosphereOrbitDefModExtension.cs" />

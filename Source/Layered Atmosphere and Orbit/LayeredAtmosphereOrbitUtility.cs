@@ -71,6 +71,19 @@ namespace LayeredAtmosphereOrbit
                         spPlanetLayerFrom.Item1.connections.RemoveAt(j);
                     }
                 }
+                List<PlanetLayerDef> forcedConnectToPlanetLayer = spPlanetLayerFrom.Item2?.forcedConnectToPlanetLayer;
+                if (!forcedConnectToPlanetLayer.NullOrEmpty())
+                {
+                    for (int j = 0; j < forcedConnectToPlanetLayer.Count; j++)
+                    {
+                        PlanetLayerDef planetLayerDef = forcedConnectToPlanetLayer[j];
+                        if (!spPlanetLayerFrom.Item1.connections.Any((LayerConnection lc) => lc.tag == planetLayerDef.defName))
+                        {
+                            //Log.Message($"Add Forced {spPlanetLayerFrom.Item1.layer.defName} > {planetLayerDef.defName} = {LayerConnection.ZoomMode.ZoomOut}");
+                            spPlanetLayerFrom.Item1.connections.Add(new LayerConnection() { tag = planetLayerDef.defName, zoomMode = (spPlanetLayerFrom.Item1.layer.DistanceToReachPlanetLayer(planetLayerDef) < 0 ? LayerConnection.ZoomMode.ZoomIn : LayerConnection.ZoomMode.ZoomOut) });
+                        }
+                    }
+                }
             }
             List<(ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension)> planetLayersKnown = planetLayers.Where(sppl => (sppl.Item2?.layerType ?? OrbitType.unknown) > OrbitType.unknown).ToList();
             for (int i = 1; i < planetLayersKnown.Count; i++)
@@ -115,7 +128,7 @@ namespace LayeredAtmosphereOrbit
             //Log.Message($"All layer connections After:\n{string.Join("\n", planetLayers.SelectMany(x => x.Item1.connections.Select(y => $"- {x.Item1.layer.defName} > {y.tag} = {y.zoomMode}")))}");
         }
 
-        public static float DistanceToReachPlanetLayer(PlanetLayerDef from, PlanetLayerDef to)
+        public static float DistanceToReachPlanetLayer(this PlanetLayerDef from, PlanetLayerDef to)
         {
             return to.Elevation() - from.Elevation();
         }

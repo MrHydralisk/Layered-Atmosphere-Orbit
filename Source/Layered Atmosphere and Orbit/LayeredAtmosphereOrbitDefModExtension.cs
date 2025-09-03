@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RimWorld;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -10,5 +11,6 @@ namespace LayeredAtmosphereOrbit
         public bool isOptionToAutoAdd = false;
         public OrbitType layerType = OrbitType.unknown;
         public float elevation = 200;
+        public List<PlanetLayerDef> forcedConnectToPlanetLayer = new List<PlanetLayerDef>();
     }
 }
