@@ -21,25 +21,36 @@ namespace LayeredAtmosphereOrbit
             patchType = typeof(HarmonyPatches);
             Harmony val = new Harmony("rimworld.mrhydralisk.LayeredAtmosphereOrbit");
 
+            LayeredAtmosphereOrbitUtility.ResetLayerData();
+            InjectScenarios();
+
+            val.Patch(AccessTools.Method(typeof(WorldGrid), "GetGizmos"), postfix: new HarmonyMethod(patchType, "WG_GetGizmos_Postfix"));
+            if (LAOMod.Settings.ShowLayerInGroup)
             {
-                List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
-                foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+                val.Patch(AccessTools.Method(typeof(ExpandableWorldObjectsUtility), "TransitionPct"), postfix: new HarmonyMethod(patchType, "EWOU_TransitionPct_Postfix"));
+                val.Patch(AccessTools.Property(typeof(WorldObject), "VisibleInBackground").GetGetMethod(), postfix: new HarmonyMethod(patchType, "WO_VisibleInBackground_Postfix"));
+            }
+            if (LAOMod.Settings.AutoSwapLayerOnSelection)
+            {
+                val.Patch(AccessTools.Method(typeof(WorldSelector), "Select"), postfix: new HarmonyMethod(patchType, "WS_Select_Postfix"));
+            }
+        }
+
+        public static void InjectScenarios()
+        {
+            List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
+            foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+            {
+                LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+                if (laoDefModExtension?.isOptionToAutoAdd ?? false)
                 {
-                    LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
-                    if (laoDefModExtension?.isOptionToAutoAdd ?? false)
-                    {
-                        LAOMod.AutoAddLayerOptions.Add(planetLayerDef);
-                    }
-                }
-                foreach (Scenario scenario in ScenarioLister.AllScenarios())
-                {
-                    LayeredAtmosphereOrbitUtility.TryAddPlanetLayerts(scenario);
+                    LAOMod.AutoAddLayerOptions.Add(planetLayerDef);
                 }
             }
-            
-            val.Patch(AccessTools.Method(typeof(WorldGrid), "GetGizmos"), postfix: new HarmonyMethod(patchType, "WG_GetGizmos_Postfix"));
-            val.Patch(AccessTools.Method(typeof(ExpandableWorldObjectsUtility), "TransitionPct"), postfix: new HarmonyMethod(patchType, "EWOU_TransitionPct_Postfix"));
-            val.Patch(AccessTools.Property(typeof(WorldObject), "VisibleInBackground").GetGetMethod(), postfix: new HarmonyMethod(patchType, "WO_VisibleInBackground_Postfix"));
+            foreach (Scenario scenario in ScenarioLister.AllScenarios())
+            {
+                LayeredAtmosphereOrbitUtility.TryAddPlanetLayerts(scenario);
+            }
         }
 
         public static void WG_GetGizmos_Postfix(ref IEnumerable<Gizmo> __result, WorldGrid __instance, Dictionary<int, PlanetLayer> ___planetLayers)
@@ -64,7 +75,7 @@ namespace LayeredAtmosphereOrbit
                             FloatMenuOption floatMenuOption = new FloatMenuOption("WorldSelectLayer".Translate(planetLayer.Def.Named("LAYER")), delegate
                             {
                                 PlanetLayer.Selected = planetLayer;
-                            }, orderInPriority: (int)planetLayer.Def.Elevation());
+                            }, planetLayer.Def.ViewGizmoTexture, Color.white, orderInPriority: (int)planetLayer.Def.Elevation());
                             if (!acceptanceReportPL.Accepted)
                             {
                                 floatMenuOption.Disabled = true;
@@ -82,7 +93,7 @@ namespace LayeredAtmosphereOrbit
 
         public static void EWOU_TransitionPct_Postfix(ref float __result, WorldObject wo)
         {
-            if (__result == 1 && wo.Tile.Layer != Find.WorldSelector.SelectedLayer)
+            if ((__result == 1 || wo.def.fullyExpandedInSpace) && wo.Tile.Layer != Find.WorldSelector.SelectedLayer)
             {
                 __result = wo.Tile.Layer.Def.VisibleInBackgroundOfCurrentLayer();
             }
@@ -91,6 +102,18 @@ namespace LayeredAtmosphereOrbit
         public static void WO_VisibleInBackground_Postfix(ref bool __result, WorldObject __instance)
         {
             __result = __result || __instance.Tile.LayerDef.VisibleInBackgroundOfCurrentLayer() > 0;
+        }
+
+        public static void WS_Select_Postfix(WorldSelector __instance, WorldObject obj)
+        {
+            if (obj.Tile.Layer != __instance.SelectedLayer && __instance.NumSelectedObjects <= 1)
+            {
+                __instance.SelectedLayer = obj.Tile.Layer;
+                if (__instance.SelectedTile == PlanetTile.Invalid)
+                {
+                    __instance.Select(obj);
+                }
+            }
         }
     }
 }

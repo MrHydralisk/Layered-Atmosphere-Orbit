@@ -8,8 +8,13 @@ namespace LayeredAtmosphereOrbit
     {
         public bool UseFuelCostBetweenLayers = false;
         public float FuelPerKm = 1;
+        public bool ShowLayerInGroup = true;
+        public bool AutoSwapLayerOnSelection = true;
+        public float TransparentInGroup = 0.6f;
+        public float TransparentInGroupSub = 0.3f;
         public List<string> AutoAddLayersDefNames = new List<string>();
         //debug
+        public bool isOpenDebugFloatingIslandMapGen = false;
         public float DebugFloatingIslandRotation = Rand.Range(0f, 360f);
         public int DebugFloatingIslandPerlinSeedA = Rand.Int;
         public int DebugFloatingIslandPerlinSeedB = Rand.Int;
@@ -40,6 +45,10 @@ namespace LayeredAtmosphereOrbit
             base.ExposeData();
             Scribe_Values.Look(ref UseFuelCostBetweenLayers, "UseFuelCostBetweenLayers", defaultValue: false);
             Scribe_Values.Look(ref FuelPerKm, "FuelPerKm", defaultValue: 1);
+            Scribe_Values.Look(ref ShowLayerInGroup, "ShowLayerInGroup", defaultValue: true);
+            Scribe_Values.Look(ref AutoSwapLayerOnSelection, "AutoSwapLayerOnSelection", defaultValue: true);
+            Scribe_Values.Look(ref TransparentInGroup, "TransparentInGroup", defaultValue: 0.6f);
+            Scribe_Values.Look(ref TransparentInGroupSub, "TransparentInGroupSub", defaultValue: 0.3f);
             Scribe_Collections.Look(ref AutoAddLayersDefNames, "AutoAddLayersDefNames", LookMode.Value);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
@@ -49,6 +58,7 @@ namespace LayeredAtmosphereOrbit
                 }
             }
             //debug
+            Scribe_Values.Look(ref isOpenDebugFloatingIslandMapGen, "isOpenDebugFloatingIslandMapGen", defaultValue: false);
             Scribe_Values.Look(ref DebugFloatingIslandRadius, "DebugFloatingIslandRadius", defaultValue: 0.2f);
             Scribe_Values.Look(ref is1Scale, "is1Scale");
             Scribe_Values.Look(ref DebugFloatingIsland1Scale, "DebugFloatingIsland1Scale", 0.6499999761581421f);

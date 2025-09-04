@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PlanetLayerGroupDefOfLocal.cs" />
     <Compile Include="DefOfLocal.cs" />
     <Compile Include="GenStep\GenStep_Atmosphere.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandCollapsing.cs" />
@@ -50,7 +51,6 @@
     <Compile Include="AtmosphereMapParent.cs" />
     <Compile Include="PlanetLayerGroupDef.cs" />
     <Compile Include="SectionLayer_TerrainEdgesFloatingIslands.cs" />
-    <Compile Include="OrbitType.cs" />
     <Compile Include="LayeredAtmosphereOrbitDefModExtension.cs" />
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="LayeredAtmosphereOrbitUtility.cs" />

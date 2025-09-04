@@ -9,8 +9,8 @@ namespace LayeredAtmosphereOrbit
     {
         public bool isReplaceConnections = false;
         public bool isOptionToAutoAdd = false;
-        public OrbitType layerType = OrbitType.unknown;
         public float elevation = 200;
+        public PlanetLayerGroupDef planetLayerGroup;
         public List<PlanetLayerDef> forcedConnectToPlanetLayer = new List<PlanetLayerDef>();
     }
 }

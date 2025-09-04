@@ -13,7 +13,7 @@ namespace LayeredAtmosphereOrbit
 
         public SectionLayer_TerrainEdgesFloatingIslands(Section section) : base(section)
         {
-            isFloatingIslands = Map.Tile.Layer.Def.LayerOrbitType() == OrbitType.atmosphere;
+            isFloatingIslands = Map.Tile.Layer.Def.LayerGroup() == PlanetLayerGroupDefOfLocal.LAO_Atmosphere;
         }
 
         public override void Regenerate()

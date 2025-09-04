@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,28 +10,41 @@ namespace LayeredAtmosphereOrbit
 {
     public static class LayeredAtmosphereOrbitUtility
     {
-        public static List<ScenPart_PlanetLayer> planetLayersLAO
+        public static List<ScenPart_PlanetLayer> planetLayersLAO;
+        public static Dictionary<PlanetLayerGroupDef, List<PlanetLayerDef>> planetLayerGroups;
+
+        public static void ResetLayerData()
         {
-            get
+            planetLayerGroups = new Dictionary<PlanetLayerGroupDef, List<PlanetLayerDef>>();
+            List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
+            foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
             {
-                if (planetLayersLAOCached == null)
+                PlanetLayerGroupDef planetLayerGroupDef = planetLayerDef.LayerGroup();
+                if (planetLayerGroupDef != null)
                 {
-                    planetLayersLAOCached = new List<ScenPart_PlanetLayer>();
-                    foreach (string defName in LAOMod.Settings.AutoAddLayersDefNames)
+                    if (planetLayerGroups.TryGetValue(planetLayerGroupDef, out List<PlanetLayerDef> subPlanetLayers))
                     {
-                        ScenPart_PlanetLayerFixed scenPart_LAOPlanetLayer = new ScenPart_PlanetLayerFixed();
-                        scenPart_LAOPlanetLayer.def = DefDatabase<ScenPartDef>.GetNamed(defName);
-                        scenPart_LAOPlanetLayer.tag = defName;
-                        scenPart_LAOPlanetLayer.layer = DefDatabase<PlanetLayerDef>.GetNamed(defName);
-                        scenPart_LAOPlanetLayer.settingsDef = DefDatabase<PlanetLayerSettingsDef>.GetNamed(defName);
-                        scenPart_LAOPlanetLayer.hide = true;
-                        planetLayersLAOCached.Add(scenPart_LAOPlanetLayer);
+                        subPlanetLayers.Add(planetLayerDef);
+                    }
+                    else
+                    {
+                        planetLayerGroups.Add(planetLayerGroupDef, new List<PlanetLayerDef>() { planetLayerDef });
                     }
                 }
-                return planetLayersLAOCached;
+            }
+            Log.Message($"All layer groupds:\n{string.Join("\n", planetLayerGroups.SelectMany(x => x.Value.Select(y => $"- {x.Key.label} > {y.label}")))}");
+            planetLayersLAO = new List<ScenPart_PlanetLayer>();
+            foreach (string defName in LAOMod.Settings.AutoAddLayersDefNames)
+            {
+                ScenPart_PlanetLayerFixed scenPart_LAOPlanetLayer = new ScenPart_PlanetLayerFixed();
+                scenPart_LAOPlanetLayer.def = DefDatabase<ScenPartDef>.GetNamed(defName);
+                scenPart_LAOPlanetLayer.tag = defName;
+                scenPart_LAOPlanetLayer.layer = DefDatabase<PlanetLayerDef>.GetNamed(defName);
+                scenPart_LAOPlanetLayer.settingsDef = DefDatabase<PlanetLayerSettingsDef>.GetNamed(defName);
+                scenPart_LAOPlanetLayer.hide = true;
+                planetLayersLAO.Add(scenPart_LAOPlanetLayer);
             }
         }
-        public static List<ScenPart_PlanetLayer> planetLayersLAOCached;
 
         public static void TryAddPlanetLayerts(Scenario scenario)
         {
@@ -49,7 +63,7 @@ namespace LayeredAtmosphereOrbit
                 if (scenPart is ScenPart_PlanetLayer scenPart_PlanetLayer)
                 {
                     LayeredAtmosphereOrbitDefModExtension laoDefModExtension = scenPart_PlanetLayer.layer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
-                    if ((laoDefModExtension?.layerType ?? OrbitType.unknown) == OrbitType.unknown)
+                    if (laoDefModExtension?.planetLayerGroup == null)
                     {
                         Log.Error($"Planet Layer {scenPart_PlanetLayer?.layer?.defName ?? "---"} missing proper LayeredAtmosphereOrbitDefModExtension. Can continue playing without issues, but ask developer to add it with patch. Layer is from mod {scenPart_PlanetLayer?.layer?.modContentPack?.Name ?? "---"} [{scenPart_PlanetLayer?.layer?.modContentPack?.PackageId ?? "---"}].");
                     }
@@ -85,7 +99,7 @@ namespace LayeredAtmosphereOrbit
                     }
                 }
             }
-            List<(ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension)> planetLayersKnown = planetLayers.Where(sppl => (sppl.Item2?.layerType ?? OrbitType.unknown) > OrbitType.unknown).ToList();
+            List<(ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension)> planetLayersKnown = planetLayers.Where(sppl => sppl.Item2?.planetLayerGroup != null).ToList();
             for (int i = 1; i < planetLayersKnown.Count; i++)
             {
                 (ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension) spPlanetLayerFrom = planetLayersKnown[i - 1];
@@ -138,23 +152,41 @@ namespace LayeredAtmosphereOrbit
             return planetLayer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.elevation ?? 200;
         }
 
-        public static OrbitType LayerOrbitType(this PlanetLayerDef planetLayer)
+        public static PlanetLayerGroupDef LayerGroup(this PlanetLayerDef planetLayer)
         {
-            return planetLayer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.layerType ?? OrbitType.unknown;
+            return planetLayer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.planetLayerGroup ?? null;
+        }
+
+        public static bool ContainsLayer(this PlanetLayerGroupDef planetLayerGroup, PlanetLayerDef planetLayer)
+        {
+            if (planetLayerGroups.TryGetValue(planetLayerGroup, out List<PlanetLayerDef> subPlanetLayers))
+            {
+                return subPlanetLayers.Contains(planetLayer);
+            }
+            return false;
+        }
+
+        public static bool ContainsLayerSub(this PlanetLayerGroupDef planetLayerGroup, PlanetLayerDef planetLayer)
+        {
+            foreach (PlanetLayerGroupDef planetLayerGroupSub in planetLayerGroup.planetLayerGroupsToShowToo)
+            {
+                return planetLayerGroupSub.ContainsLayer(planetLayer);
+            }
+            return false;
         }
 
         public static float VisibleInBackgroundOfCurrentLayer(this PlanetLayerDef planetLayer)
         {
-            OrbitType currentOrbitType = Find.WorldSelector.SelectedLayer.Def.LayerOrbitType();
-            if (planetLayer.LayerOrbitType() == OrbitType.atmosphere)
+            PlanetLayerGroupDef planetLayerGroup = Find.WorldSelector.SelectedLayer.Def.LayerGroup();
+            if (planetLayerGroup != null)
             {
-                if (currentOrbitType == OrbitType.surface)
+                if (planetLayerGroup.ContainsLayer(planetLayer))
                 {
-                    return 0.3f;
+                    return LAOMod.Settings.TransparentInGroup;
                 }
-                else if (currentOrbitType == OrbitType.atmosphere)
+                else if (planetLayerGroup.ContainsLayerSub(planetLayer))
                 {
-                    return 0.6f;
+                    return LAOMod.Settings.TransparentInGroupSub;
                 }
             }
             return 0;

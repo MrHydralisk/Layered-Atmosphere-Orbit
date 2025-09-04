@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  
+	<LayeredAtmosphereOrbit.PlanetLayerGroupDef>
+		<defName>LAO_Surface</defName>
+		<label>surface</label>
+		<defaultPlanetLayer>Surface</defaultPlanetLayer>
+		<planetLayerGroupsToShowToo>
+			<li>LAO_Atmosphere</li>
+		</planetLayerGroupsToShowToo>
+	</LayeredAtmosphereOrbit.PlanetLayerGroupDef>
+  
+	<LayeredAtmosphereOrbit.PlanetLayerGroupDef>
+		<defName>LAO_Atmosphere</defName>
+		<label>atmosphere</label>
+		<defaultPlanetLayer>LAO_Troposphere</defaultPlanetLayer>
+	</LayeredAtmosphereOrbit.PlanetLayerGroupDef>
+  
+	<LayeredAtmosphereOrbit.PlanetLayerGroupDef>
+		<defName>LAO_Orbit</defName>
+		<label>orbit</label>
+		<defaultPlanetLayer>Orbit</defaultPlanetLayer>
+	</LayeredAtmosphereOrbit.PlanetLayerGroupDef>
+  
+</Defs>
