@@ -4,6 +4,7 @@
 	<LayeredAtmosphereOrbit.PlanetLayerGroupDef>
 		<defName>LAO_Surface</defName>
 		<label>surface</label>
+		<description>surface layer</description>
 		<defaultPlanetLayer>Surface</defaultPlanetLayer>
 		<planetLayerGroupsToShowToo>
 			<li>LAO_Atmosphere</li>
@@ -13,12 +14,14 @@
 	<LayeredAtmosphereOrbit.PlanetLayerGroupDef>
 		<defName>LAO_Atmosphere</defName>
 		<label>atmosphere</label>
+		<description>atmosphere layer</description>
 		<defaultPlanetLayer>LAO_Troposphere</defaultPlanetLayer>
 	</LayeredAtmosphereOrbit.PlanetLayerGroupDef>
   
 	<LayeredAtmosphereOrbit.PlanetLayerGroupDef>
 		<defName>LAO_Orbit</defName>
 		<label>orbit</label>
+		<description>orbit layer</description>
 		<defaultPlanetLayer>Orbit</defaultPlanetLayer>
 	</LayeredAtmosphereOrbit.PlanetLayerGroupDef>
   

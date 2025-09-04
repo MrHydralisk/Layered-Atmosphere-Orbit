@@ -79,7 +79,7 @@
 		<!-- <li>WorldDrawLayer_ClosestTile</li> -->
 		<!-- </worldDrawLayers> -->
 		<worldTabs Inherit="False">
-			<!-- <li>WITab_Orbit</li> -->
+			<li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li>
 			<li>WITab_Planet</li>
 		</worldTabs>
 	</PlanetLayerDef>
@@ -151,6 +151,10 @@
 				<planetLayerGroup>LAO_Orbit</planetLayerGroup>
 			</li>
 		</modExtensions>
+		<worldTabs Inherit="False">
+			<li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li>
+			<li>WITab_Planet</li>
+		</worldTabs>
 	</PlanetLayerDef>
   
 </Defs>
