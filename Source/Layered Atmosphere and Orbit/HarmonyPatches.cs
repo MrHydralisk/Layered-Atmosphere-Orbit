@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Verse;
 
 namespace LayeredAtmosphereOrbit
@@ -24,6 +23,10 @@ namespace LayeredAtmosphereOrbit
             LayeredAtmosphereOrbitUtility.ResetLayerData();
             InjectScenarios();
 
+            if (LAOMod.Settings.ReplaceAllViewLayerGizmo)
+            {
+                val.Patch(AccessTools.Method(typeof(WorldGrid).GetNestedTypes(AccessTools.all).First((Type t) => t.Name.Contains("<GetGizmos>d__103")), "MoveNext"), transpiler: new HarmonyMethod(patchType, "WG_GetGizmos_Transpiler"));
+            }
             val.Patch(AccessTools.Method(typeof(WorldGrid), "GetGizmos"), postfix: new HarmonyMethod(patchType, "WG_GetGizmos_Postfix"));
             if (LAOMod.Settings.ShowLayerInGroup)
             {
@@ -51,6 +54,20 @@ namespace LayeredAtmosphereOrbit
             {
                 LayeredAtmosphereOrbitUtility.TryAddPlanetLayerts(scenario);
             }
+        }
+
+        public static IEnumerable<CodeInstruction> WG_GetGizmos_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
+        {
+            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count - 1; i++)
+            {
+                if (codes[i].opcode == OpCodes.Callvirt && (codes[i].operand?.ToString().Contains("get_IsSelected") ?? false))
+                {
+                    codes[i] = new CodeInstruction(OpCodes.Pop);
+                    codes[i + 1].opcode = OpCodes.Br;
+                }
+            }
+            return codes.AsEnumerable();
         }
 
         public static void WG_GetGizmos_Postfix(ref IEnumerable<Gizmo> __result, WorldGrid __instance, Dictionary<int, PlanetLayer> ___planetLayers)
@@ -86,7 +103,7 @@ namespace LayeredAtmosphereOrbit
                         Find.WindowStack.Add(new FloatMenu(floatMenuOptions));
                     }
                 };
-                NGizmos.Insert(1, command_Action);
+                NGizmos.Insert(LAOMod.Settings.ReplaceAllViewLayerGizmo ? 0 : 1, command_Action);
             }
             __result = NGizmos;
         }

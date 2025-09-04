@@ -12,6 +12,7 @@ namespace LayeredAtmosphereOrbit
         public bool AutoSwapLayerOnSelection = true;
         public float TransparentInGroup = 0.6f;
         public float TransparentInGroupSub = 0.3f;
+        public bool ReplaceAllViewLayerGizmo = false;
         public List<string> AutoAddLayersDefNames = new List<string>();
         //debug
         public bool isOpenDebugFloatingIslandMapGen = false;
@@ -49,6 +50,7 @@ namespace LayeredAtmosphereOrbit
             Scribe_Values.Look(ref AutoSwapLayerOnSelection, "AutoSwapLayerOnSelection", defaultValue: true);
             Scribe_Values.Look(ref TransparentInGroup, "TransparentInGroup", defaultValue: 0.6f);
             Scribe_Values.Look(ref TransparentInGroupSub, "TransparentInGroupSub", defaultValue: 0.3f);
+            Scribe_Values.Look(ref ReplaceAllViewLayerGizmo, "ReplaceAllViewLayerGizmo", defaultValue: false);
             Scribe_Collections.Look(ref AutoAddLayersDefNames, "AutoAddLayersDefNames", LookMode.Value);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {

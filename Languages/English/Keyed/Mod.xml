@@ -10,6 +10,7 @@
 	<LayeredAtmosphereOrbit.Settings.AutoSwapLayerOnSelection>On world object selection not within current planet layer will automatically swap to that layer. (Useful for fast swap between layers in same planet layer group. Require game restart.)</LayeredAtmosphereOrbit.Settings.AutoSwapLayerOnSelection>
 	<LayeredAtmosphereOrbit.Settings.TransparentInGroup>Transparency of world objects in layer within same planet layer group {0}. (When above 50% allows to select world objects from same planet layer group. Default 60%. Vanilla 30%.)</LayeredAtmosphereOrbit.Settings.TransparentInGroup>
 	<LayeredAtmosphereOrbit.Settings.TransparentInGroupSub>Transparency of world objects in layer within similar planet layer group {0}. (For example, refer to value of floating islands, when surface layer selected. Default 30%.)</LayeredAtmosphereOrbit.Settings.TransparentInGroupSub>
+	<LayeredAtmosphereOrbit.Settings.ReplaceAllViewLayerGizmo>Remove vanilla buttons to view layers and keep only custom one. (Useful when have a lot of planet layers. Require game restart.)</LayeredAtmosphereOrbit.Settings.ReplaceAllViewLayerGizmo>
 	
 	<LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Total>Planet Layers that will be added: (Require game restart.)</LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Total>
 	<LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Option>- {0}</LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Option>
