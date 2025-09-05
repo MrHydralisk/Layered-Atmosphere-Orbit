@@ -4,9 +4,9 @@
 	<WorldObjectDef ParentName="GeneratedAsteroid" Name="Generated_LAO_FloatingIsland" Abstract="True">
 		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
 		<fullyExpandedInSpace>false</fullyExpandedInSpace>
-		<inspectorTabs>
-			<li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li>
-		</inspectorTabs>
+		<!-- <inspectorTabs> -->
+			<!-- <li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li> -->
+		<!-- </inspectorTabs> -->
 	</WorldObjectDef>
 
 	<!-- Atmosphere -->
@@ -60,9 +60,9 @@
 		<label>basic asteroid</label>
 		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
 		<mapGenerator>LAO_AsteroidPrecious</mapGenerator>
-		<inspectorTabs>
-			<li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li>
-		</inspectorTabs>
+		<!-- <inspectorTabs> -->
+			<!-- <li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li> -->
+		<!-- </inspectorTabs> -->
 	</WorldObjectDef>
 
 </Defs>

@@ -65,6 +65,13 @@
 					</value>
 				</match>
 			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/WorldObjectDef[@Name="StaticWorldObjectBase"]/inspectorTabs</xpath>
+				<order>Append</order>
+				<value>
+					<li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li>
+				</value>
+			</li>
 		</operations>
 	</Operation>
 

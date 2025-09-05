@@ -21,7 +21,9 @@ namespace LayeredAtmosphereOrbit
             Harmony val = new Harmony("rimworld.mrhydralisk.LayeredAtmosphereOrbit");
 
             LayeredAtmosphereOrbitUtility.ResetLayerData();
+            InjectPlanetLayersDefs();
             InjectScenarios();
+            InjectWorldObjectsDefs();
 
             if (LAOMod.Settings.ReplaceAllViewLayerGizmo)
             {
@@ -39,20 +41,44 @@ namespace LayeredAtmosphereOrbit
             }
         }
 
-        public static void InjectScenarios()
+        public static void InjectPlanetLayersDefs()
         {
             List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
             foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
             {
                 LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
-                if (laoDefModExtension?.isOptionToAutoAdd ?? false)
+                if (laoDefModExtension != null)
                 {
-                    LAOMod.AutoAddLayerOptions.Add(planetLayerDef);
+                    if (laoDefModExtension.isOptionToAutoAdd)
+                    {
+                        LAOMod.AutoAddLayerOptions.Add(planetLayerDef);
+                    }
+                    if (laoDefModExtension.planetLayerGroup != null)
+                    {
+                        planetLayerDef.cachedTabs.AddDistinct((WITab)Activator.CreateInstance(typeof(WITab_PlanetLayer)));
+                    }
                 }
             }
+        }
+
+        public static void InjectScenarios()
+        {
             foreach (Scenario scenario in ScenarioLister.AllScenarios())
             {
                 LayeredAtmosphereOrbitUtility.TryAddPlanetLayerts(scenario);
+            }
+        }
+
+        public static void InjectWorldObjectsDefs()
+        {
+            List<GeneratedLocationDef> AllGeneratedLocationDefs = DefDatabase<GeneratedLocationDef>.AllDefs.ToList();
+            foreach (GeneratedLocationDef generatedLocationDef in AllGeneratedLocationDefs)
+            {
+                if (generatedLocationDef.LayerDefs.Any((PlanetLayerDef pld) => pld.LayerGroup() != null))
+                {
+                    generatedLocationDef.worldObjectDef.inspectorTabsResolved.AddDistinct((InspectTabBase)Activator.CreateInstance(typeof(WITab_PlanetLayer)));
+                }
+
             }
         }
 

@@ -78,10 +78,10 @@
 		<!-- <worldDrawLayers> -->
 		<!-- <li>WorldDrawLayer_ClosestTile</li> -->
 		<!-- </worldDrawLayers> -->
-		<worldTabs Inherit="False">
-			<li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li>
-			<li>WITab_Planet</li>
-		</worldTabs>
+		<!-- <worldTabs Inherit="False"> -->
+			<!-- <li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li> -->
+			<!-- <li>WITab_Planet</li> -->
+		<!-- </worldTabs> -->
 	</PlanetLayerDef>
   
 	<PlanetLayerDef ParentName="LAO_LowOrbitLayer">
@@ -151,10 +151,10 @@
 				<planetLayerGroup>LAO_Orbit</planetLayerGroup>
 			</li>
 		</modExtensions>
-		<worldTabs Inherit="False">
-			<li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li>
-			<li>WITab_Planet</li>
-		</worldTabs>
+		<!-- <worldTabs Inherit="False"> -->
+			<!-- <li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li> -->
+			<!-- <li>WITab_Planet</li> -->
+		<!-- </worldTabs> -->
 	</PlanetLayerDef>
   
 </Defs>

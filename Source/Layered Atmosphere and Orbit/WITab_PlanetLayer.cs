@@ -40,49 +40,43 @@ namespace LayeredAtmosphereOrbit
             Rect outRect = new Rect(0f, 0f, WinSize.x, WinSize.y).ContractedBy(10f);
             Rect rect = new Rect(0f, 0f, outRect.width - 16f, Mathf.Max(lastDrawnHeight, outRect.height));
             Widgets.BeginScrollView(outRect, ref scrollPosition, rect);
-            Text.Font = GameFont.Medium;
-            Widgets.Label(rect, base.SelTile.PrimaryBiome.LabelCap);
-            Rect rect2 = rect;
-            rect2.yMin += 35f;
-            rect2.height = 99999f;
-            Text.Font = GameFont.Small;
+            Tile selTile = base.SelTile;
+            PlanetTile selPlanerTile = base.SelPlanetTile;
             Listing_Standard listing_Standard = new Listing_Standard();
             listing_Standard.verticalSpacing = 0f;
-            listing_Standard.Begin(rect2);
-            DrawScrollContents(listing_Standard, rect2);
-            listing_Standard.End();
-            Widgets.EndScrollView();
-        }
-
-        private void DrawScrollContents(Listing_Standard listing, Rect infoRect)
-        {
-            Tile selTile = base.SelTile;
-            listing.Label(selTile.PrimaryBiome.description);
-            listing.Gap(8f);
-            listing.GapLine();
-            if (!selTile.PrimaryBiome.implemented)
+            listing_Standard.Begin(rect);
+            PlanetLayerGroupDef planetLayerGroup = LAODefModExtension?.planetLayerGroup;
+            if (planetLayerGroup != null)
             {
-                listing.Label(string.Format("{0} {1}", selTile.PrimaryBiome.LabelCap, "BiomeNotImplemented".Translate()));
+                Text.Font = GameFont.Medium;
+                listing_Standard.Label(planetLayerGroup.LabelCap);
+                Text.Font = GameFont.Small;
+                listing_Standard.Label(planetLayerGroup.description);
+                listing_Standard.GapLine();
             }
-            ListOrbitalDetails(listing, selTile, base.SelPlanetTile);
-            listing.GapLine();
-            ListMiscDetails(listing, selTile, base.SelPlanetTile);
-            lastDrawnHeight = infoRect.y + listing.CurHeight;
-        }
-
-        private static void ListOrbitalDetails(Listing_Standard listing, Tile ws, PlanetTile tile)
-        {
-            listing.LabelDouble("Elevation".Translate(), ws.Layer.Def.elevationString.Formatted(ws.elevation.ToString("F0")));
-            listing.LabelDouble("AvgTemp".Translate(), GenTemperature.GetAverageTemperatureLabel(tile));
-        }
-
-        private static void ListMiscDetails(Listing_Standard listing, Tile ws, PlanetTile tile)
-        {
-            listing.LabelDouble("TimeZone".Translate(), GenDate.TimeZoneAt(Find.WorldGrid.LongLatOf(tile).x).ToStringWithSign());
+            if (selTile.PrimaryBiome != null)
+            {
+                Text.Font = GameFont.Medium;
+                listing_Standard.Label(selTile.PrimaryBiome.LabelCap);
+                Text.Font = GameFont.Small;
+                listing_Standard.Label(selTile.PrimaryBiome.description);
+                listing_Standard.GapLine();
+                if (!selTile.PrimaryBiome.implemented)
+                {
+                    listing_Standard.Label(string.Format("{0} {1}", selTile.PrimaryBiome.LabelCap, "BiomeNotImplemented".Translate()));
+                }
+            }
+            listing_Standard.LabelDouble("Elevation".Translate(), selTile.Layer.Def.elevationString.Formatted(selTile.elevation.ToString("F0")));
+            listing_Standard.LabelDouble("AvgTemp".Translate(), GenTemperature.GetAverageTemperatureLabel(selPlanerTile));
+            listing_Standard.GapLine();
+            listing_Standard.LabelDouble("TimeZone".Translate(), GenDate.TimeZoneAt(Find.WorldGrid.LongLatOf(selPlanerTile).x).ToStringWithSign());
             if (Prefs.DevMode)
             {
-                listing.LabelDouble("Debug world tile ID", tile.ToString());
+                listing_Standard.LabelDouble("Debug world tile ID", selPlanerTile.ToString());
             }
+            lastDrawnHeight = rect.y + listing_Standard.CurHeight;
+            listing_Standard.End();
+            Widgets.EndScrollView();
         }
     }
 }
