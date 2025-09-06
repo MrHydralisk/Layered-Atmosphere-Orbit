@@ -56,9 +56,9 @@ namespace LayeredAtmosphereOrbit
                     {
                         LAOMod.AutoAddLayerOptions.Add(planetLayerDef);
                     }
-                    if (laoDefModExtension.planetLayerGroup != null)
+                    if (laoDefModExtension.planetLayerGroup != null && !planetLayerDef.cachedTabs.Any((WITab wit) => wit is WITab_PlanetLayer))
                     {
-                        planetLayerDef.cachedTabs.AddDistinct((WITab)Activator.CreateInstance(typeof(WITab_PlanetLayer)));
+                        planetLayerDef.cachedTabs.Add((WITab)Activator.CreateInstance(typeof(WITab_PlanetLayer)));
                     }
                 }
             }
@@ -77,9 +77,9 @@ namespace LayeredAtmosphereOrbit
             List<GeneratedLocationDef> AllGeneratedLocationDefs = DefDatabase<GeneratedLocationDef>.AllDefs.ToList();
             foreach (GeneratedLocationDef generatedLocationDef in AllGeneratedLocationDefs)
             {
-                if (generatedLocationDef.LayerDefs.Any((PlanetLayerDef pld) => pld.LayerGroup() != null))
+                if (generatedLocationDef.LayerDefs.Any((PlanetLayerDef pld) => pld.LayerGroup() != null) && !generatedLocationDef.worldObjectDef.inspectorTabsResolved.Any((InspectTabBase itb) => itb is WITab_PlanetLayer))
                 {
-                    generatedLocationDef.worldObjectDef.inspectorTabsResolved.AddDistinct((InspectTabBase)Activator.CreateInstance(typeof(WITab_PlanetLayer)));
+                    generatedLocationDef.worldObjectDef.inspectorTabsResolved.Add((InspectTabBase)Activator.CreateInstance(typeof(WITab_PlanetLayer)));
                 }
 
             }
