@@ -67,10 +67,10 @@
 	</MapGeneratorDef>
 
 	<MapGeneratorDef ParentName="AtmosphereMapGenerator">
-		<defName>LAO_FloatingIslandGiantPlain</defName>
-		<label>giant floating island with plain</label>
+		<defName>LAO_FloatingIslandGiantFlat</defName>
+		<label>giant floating island with flat</label>
 		<genSteps>
-			<li>LAO_FloatingIslandGiantPlain</li>
+			<li>LAO_FloatingIslandGiantFlat</li>
       <li>RockChunks</li>
       <!-- <li>MutatorCriticalStructures</li> -->
       <!-- <li>MutatorNonCriticalStructures</li> -->

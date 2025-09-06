@@ -1,0 +1,45 @@
+﻿using RimWorld;
+using RimWorld.Planet;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+using Verse;
+using Verse.Noise;
+
+namespace LayeredAtmosphereOrbit
+{
+    public class FloatingIslandMapParent : AtmosphereMapParent
+    {
+        public PlanetTile parentPlanetTile = PlanetTile.Invalid;
+
+        public override void SpawnSetup()
+        {
+            base.SpawnSetup();
+            PlanetLayer SurfacePlanetLayer = Find.WorldGrid.PlanetLayers.Values.FirstOrDefault((PlanetLayer pl) => pl.Def == PlanetLayerDefOf.Surface);
+            LayeredAtmosphereOrbitDefModExtension laoDefModExtension = def.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+            List<BiomeDef> biomeDefs = laoDefModExtension.availableBiomes;
+            if (biomeDefs.NullOrEmpty())
+            {
+                biomeDefs = new List<BiomeDef> { BiomeDefOf.TemperateForest, BiomeDefOf.BorealForest, BiomeDefOf.TropicalRainforest };
+            }
+            if (SurfacePlanetLayer != null && laoDefModExtension != null && GenWorldClosest.TryFindClosestTile(SurfacePlanetLayer[Tile].tile, (PlanetTile x) => biomeDefs.Contains(x.Tile.PrimaryBiome), out PlanetTile foundTile))
+            {
+                parentPlanetTile = foundTile;
+                Tile.Tile.PrimaryBiome = parentPlanetTile.Tile.PrimaryBiome;
+                Tile.Tile.elevation = parentPlanetTile.Tile.elevation;
+                Tile.Tile.hilliness = parentPlanetTile.Tile.hilliness;
+                Tile.Tile.rainfall = parentPlanetTile.Tile.rainfall;
+                Tile.Tile.feature = parentPlanetTile.Tile.feature;
+            }
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref parentPlanetTile, "parentPlanetTile");
+        }
+    }
+}
+

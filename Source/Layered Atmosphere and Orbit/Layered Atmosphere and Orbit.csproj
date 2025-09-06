@@ -37,19 +37,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MapParent\FloatingIslandMapParent.cs" />
     <Compile Include="WITab_PlanetLayer.cs" />
     <Compile Include="PlanetLayerGroupDefOfLocal.cs" />
     <Compile Include="DefOfLocal.cs" />
     <Compile Include="GenStep\GenStep_Atmosphere.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandCollapsing.cs" />
-    <Compile Include="GenStep\GenStep_FloatingIslandGiantPlain.cs" />
+    <Compile Include="GenStep\GenStep_FloatingIslandGiantFlat.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandGiant.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandDebug.cs" />
     <Compile Include="LAOMod.cs" />
     <Compile Include="GameComponent_LayeredAtmosphereOrbit.cs" />
     <Compile Include="LAOSettings.cs" />
     <Compile Include="GenStep\GenStep_FloatingIsland.cs" />
-    <Compile Include="AtmosphereMapParent.cs" />
+    <Compile Include="MapParent\AtmosphereMapParent.cs" />
     <Compile Include="PlanetLayerGroupDef.cs" />
     <Compile Include="SectionLayer_TerrainEdgesFloatingIslands.cs" />
     <Compile Include="LayeredAtmosphereOrbitDefModExtension.cs" />

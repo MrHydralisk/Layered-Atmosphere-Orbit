@@ -19,8 +19,8 @@
   </GeneratedLocationDef>
   
   <GeneratedLocationDef>
-    <defName>LAO_FloatingIslandGiantPlain</defName>
-    <worldObjectDef>LAO_FloatingIslandGiantPlain</worldObjectDef>
+    <defName>LAO_FloatingIslandGiantFlat</defName>
+    <worldObjectDef>LAO_FloatingIslandGiantFlat</worldObjectDef>
     <layerDefs>
       <li>LAO_Troposphere</li>
     </layerDefs>

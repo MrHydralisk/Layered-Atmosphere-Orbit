@@ -2,11 +2,33 @@
 <Defs>
   
 	<WorldObjectDef ParentName="GeneratedAsteroid" Name="Generated_LAO_FloatingIsland" Abstract="True">
+		<worldObjectClass>LayeredAtmosphereOrbit.FloatingIslandMapParent</worldObjectClass>
 		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
 		<fullyExpandedInSpace>false</fullyExpandedInSpace>
 		<!-- <inspectorTabs> -->
 			<!-- <li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li> -->
 		<!-- </inspectorTabs> -->
+		<modExtensions>
+			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<availableBiomes>
+					<li>BorealForest</li>
+					<li>Tundra</li>
+					<li>ColdBog</li>
+					<li>IceSheet</li>
+					<li>SeaIce</li>
+					<li>TemperateForest</li>
+					<li>TemperateSwamp</li>
+					<li>TropicalRainforest</li>
+					<li>TropicalSwamp</li>
+					<li>AridShrubland</li>
+					<li>Desert</li>
+					<li>ExtremeDesert</li>
+					<li MayRequire="Ludeon.RimWorld.Odyssey">GlacialPlain</li>
+					<li MayRequire="Ludeon.RimWorld.Odyssey">Grasslands</li>
+					<li MayRequire="Ludeon.RimWorld.Odyssey">Scarlands</li>
+				</availableBiomes>
+			</li>
+		</modExtensions>
 	</WorldObjectDef>
 
 	<!-- Atmosphere -->
@@ -33,10 +55,10 @@
 	</WorldObjectDef>
 
 	<WorldObjectDef ParentName="Generated_LAO_FloatingIsland">
-		<defName>LAO_FloatingIslandGiantPlain</defName>
-		<label>giant floating island plain</label>
+		<defName>LAO_FloatingIslandGiantFlat</defName>
+		<label>giant floating island flat</label>
 		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
-		<mapGenerator>LAO_FloatingIslandGiantPlain</mapGenerator>
+		<mapGenerator>LAO_FloatingIslandGiantFlat</mapGenerator>
 	</WorldObjectDef>
 
 	<WorldObjectDef ParentName="Generated_LAO_FloatingIsland">

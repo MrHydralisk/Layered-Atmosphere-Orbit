@@ -48,9 +48,9 @@
 	</GenStepDef>
 
 	<GenStepDef>
-		<defName>LAO_FloatingIslandGiantPlain</defName>
+		<defName>LAO_FloatingIslandGiantFlat</defName>
 		<order>200</order>
-		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandGiantPlain">
+		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandGiantFlat">
 			<Radius>0.28</Radius>
 			<numChunks>6~10</numChunks>
 			<ruinsChance>0.2</ruinsChance>

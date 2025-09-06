@@ -12,7 +12,7 @@ using System.Reflection;
 
 namespace LayeredAtmosphereOrbit
 {
-    public class GenStep_FloatingIslandGiantPlain : GenStep_FloatingIslandGiant
+    public class GenStep_FloatingIslandGiantFlat : GenStep_FloatingIslandGiant
     {
         public override float WallThreshold => 0.95f;
         public FloatRange SoilThreshold = new FloatRange (0.6f, 0.92f);

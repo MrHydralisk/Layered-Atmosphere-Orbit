@@ -73,6 +73,7 @@ namespace LayeredAtmosphereOrbit
             listing_Standard.LabelDouble("TimeZone".Translate(), GenDate.TimeZoneAt(Find.WorldGrid.LongLatOf(selPlanerTile).x).ToStringWithSign());
             if (Prefs.DevMode)
             {
+                listing_Standard.LabelDouble("Debug world object def name", SelObject?.def.defName.ToStringSafe());
                 listing_Standard.LabelDouble("Debug world tile ID", selPlanerTile.ToString());
             }
             lastDrawnHeight = rect.y + listing_Standard.CurHeight;
