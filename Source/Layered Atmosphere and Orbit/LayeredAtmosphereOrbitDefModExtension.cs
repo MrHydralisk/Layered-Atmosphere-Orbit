@@ -10,6 +10,7 @@ namespace LayeredAtmosphereOrbit
         public bool isReplaceConnections = false;
         public bool isOptionToAutoAdd = false;
         public float elevation = 200;
+        public float tempOffest = 0;
         public PlanetLayerGroupDef planetLayerGroup;
         public List<PlanetLayerDef> forcedConnectToPlanetLayer = new List<PlanetLayerDef>();
     }

@@ -32,7 +32,7 @@ namespace LayeredAtmosphereOrbit
                     }
                 }
             }
-            Log.Message($"All layer groupds:\n{string.Join("\n", planetLayerGroups.SelectMany(x => x.Value.Select(y => $"- {x.Key.label} > {y.label}")))}");
+            //Log.Message($"All layer groupds:\n{string.Join("\n", planetLayerGroups.SelectMany(x => x.Value.Select(y => $"- {x.Key.label} > {y.label}")))}");
             planetLayersLAO = new List<ScenPart_PlanetLayer>();
             foreach (string defName in LAOMod.Settings.AutoAddLayersDefNames)
             {

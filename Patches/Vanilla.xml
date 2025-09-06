@@ -43,6 +43,7 @@
 						<modExtensions>
 							<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 								<elevation>200</elevation>
+								<tempOffest>-95</tempOffest>
 								<planetLayerGroup>LAO_Orbit</planetLayerGroup>
 								<forcedConnectToPlanetLayer>
 									<li>Surface</li>
@@ -57,6 +58,7 @@
 					<value>
 						<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 							<elevation>200</elevation>
+							<tempOffest>-95</tempOffest>
 							<planetLayerGroup>LAO_Orbit</planetLayerGroup>
 							<forcedConnectToPlanetLayer>
 								<li>Surface</li>

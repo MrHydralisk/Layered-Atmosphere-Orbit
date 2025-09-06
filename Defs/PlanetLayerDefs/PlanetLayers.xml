@@ -96,6 +96,7 @@
 				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<elevation>20</elevation>
+				<tempOffest>-10</tempOffest>
 				<planetLayerGroup>LAO_Atmosphere</planetLayerGroup>
 			</li>
 		</modExtensions>
@@ -113,6 +114,7 @@
 				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<elevation>50</elevation>
+				<tempOffest>-20</tempOffest>
 				<planetLayerGroup>LAO_Atmosphere</planetLayerGroup>
 			</li>
 		</modExtensions>
@@ -130,6 +132,7 @@
 				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<elevation>80</elevation>
+				<tempOffest>-40</tempOffest>
 				<planetLayerGroup>LAO_Atmosphere</planetLayerGroup>
 			</li>
 		</modExtensions>
@@ -148,6 +151,7 @@
 				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<elevation>500</elevation>
+				<tempOffest>-95</tempOffest>
 				<planetLayerGroup>LAO_Orbit</planetLayerGroup>
 			</li>
 		</modExtensions>

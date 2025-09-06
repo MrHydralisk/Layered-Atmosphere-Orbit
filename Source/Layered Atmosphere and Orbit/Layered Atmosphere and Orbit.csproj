@@ -78,6 +78,7 @@
     <Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.GenerateRuins" />
     <Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.GenerateArcheanTree" />
     <Publicize Include="Assembly-CSharp:RimWorld.PlanetLayerDef.cachedTabs" />
+    <Publicize Include="Assembly-CSharp" MemberPattern="^RimWorld\.Planet\.TileTemperaturesComp*" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
