@@ -56,6 +56,7 @@ namespace LayeredAtmosphereOrbit
                 }
                 map.OrbitalDebris = OrbitalDebrisDefOf.Asteroid;
             }
+            map.regionAndRoomUpdater.Enabled = true;
         }
 
         protected virtual void SpawnFloatingIsland(Map map)

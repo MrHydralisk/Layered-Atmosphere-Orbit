@@ -19,12 +19,7 @@ namespace LayeredAtmosphereOrbit
             base.SpawnSetup();
             PlanetLayer SurfacePlanetLayer = Find.WorldGrid.PlanetLayers.Values.FirstOrDefault((PlanetLayer pl) => pl.Def == PlanetLayerDefOf.Surface);
             LayeredAtmosphereOrbitDefModExtension laoDefModExtension = def.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
-            List<BiomeDef> biomeDefs = laoDefModExtension.availableBiomes;
-            if (biomeDefs.NullOrEmpty())
-            {
-                biomeDefs = new List<BiomeDef> { BiomeDefOf.TemperateForest, BiomeDefOf.BorealForest, BiomeDefOf.TropicalRainforest };
-            }
-            if (SurfacePlanetLayer != null && laoDefModExtension != null && GenWorldClosest.TryFindClosestTile(SurfacePlanetLayer[Tile].tile, (PlanetTile x) => biomeDefs.Contains(x.Tile.PrimaryBiome), out PlanetTile foundTile))
+            if (SurfacePlanetLayer != null && laoDefModExtension != null && !laoDefModExtension.availableBiomes.NullOrEmpty() && GenWorldClosest.TryFindClosestTile(SurfacePlanetLayer[Tile].tile, (PlanetTile x) => laoDefModExtension.availableBiomes.Contains(x.Tile.PrimaryBiome), out PlanetTile foundTile))
             {
                 parentPlanetTile = foundTile;
                 Tile.Tile.PrimaryBiome = parentPlanetTile.Tile.PrimaryBiome;

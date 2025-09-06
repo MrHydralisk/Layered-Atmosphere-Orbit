@@ -13,6 +13,6 @@ namespace LayeredAtmosphereOrbit
         public float tempOffest = 0;
         public PlanetLayerGroupDef planetLayerGroup;
         public List<PlanetLayerDef> forcedConnectToPlanetLayer = new List<PlanetLayerDef>();
-        public List<BiomeDef> availableBiomes = new List<BiomeDef>() { BiomeDefOf.TemperateForest};
+        public List<BiomeDef> availableBiomes = new List<BiomeDef>();
     }
 }

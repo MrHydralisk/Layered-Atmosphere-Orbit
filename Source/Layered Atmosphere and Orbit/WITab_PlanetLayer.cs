@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using RimWorld.Planet;
+using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 using Verse;
@@ -74,6 +75,26 @@ namespace LayeredAtmosphereOrbit
             if (Prefs.DevMode)
             {
                 listing_Standard.LabelDouble("Debug world object def name", SelObject?.def.defName.ToStringSafe());
+                LayeredAtmosphereOrbitDefModExtension LAOObjectDefModExtension = SelObject?.def.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+                if (LAOObjectDefModExtension?.availableBiomes.NullOrEmpty() ?? true)
+                {
+                    listing_Standard.LabelDouble("Debug biome", $"{selTile.PrimaryBiome.LabelCap} [{selTile.PrimaryBiome.defName}]");
+                }
+                else
+                {
+                    if (listing_Standard.ButtonText($"Debug biome {selTile.PrimaryBiome.LabelCap} [{selTile.PrimaryBiome.defName}]"))
+                    {
+                        List<FloatMenuOption> floatMenuOptions = new List<FloatMenuOption>();
+                        foreach (BiomeDef biomeDef in LAOObjectDefModExtension.availableBiomes)
+                        {
+                            floatMenuOptions.Add(new FloatMenuOption($"{biomeDef.LabelCap} [{biomeDef.defName}]", delegate
+                            {
+                                selTile.PrimaryBiome = biomeDef;
+                            }));
+                        }
+                        Find.WindowStack.Add(new FloatMenu(floatMenuOptions));
+                    }
+                }
                 listing_Standard.LabelDouble("Debug world tile ID", selPlanerTile.ToString());
             }
             lastDrawnHeight = rect.y + listing_Standard.CurHeight;
