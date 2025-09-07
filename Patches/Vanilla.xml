@@ -74,6 +74,16 @@
 					<li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li>
 				</value>
 			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/PawnsArrivalModeDef[defName="EdgeDrop" or defName="EdgeDropGroups" or defName="CenterDrop" or defName="RandomDrop" or defName="MechClusterDrop" or defName="SpecificDropDebug"]/layerWhitelist</xpath>
+				<order>Append</order>
+				<value>
+					<li>LAO_Troposphere</li>
+					<li>LAO_Stratosphere</li>
+					<li>LAO_Mesosphere</li>
+					<li>LAO_HighOrbit</li>
+				</value>
+			</li>
 		</operations>
 	</Operation>
 
