@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using RimWorld.Planet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -46,6 +47,8 @@ namespace LayeredAtmosphereOrbit
 
         public float FloorThreshold = 0.5f;
         public float WallThreshold = 0.7f;
+
+        public float radiuPercToStartFlood = 0.05f;
 
         public FloatRange SoilThreshold = FloatRange.Zero;
 
@@ -110,10 +113,27 @@ namespace LayeredAtmosphereOrbit
                     }
                 }
                 HashSet<IntVec3> mainIsland = new HashSet<IntVec3>();
-                map.floodFiller.FloodFill(map.Center, (IntVec3 x) => x.GetTerrain(map) != DefOfLocal.LAO_Air, delegate (IntVec3 x)
+                float radius = map.Size.x * radiuPercToStartFlood;
+                List<IntVec3> centerArea = new CellRect(Mathf.RoundToInt(map.Center.x - radius), Mathf.RoundToInt(map.Center.z - radius), Mathf.RoundToInt(radius * 2), Mathf.RoundToInt(radius * 2)).Where((IntVec3 x) => map.Center.DistanceTo(x) <= radius && x.GetTerrain(map) != DefOfLocal.LAO_Air).ToList();
+                int iteration = 0;
+                while (!centerArea.NullOrEmpty() && iteration < 1000)
                 {
-                    mainIsland.Add(x);
-                });
+                    iteration++;
+                    IntVec3 startingTile = centerArea.First();
+                    map.floodFiller.FloodFill(startingTile, (IntVec3 x) => x.GetTerrain(map) != DefOfLocal.LAO_Air, delegate (IntVec3 x)
+                    {
+                        mainIsland.Add(x);
+                        int index = centerArea.IndexOf(x);
+                        if (index > -1)
+                        {
+                            centerArea.RemoveAt(index);
+                        }
+                    });
+                }
+                if (iteration >= 1000)
+                {
+                    Log.Warning("Exceeded iteration limit during SpawnFloatingIsland");
+                }
                 foreach (IntVec3 allCell2 in map.AllCells)
                 {
                     if (mainIsland.Contains(allCell2))

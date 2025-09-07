@@ -115,8 +115,9 @@
 		<order>200</order>
 		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandCollapsing">
 			<Radius>0.3</Radius>
+			<radiuPercToStartFlood>0.4</radiuPercToStartFlood>
 			<WallThreshold>1</WallThreshold>
-			<numChunks>6~10</numChunks>
+			<numChunks>30~45</numChunks>
 			<ruinsChance>0.2</ruinsChance>
 			<archeanTreeChance>0.4</archeanTreeChance>
 			<mineableCounts>
