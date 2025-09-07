@@ -28,7 +28,7 @@ namespace LayeredAtmosphereOrbit
                     float fertility = MapGenerator.Fertility[allCell];
                     if (num > FloorThreshold)
                     {
-                        TerrainDef terrainDef = ThingDefOf.Slate.building.naturalTerrain;
+                        TerrainDef terrainDef = rockDef.building.naturalTerrain;
                         if (SoilThreshold.Includes(num) && GenAdjFast.AdjacentCells8Way(allCell).All((IntVec3 adjCell) => MapGenerator.Elevation[adjCell] > FloorThreshold))
                         {
                             terrainDef = TerrainThreshold.TerrainAtValue(map.Biome.terrainsByFertility, fertility);
@@ -37,7 +37,7 @@ namespace LayeredAtmosphereOrbit
                     }
                     if (num > WallThreshold && num2 == 0f)
                     {
-                        GenSpawn.Spawn(ThingDefOf.Slate, allCell, map);
+                        GenSpawn.Spawn(rockDef, allCell, map);
                     }
                     if (num > WallThreshold)
                     {

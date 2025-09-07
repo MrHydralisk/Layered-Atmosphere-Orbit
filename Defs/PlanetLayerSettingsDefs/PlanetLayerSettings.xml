@@ -19,10 +19,9 @@
     <label>troposphere</label>
     <settings>
       <radius>103</radius>
-      <!-- <subdivisions>10</subdivisions> -->
-      <!-- <extraCameraAltitude>30</extraCameraAltitude> -->
-      <!-- <backgroundWorldCameraOffset>16</backgroundWorldCameraOffset> -->
-      <!-- <backgroundWorldCameraParallaxDistancePer100Cells>0.25</backgroundWorldCameraParallaxDistancePer100Cells> -->
+      <extraCameraAltitude>30</extraCameraAltitude>
+      <backgroundWorldCameraOffset>16</backgroundWorldCameraOffset>
+      <backgroundWorldCameraParallaxDistancePer100Cells>0.25</backgroundWorldCameraParallaxDistancePer100Cells>
       <!-- <useSurfaceViewAngle>true</useSurfaceViewAngle> -->
     </settings>
   </PlanetLayerSettingsDef>
@@ -32,10 +31,9 @@
     <label>stratosphere</label>
     <settings>
       <radius>107.5</radius>
-      <!-- <subdivisions>9</subdivisions> -->
-      <!-- <extraCameraAltitude>75</extraCameraAltitude> -->
-      <!-- <backgroundWorldCameraOffset>40</backgroundWorldCameraOffset> -->
-      <!-- <backgroundWorldCameraParallaxDistancePer100Cells>0.655</backgroundWorldCameraParallaxDistancePer100Cells> -->
+      <extraCameraAltitude>75</extraCameraAltitude>
+      <backgroundWorldCameraOffset>40</backgroundWorldCameraOffset>
+      <backgroundWorldCameraParallaxDistancePer100Cells>0.655</backgroundWorldCameraParallaxDistancePer100Cells>
       <!-- <useSurfaceViewAngle>true</useSurfaceViewAngle> -->
     </settings>
   </PlanetLayerSettingsDef>
@@ -45,10 +43,9 @@
     <label>mesosphere</label>
     <settings>
       <radius>112</radius>
-      <!-- <subdivisions>8</subdivisions> -->
-      <!-- <extraCameraAltitude>120</extraCameraAltitude> -->
-      <!-- <backgroundWorldCameraOffset>64</backgroundWorldCameraOffset> -->
-      <!-- <backgroundWorldCameraParallaxDistancePer100Cells>1</backgroundWorldCameraParallaxDistancePer100Cells> -->
+      <extraCameraAltitude>120</extraCameraAltitude>
+      <backgroundWorldCameraOffset>64</backgroundWorldCameraOffset>
+      <backgroundWorldCameraParallaxDistancePer100Cells>1</backgroundWorldCameraParallaxDistancePer100Cells>
       <!-- <useSurfaceViewAngle>true</useSurfaceViewAngle> -->
     </settings>
   </PlanetLayerSettingsDef>
@@ -58,10 +55,9 @@
     <label>high orbit</label>
     <settings>
       <radius>175</radius>
-      <!-- <subdivisions>2</subdivisions> -->
-      <!-- <extraCameraAltitude>750</extraCameraAltitude> -->
-      <!-- <backgroundWorldCameraOffset>400</backgroundWorldCameraOffset> -->
-      <!-- <backgroundWorldCameraParallaxDistancePer100Cells>6.25</backgroundWorldCameraParallaxDistancePer100Cells> -->
+      <extraCameraAltitude>750</extraCameraAltitude>
+      <backgroundWorldCameraOffset>400</backgroundWorldCameraOffset>
+      <backgroundWorldCameraParallaxDistancePer100Cells>6.25</backgroundWorldCameraParallaxDistancePer100Cells>
       <!-- <useSurfaceViewAngle>true</useSurfaceViewAngle> -->
     </settings>
   </PlanetLayerSettingsDef>

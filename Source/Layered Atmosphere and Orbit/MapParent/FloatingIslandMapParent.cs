@@ -23,7 +23,6 @@ namespace LayeredAtmosphereOrbit
             {
                 parentPlanetTile = foundTile;
                 Tile.Tile.PrimaryBiome = parentPlanetTile.Tile.PrimaryBiome;
-                Tile.Tile.elevation = parentPlanetTile.Tile.elevation;
                 Tile.Tile.hilliness = parentPlanetTile.Tile.hilliness;
                 Tile.Tile.rainfall = parentPlanetTile.Tile.rainfall;
                 Tile.Tile.feature = parentPlanetTile.Tile.feature;

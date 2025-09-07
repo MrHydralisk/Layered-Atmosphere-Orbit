@@ -38,10 +38,13 @@ namespace LayeredAtmosphereOrbit
 
         public float Radius;
 
+        public ThingDef rockDef;
+
         public override void Generate(Map map, GenStepParams parms)
         {
             if (ModLister.OdysseyInstalled)
             {
+                rockDef = Find.World.NaturalRockTypesIn(map.Tile).RandomElement();
                 GenerateAsteroidElevation(map, parms);
                 GenerateCaveElevation(map, parms);
                 SpawnFloatingIsland(map);
@@ -69,11 +72,11 @@ namespace LayeredAtmosphereOrbit
                     float num2 = MapGenerator.Caves[allCell];
                     if (num > FloorThreshold)
                     {
-                        map.terrainGrid.SetTerrain(allCell, ThingDefOf.Slate.building.naturalTerrain);
+                        map.terrainGrid.SetTerrain(allCell, rockDef.building.naturalTerrain);
                     }
                     if (num > WallThreshold && num2 == 0f)
                     {
-                        GenSpawn.Spawn(ThingDefOf.Slate, allCell, map);
+                        GenSpawn.Spawn(rockDef, allCell, map);
                     }
                     if (num > WallThreshold)
                     {
