@@ -5,9 +5,6 @@
 		<worldObjectClass>LayeredAtmosphereOrbit.FloatingIslandMapParent</worldObjectClass>
 		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
 		<fullyExpandedInSpace>false</fullyExpandedInSpace>
-		<!-- <inspectorTabs> -->
-			<!-- <li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li> -->
-		<!-- </inspectorTabs> -->
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<availableBiomes>
@@ -41,17 +38,11 @@
 	</WorldObjectDef>
 
 	<WorldObjectDef ParentName="Generated_LAO_FloatingIsland">
-		<defName>LAO_FloatingIsland</defName>
-		<label>floating island</label>
-		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
-		<mapGenerator>LAO_FloatingIsland</mapGenerator>
-	</WorldObjectDef>
-
-	<WorldObjectDef ParentName="Generated_LAO_FloatingIsland">
 		<defName>LAO_FloatingIslandGiant</defName>
 		<label>giant floating island</label>
 		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
 		<mapGenerator>LAO_FloatingIslandGiant</mapGenerator>
+		<overrideMapSize>(350,1,350)</overrideMapSize>
 	</WorldObjectDef>
 
 	<WorldObjectDef ParentName="Generated_LAO_FloatingIsland">
@@ -59,7 +50,26 @@
 		<label>giant floating island flat</label>
 		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
 		<mapGenerator>LAO_FloatingIslandGiantFlat</mapGenerator>
+		<overrideMapSize>(350,1,350)</overrideMapSize>
 	</WorldObjectDef>
+	
+	
+
+	<WorldObjectDef ParentName="Generated_LAO_FloatingIsland">
+		<defName>LAO_FloatingIsland</defName>
+		<label>floating island</label>
+		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
+		<mapGenerator>LAO_FloatingIsland</mapGenerator>
+	</WorldObjectDef>
+
+	<WorldObjectDef ParentName="Generated_LAO_FloatingIsland">
+		<defName>LAO_FloatingIslandFlat</defName>
+		<label>floating island</label>
+		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
+		<mapGenerator>LAO_FloatingIslandFlat</mapGenerator>
+	</WorldObjectDef>
+	
+	
 
 	<WorldObjectDef ParentName="Generated_LAO_FloatingIsland">
 		<defName>LAO_FloatingIslandCollapsing</defName>
@@ -82,9 +92,7 @@
 		<label>basic asteroid</label>
 		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
 		<mapGenerator>LAO_AsteroidPrecious</mapGenerator>
-		<!-- <inspectorTabs> -->
-			<!-- <li>LayeredAtmosphereOrbit.WITab_PlanetLayer</li> -->
-		<!-- </inspectorTabs> -->
+		<overrideMapSize>(350,1,350)</overrideMapSize>
 	</WorldObjectDef>
 
 </Defs>

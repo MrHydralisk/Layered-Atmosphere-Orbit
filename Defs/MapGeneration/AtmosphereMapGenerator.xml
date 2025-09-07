@@ -21,14 +21,50 @@
 		<label>floating island</label>
 		<genSteps>
 			<li>LAO_FloatingIsland</li>
-			<li>AsteroidBasicTransportPods</li>
+			<li>RockChunks</li>
+			<li>ScatterRuinsSimple</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientUtilityBuilding</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">MechanoidRemains</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientTurret</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientMechs</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientLandingPad</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientFences</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientPipelineSection</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
+			<li>CaveHives</li>
+			<li>Snow</li>
 			<li>AncientMiningCharge_Asteroid</li>
 			<li>AncientExplosivesCrate_Asteroid</li>
 			<li>AncientDrillPlatform_Asteroid</li>
 			<li>AncientTuneller_Asteroid</li>
-			<li>MechShipChunk_Asteroid</li>
+		</genSteps>
+	</MapGeneratorDef>
+
+	<MapGeneratorDef ParentName="AtmosphereMapGenerator">
+		<defName>LAO_FloatingIslandFlat</defName>
+		<label>floating island flat</label>
+		<genSteps>
+			<li>LAO_FloatingIslandFlat</li>
 			<li>RockChunks</li>
-			<li>CaveHives</li>
+			<li>ScatterRuinsSimple</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientUtilityBuilding</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">MechanoidRemains</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientTurret</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientMechs</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientLandingPad</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientFences</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientPipelineSection</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
+			<li>Plants</li>
+			<li>Snow</li>
 		</genSteps>
 	</MapGeneratorDef>
 
@@ -37,32 +73,26 @@
 		<label>giant floating island</label>
 		<genSteps>
 			<li>LAO_FloatingIslandGiant</li>
-      <li>RockChunks</li>
-      <!-- <li>MutatorCriticalStructures</li> -->
-      <!-- <li>MutatorNonCriticalStructures</li> -->
-      <li>ScatterRuinsSimple</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientUtilityBuilding</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">MechanoidRemains</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientTurret</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientMechs</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientLandingPad</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientFences</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientPipelineSection</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
-      <li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
-      <li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
-      <li>CaveHives</li>
-      <!-- <li>Plants</li> -->
-      <li>Snow</li>
-      <!-- <li>MutatorFinal</li> -->
-      <!-- <li>Animals</li> -->
-			<!-- <li>AsteroidBasicTransportPods</li> -->
-			<!-- <li>AncientMiningCharge_Asteroid</li> -->
-			<!-- <li>AncientExplosivesCrate_Asteroid</li> -->
-			<!-- <li>AncientDrillPlatform_Asteroid</li> -->
-			<!-- <li>AncientTuneller_Asteroid</li> -->
+			<li>RockChunks</li>
+			<li>ScatterRuinsSimple</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientUtilityBuilding</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">MechanoidRemains</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientTurret</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientMechs</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientLandingPad</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientFences</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientPipelineSection</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
+			<li>CaveHives</li>
+			<li>Snow</li>
+			<li>AncientMiningCharge_Asteroid</li>
+			<li>AncientExplosivesCrate_Asteroid</li>
+			<li>AncientDrillPlatform_Asteroid</li>
+			<li>AncientTuneller_Asteroid</li>
 		</genSteps>
 	</MapGeneratorDef>
 
@@ -71,31 +101,22 @@
 		<label>giant floating island with flat</label>
 		<genSteps>
 			<li>LAO_FloatingIslandGiantFlat</li>
-      <li>RockChunks</li>
-      <!-- <li>MutatorCriticalStructures</li> -->
-      <!-- <li>MutatorNonCriticalStructures</li> -->
-      <li>ScatterRuinsSimple</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientUtilityBuilding</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">MechanoidRemains</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientTurret</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientMechs</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientLandingPad</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientFences</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientPipelineSection</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
-      <li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
-      <li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
-      <li>Plants</li>
-      <li>Snow</li>
-      <!-- <li>MutatorFinal</li> -->
-      <!-- <li>Animals</li> -->
-			<!-- <li>AsteroidBasicTransportPods</li> -->
-			<!-- <li>AncientMiningCharge_Asteroid</li> -->
-			<!-- <li>AncientExplosivesCrate_Asteroid</li> -->
-			<!-- <li>AncientDrillPlatform_Asteroid</li> -->
-			<!-- <li>AncientTuneller_Asteroid</li> -->
+			<li>RockChunks</li>
+			<li>ScatterRuinsSimple</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientUtilityBuilding</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">MechanoidRemains</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientTurret</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientMechs</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientLandingPad</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientFences</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientPipelineSection</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
+			<li>Plants</li>
+			<li>Snow</li>
 		</genSteps>
 	</MapGeneratorDef>
 
@@ -104,30 +125,25 @@
 		<label>collapsing floating island</label>
 		<genSteps>
 			<li>LAO_FloatingIslandCollapsing</li>
-      <li>RockChunks</li>
-      <li>MutatorCriticalStructures</li>
-      <li>MutatorNonCriticalStructures</li>
-      <li>ScatterRuinsSimple</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientUtilityBuilding</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">MechanoidRemains</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientTurret</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientMechs</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientLandingPad</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientFences</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientPipelineSection</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
-      <li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
-      <li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
-      <li>ScatterShrines</li>
-      <li>MutatorFinal</li>
-      <!-- <li>Animals</li> -->
-			<!-- <li>AsteroidBasicTransportPods</li> -->
-			<!-- <li>AncientMiningCharge_Asteroid</li> -->
-			<!-- <li>AncientExplosivesCrate_Asteroid</li> -->
-			<!-- <li>AncientDrillPlatform_Asteroid</li> -->
-			<!-- <li>AncientTuneller_Asteroid</li> -->
+			<li>RockChunks</li>
+			<li>ScatterRuinsSimple</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientUtilityBuilding</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">MechanoidRemains</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientTurret</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientMechs</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientLandingPad</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientFences</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientPipelineSection</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
+			<li>ScatterShrines</li>
+			<li>AncientMiningCharge_Asteroid</li>
+			<li>AncientExplosivesCrate_Asteroid</li>
+			<li>AncientDrillPlatform_Asteroid</li>
+			<li>AncientTuneller_Asteroid</li>
 		</genSteps>
 	</MapGeneratorDef>
 
@@ -136,33 +152,6 @@
 		<label>floating island debug</label>
 		<genSteps>
 			<li>LAO_FloatingIslandDebug</li>
-      <!-- <li>RockChunks</li> -->
-      <!-- <li>MutatorCriticalStructures</li> -->
-      <!-- <li>MutatorNonCriticalStructures</li> -->
-      <!-- <li>ScatterRuinsSimple</li> -->
-      <!-- <li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li> -->
-      <!-- <li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li> -->
-      <!-- <li MayRequire="Ludeon.RimWorld.Ideology">AncientUtilityBuilding</li> -->
-      <!-- <li MayRequire="Ludeon.RimWorld.Ideology">MechanoidRemains</li> -->
-      <!-- <li MayRequire="Ludeon.RimWorld.Ideology">AncientTurret</li> -->
-      <!-- <li MayRequire="Ludeon.RimWorld.Ideology">AncientMechs</li> -->
-      <!-- <li MayRequire="Ludeon.RimWorld.Ideology">AncientLandingPad</li> -->
-      <!-- <li MayRequire="Ludeon.RimWorld.Ideology">AncientFences</li> -->
-      <!-- <li MayRequire="Ludeon.RimWorld.Ideology">AncientPipelineSection</li> -->
-      <!-- <li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li> -->
-      <!-- <li>FindPlayerStartSpot</li> -->
-      <!-- <li>ScenParts</li> -->
-      <!-- <li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li> -->
-      <!-- <li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li> -->
-      <!-- <li>Plants</li> -->
-      <!-- <li>Snow</li> -->
-      <!-- <li>MutatorFinal</li> -->
-      <!-- <li>Animals</li> -->
-			<!-- <li>AsteroidBasicTransportPods</li> -->
-			<!-- <li>AncientMiningCharge_Asteroid</li> -->
-			<!-- <li>AncientExplosivesCrate_Asteroid</li> -->
-			<!-- <li>AncientDrillPlatform_Asteroid</li> -->
-			<!-- <li>AncientTuneller_Asteroid</li> -->
 		</genSteps>
 	</MapGeneratorDef>
   

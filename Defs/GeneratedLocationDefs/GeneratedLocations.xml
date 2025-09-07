@@ -41,9 +41,24 @@
     <defName>LAO_FloatingIsland</defName>
     <worldObjectDef>LAO_FloatingIsland</worldObjectDef>
     <layerDefs>
-      <!-- <li>LAO_Troposphere</li> -->
       <li>LAO_Stratosphere</li>
-      <!-- <li>LAO_Mesosphere</li> -->
+    </layerDefs>
+    <preciousResources>
+      <li>MineableGold</li>
+      <li>MineableSilver</li>
+      <li>MineableSteel</li>
+      <li>MineableUranium</li>
+      <li>MineablePlasteel</li>
+      <li>MineableComponentsIndustrial</li>
+      <li>MineableJade</li>
+    </preciousResources>
+  </GeneratedLocationDef>
+  
+  <GeneratedLocationDef>
+    <defName>LAO_FloatingIslandFlat</defName>
+    <worldObjectDef>LAO_FloatingIslandFlat</worldObjectDef>
+    <layerDefs>
+      <li>LAO_Stratosphere</li>
     </layerDefs>
     <preciousResources>
       <li>MineableGold</li>
@@ -67,9 +82,6 @@
     <preciousResources>
       <li>MineableGold</li>
       <li>MineableSilver</li>
-      <li>MineableSteel</li>
-      <li>MineableUranium</li>
-      <li>MineablePlasteel</li>
       <li>MineableComponentsIndustrial</li>
       <li>MineableJade</li>
     </preciousResources>

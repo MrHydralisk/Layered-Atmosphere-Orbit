@@ -18,6 +18,8 @@ namespace LayeredAtmosphereOrbit
 
         public float archeanTreeChance;
 
+        public OrbitalDebrisDef orbitalDebris;
+
         public static SimpleCurve edgeElevationMult = new SimpleCurve
         {
             new CurvePoint(0, 0),
@@ -29,8 +31,23 @@ namespace LayeredAtmosphereOrbit
             new CurvePoint(6, 1f)
         };
 
-        public virtual float FloorThreshold => 0.5f;
-        public virtual float WallThreshold => 0.7f;
+        public float widthOffsetPerCell = 0.015f;
+        public int maxOpenTunnelsPerRockGroup = 2;
+        public int maxClosedTunnelsPerRockGroup = 2;
+        public float minTunnelWidth = 0.25f;
+        public float branchChance = 0.05f;
+        public float openTunnelsPer10k = 4f;
+        public SimpleCurve tunnelsWidthPerRockCount = new SimpleCurve
+        {
+            new CurvePoint(100f, 1f),
+            new CurvePoint(300f, 1.5f),
+            new CurvePoint(3000f, 1.9f)
+        };
+
+        public float FloorThreshold = 0.5f;
+        public float WallThreshold = 0.7f;
+
+        public FloatRange SoilThreshold = FloatRange.Zero;
 
         private ModuleBase innerNoise;
 
@@ -57,7 +74,10 @@ namespace LayeredAtmosphereOrbit
                 {
                     GenStep_Asteroid.GenerateArcheanTree(map, parms);
                 }
-                map.OrbitalDebris = OrbitalDebrisDefOf.Asteroid;
+                if (orbitalDebris != null)
+                {
+                    map.OrbitalDebris = orbitalDebris;
+                }
             }
             map.regionAndRoomUpdater.Enabled = true;
         }
@@ -70,9 +90,15 @@ namespace LayeredAtmosphereOrbit
                 {
                     float num = MapGenerator.Elevation[allCell];
                     float num2 = MapGenerator.Caves[allCell];
+                    float fertility = MapGenerator.Fertility[allCell];
                     if (num > FloorThreshold)
                     {
-                        map.terrainGrid.SetTerrain(allCell, rockDef.building.naturalTerrain);
+                        TerrainDef terrainDef = rockDef.building.naturalTerrain;
+                        if (SoilThreshold.Includes(num) && GenAdjFast.AdjacentCells8Way(allCell).All((IntVec3 adjCell) => MapGenerator.Elevation[adjCell] > FloorThreshold))
+                        {
+                            terrainDef = TerrainThreshold.TerrainAtValue(map.Biome.terrainsByFertility, fertility);
+                        }
+                        map.terrainGrid.SetTerrain(allCell, terrainDef);
                     }
                     if (num > WallThreshold && num2 == 0f)
                     {
@@ -166,20 +192,13 @@ namespace LayeredAtmosphereOrbit
             BoolGrid visited = new BoolGrid(map);
             List<IntVec3> group = new List<IntVec3>();
             MapGenCavesUtility.CaveGenParms @default = MapGenCavesUtility.CaveGenParms.Default;
-            @default.widthOffsetPerCell = 0.015f;
-            @default.minTunnelWidth = 0.5f;
-            @default.branchChance = 0.05f;
-            @default.maxOpenTunnelsPerRockGroup = 2;
-            @default.maxClosedTunnelsPerRockGroup = 2;
-            @default.minTunnelWidth = 0.25f;
-            @default.branchChance = 0.05f;
-            @default.openTunnelsPer10k = 4f;
-            @default.tunnelsWidthPerRockCount = new SimpleCurve
-        {
-            new CurvePoint(100f, 1f),
-            new CurvePoint(300f, 1.5f),
-            new CurvePoint(3000f, 1.9f)
-        };
+            @default.widthOffsetPerCell = widthOffsetPerCell;
+            @default.maxOpenTunnelsPerRockGroup = maxOpenTunnelsPerRockGroup;
+            @default.maxClosedTunnelsPerRockGroup = maxClosedTunnelsPerRockGroup;
+            @default.minTunnelWidth = minTunnelWidth;
+            @default.branchChance = branchChance;
+            @default.openTunnelsPer10k = openTunnelsPer10k;
+            @default.tunnelsWidthPerRockCount = tunnelsWidthPerRockCount;
             MapGenCavesUtility.GenerateCaves(map, visited, group, directionNoise, @default, Rock);
             bool Rock(IntVec3 cell)
             {
@@ -191,7 +210,7 @@ namespace LayeredAtmosphereOrbit
         {
             if (c.InBounds(map))
             {
-                return elevation[c] > 0.7f;
+                return elevation[c] > WallThreshold;
             }
             return false;
         }

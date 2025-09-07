@@ -40,6 +40,12 @@ namespace LayeredAtmosphereOrbit
         public float DebugFloatingIslandConst = 0.20000000298023224f;
         public float DebugFloatingIslandFloorThreshold = 0.5f;
         public float DebugFloatingIslandWallThreshold = 0.7f;
+        public float DebugFloatingIslandwidthOffsetPerCell = 0.015f;
+        public int DebugFloatingIslandmaxOpenTunnelsPerRockGroup = 2;
+        public int DebugFloatingIslandmaxClosedTunnelsPerRockGroup = 2;
+        public float DebugFloatingIslandminTunnelWidth = 0.25f;
+        public float DebugFloatingIslandbranchChance = 0.05f;
+        public float DebugFloatingIslandopenTunnelsPer10k = 4f;
 
         public override void ExposeData()
         {
@@ -82,6 +88,12 @@ namespace LayeredAtmosphereOrbit
             Scribe_Values.Look(ref DebugFloatingIslandConst, "DebugFloatingIslandConst", 0.20000000298023224f);
             Scribe_Values.Look(ref DebugFloatingIslandFloorThreshold, "DebugFloatingIslandFloorThreshold", 0.5f);
             Scribe_Values.Look(ref DebugFloatingIslandWallThreshold, "DebugFloatingIslandWallThreshold", 0.7f);
+            Scribe_Values.Look(ref DebugFloatingIslandwidthOffsetPerCell, "DebugFloatingIslandwidthOffsetPerCell", 0.015f);
+            Scribe_Values.Look(ref DebugFloatingIslandmaxOpenTunnelsPerRockGroup, "DebugFloatingIslandmaxOpenTunnelsPerRockGroup", 2);
+            Scribe_Values.Look(ref DebugFloatingIslandmaxClosedTunnelsPerRockGroup, "DebugFloatingIslandmaxClosedTunnelsPerRockGroup", 2);
+            Scribe_Values.Look(ref DebugFloatingIslandminTunnelWidth, "DebugFloatingIslandminTunnelWidth", 0.25f);
+            Scribe_Values.Look(ref DebugFloatingIslandbranchChance, "DebugFloatingIslandbranchChance", 0.05f);
+            Scribe_Values.Look(ref DebugFloatingIslandopenTunnelsPer10k, "DebugFloatingIslandopenTunnelsPer10k", 4f);
         }
     }
 }

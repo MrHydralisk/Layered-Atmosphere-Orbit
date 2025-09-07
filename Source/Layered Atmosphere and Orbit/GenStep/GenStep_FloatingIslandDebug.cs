@@ -1,14 +1,10 @@
-﻿using RimWorld.Planet;
-using RimWorld.SketchGen;
-using RimWorld;
+﻿using RimWorld;
+using RimWorld.Planet;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using UnityEngine;
 using Verse;
 using Verse.Noise;
-using HarmonyLib;
-using System.Reflection;
 
 namespace LayeredAtmosphereOrbit
 {
@@ -42,7 +38,7 @@ namespace LayeredAtmosphereOrbit
                 }
                 if (Rand.Chance(archeanTreeChance))
                 {
-                    GenStep_Asteroid.GenerateArcheanTree(map, parms );
+                    GenStep_Asteroid.GenerateArcheanTree(map, parms);
                 }
                 map.OrbitalDebris = OrbitalDebrisDefOf.Asteroid;
             }
@@ -165,20 +161,18 @@ namespace LayeredAtmosphereOrbit
             BoolGrid visited = new BoolGrid(map);
             List<IntVec3> group = new List<IntVec3>();
             MapGenCavesUtility.CaveGenParms @default = MapGenCavesUtility.CaveGenParms.Default;
-            @default.widthOffsetPerCell = 0.015f;
-            @default.minTunnelWidth = 0.5f;
-            @default.branchChance = 0.05f;
-            @default.maxOpenTunnelsPerRockGroup = 2;
-            @default.maxClosedTunnelsPerRockGroup = 2;
-            @default.minTunnelWidth = 0.25f;
-            @default.branchChance = 0.05f;
-            @default.openTunnelsPer10k = 4f;
+            @default.widthOffsetPerCell = LAOMod.Settings.DebugFloatingIslandwidthOffsetPerCell;
+            @default.maxOpenTunnelsPerRockGroup = LAOMod.Settings.DebugFloatingIslandmaxOpenTunnelsPerRockGroup;
+            @default.maxClosedTunnelsPerRockGroup = LAOMod.Settings.DebugFloatingIslandmaxClosedTunnelsPerRockGroup;
+            @default.minTunnelWidth = LAOMod.Settings.DebugFloatingIslandminTunnelWidth;
+            @default.branchChance = LAOMod.Settings.DebugFloatingIslandbranchChance;
+            @default.openTunnelsPer10k = LAOMod.Settings.DebugFloatingIslandopenTunnelsPer10k;
             @default.tunnelsWidthPerRockCount = new SimpleCurve
-        {
-            new CurvePoint(100f, 1f),
-            new CurvePoint(300f, 1.5f),
-            new CurvePoint(3000f, 1.9f)
-        };
+            {
+                new CurvePoint(100f, 1f),
+                new CurvePoint(300f, 1.5f),
+                new CurvePoint(3000f, 1.9f)
+            };
             MapGenCavesUtility.GenerateCaves(map, visited, group, directionNoise, @default, Rock);
             bool Rock(IntVec3 cell)
             {

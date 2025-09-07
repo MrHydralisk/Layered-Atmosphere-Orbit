@@ -35,6 +35,12 @@ namespace LayeredAtmosphereOrbit
         private string inputDebugFloatingIsland5Const;
         private string inputDebugFloatingIslandConst;
 
+        private string inputDebugFloatingIslandwidthOffsetPerCell;
+        private string inputDebugFloatingIslandmaxOpenTunnelsPerRockGroup;
+        private string inputDebugFloatingIslandmaxClosedTunnelsPerRockGroup;
+        private string inputDebugFloatingIslandminTunnelWidth;
+        private string inputDebugFloatingIslandopenTunnelsPer10k;
+
         public LAOMod(ModContentPack content) : base(content)
         {
             Settings = GetSettings<LAOSettings>();
@@ -134,6 +140,21 @@ namespace LayeredAtmosphereOrbit
                     Settings.DebugFloatingIslandFloorThreshold = Mathf.Round(options.Slider(Settings.DebugFloatingIslandFloorThreshold, 0, 1) * 100f) / 100f;
                     options.Label($"DebugFloatingIslandWallThreshold {Settings.DebugFloatingIslandWallThreshold}");
                     Settings.DebugFloatingIslandWallThreshold = Mathf.Round(options.Slider(Settings.DebugFloatingIslandWallThreshold, 0, 1) * 100f) / 100f;
+
+
+                    options.Label($"DebugFloatingIslandwidthOffsetPerCell {Settings.DebugFloatingIslandwidthOffsetPerCell}");
+                    options.TextFieldNumeric(ref Settings.DebugFloatingIslandwidthOffsetPerCell, ref inputDebugFloatingIslandwidthOffsetPerCell, 0.001f, 1);
+                    options.Label($"DebugFloatingIslandmaxOpenTunnelsPerRockGroup {Settings.DebugFloatingIslandmaxOpenTunnelsPerRockGroup}");
+                    options.TextFieldNumeric(ref Settings.DebugFloatingIslandmaxOpenTunnelsPerRockGroup, ref inputDebugFloatingIslandmaxOpenTunnelsPerRockGroup, 0, 50);
+                    options.Label($"DebugFloatingIslandmaxClosedTunnelsPerRockGroup {Settings.DebugFloatingIslandmaxClosedTunnelsPerRockGroup}");
+                    options.TextFieldNumeric(ref Settings.DebugFloatingIslandmaxClosedTunnelsPerRockGroup, ref inputDebugFloatingIslandmaxClosedTunnelsPerRockGroup, 0, 50);
+                    options.Label($"DebugFloatingIslandminTunnelWidth {Settings.DebugFloatingIslandminTunnelWidth}");
+                    options.TextFieldNumeric(ref Settings.DebugFloatingIslandminTunnelWidth, ref inputDebugFloatingIslandminTunnelWidth, 0.01f, 5);
+                    options.Label($"DebugFloatingIslandbranchChance {Settings.DebugFloatingIslandbranchChance}");
+                    Settings.DebugFloatingIslandbranchChance = Mathf.Round(options.Slider(Settings.DebugFloatingIslandbranchChance, 0, 1) * 100f) / 100f;
+                    options.Label($"DebugFloatingIslandopenTunnelsPer10k {Settings.DebugFloatingIslandopenTunnelsPer10k}");
+                    options.TextFieldNumeric(ref Settings.DebugFloatingIslandopenTunnelsPer10k, ref inputDebugFloatingIslandopenTunnelsPer10k, 0.01f, 12); 
+                    
                     string defName = options.TextEntryLabeled($"worldObjectDefName{(worldObjectDef == null ? " failed" : "")}", worldObjectDefName);
                     if (defName != worldObjectDefName)
                     {

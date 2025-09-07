@@ -14,8 +14,6 @@ namespace LayeredAtmosphereOrbit
 {
     public class GenStep_FloatingIslandGiant : GenStep_FloatingIsland
     {
-        public override float WallThreshold => 0.75f;
-
         protected override ModuleBase ConfigureNoise(Map map, GenStepParams parms)
         {
             ModuleBase input = new DistFromPoint((float)map.Size.x * Radius);
