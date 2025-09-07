@@ -19,5 +19,14 @@
 			</mineableCounts>
 		</genStep>
 	</GenStepDef>
+
+	<GenStepDef>
+		<defName>LAO_SleepingMechanoidsAPrecious</defName>
+		<linkWithSite>SleepingMechanoids</linkWithSite>
+		<order>1600</order>
+		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandSleepingMechanoids">
+			<defaultPointsRange>3000~5000</defaultPointsRange>
+		</genStep>
+	</GenStepDef>
   
 </Defs>

@@ -170,6 +170,7 @@
 			<li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
 			<li>ScatterShrines</li>
+			<li>LAO_SleepingMechanoidsFICollapsing</li>
 			<li>AncientMiningCharge_Asteroid</li>
 			<li>AncientExplosivesCrate_Asteroid</li>
 			<li>AncientDrillPlatform_Asteroid</li>

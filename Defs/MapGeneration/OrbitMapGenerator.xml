@@ -12,6 +12,7 @@
 			<li>AncientDrillPlatform_Asteroid</li>
 			<li>AncientTuneller_Asteroid</li>
 			<li>MechShipChunk_Asteroid</li>
+			<li>LAO_SleepingMechanoidsAPrecious</li>
 			<li>RockChunks</li>
 		</genSteps>
 	</MapGeneratorDef>

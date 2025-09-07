@@ -163,5 +163,14 @@
 			<CaveCellsPerHive>100</CaveCellsPerHive>
 		</genStep>
 	</GenStepDef>
+
+	<GenStepDef>
+		<defName>LAO_SleepingMechanoidsFICollapsing</defName>
+		<linkWithSite>SleepingMechanoids</linkWithSite>
+		<order>1600</order>
+		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandSleepingMechanoids">
+			<defaultPointsRange>1500~3000</defaultPointsRange>
+		</genStep>
+	</GenStepDef>
   
 </Defs>
