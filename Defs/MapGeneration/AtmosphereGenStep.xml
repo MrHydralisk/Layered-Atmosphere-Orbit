@@ -51,9 +51,11 @@
 		<defName>LAO_FloatingIslandGiant</defName>
 		<order>200</order>
 		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandGiant">
+			<maxOpenTunnelsPerRockGroup>4</maxOpenTunnelsPerRockGroup>
+			<maxClosedTunnelsPerRockGroup>4</maxClosedTunnelsPerRockGroup>
 			<Radius>0.28</Radius>
 			<WallThreshold>0.75</WallThreshold>
-			<numChunks>6~10</numChunks>
+			<numChunks>8~12</numChunks>
 			<ruinsChance>0.2</ruinsChance>
 			<mineableCounts>
 				<MineableGold>28~44</MineableGold>
@@ -67,26 +69,27 @@
 		</genStep>
 	</GenStepDef>
 
-	<!-- <GenStepDef> -->
-		<!-- <defName>LAO_FloatingIslandGiantInfested</defName> -->
-		<!-- <order>200</order> -->
-		<!-- <genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandGiant"> -->
-			<!-- <DebugFloatingIslandmaxOpenTunnelsPerRockGroup>8</DebugFloatingIslandmaxOpenTunnelsPerRockGroup> -->
-			<!-- <DebugFloatingIslandmaxClosedTunnelsPerRockGroup>8</DebugFloatingIslandmaxClosedTunnelsPerRockGroup> -->
-			<!-- <DebugFloatingIslandbranchChance>0.5</DebugFloatingIslandbranchChance> -->
-			<!-- <Radius>0.28</Radius> -->
-			<!-- <numChunks>6~10</numChunks> -->
-			<!-- <mineableCounts> -->
-				<!-- <MineableGold>28~44</MineableGold> -->
-				<!-- <MineableSilver>100~140</MineableSilver> -->
-				<!-- <MineableSteel>160~220</MineableSteel> -->
-				<!-- <MineableUranium>30~50</MineableUranium> -->
-				<!-- <MineablePlasteel>24~30</MineablePlasteel> -->
-				<!-- <MineableComponentsIndustrial>130~170</MineableComponentsIndustrial> -->
-				<!-- <MineableJade>40~70</MineableJade> -->
-			<!-- </mineableCounts> -->
-		<!-- </genStep> -->
-	<!-- </GenStepDef> -->
+	<GenStepDef>
+		<defName>LAO_FloatingIslandGiantInfested</defName>
+		<order>200</order>
+		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandGiant">
+			<maxOpenTunnelsPerRockGroup>12</maxOpenTunnelsPerRockGroup>
+			<maxClosedTunnelsPerRockGroup>12</maxClosedTunnelsPerRockGroup>
+			<branchChance>0.5</branchChance>
+			<Radius>0.3</Radius>
+			<WallThreshold>0.75</WallThreshold>
+			<numChunks>12~18</numChunks>
+			<mineableCounts>
+				<MineableGold>42~66</MineableGold>
+				<MineableSilver>150~210</MineableSilver>
+				<MineableSteel>240~330</MineableSteel>
+				<MineableUranium>45~75</MineableUranium>
+				<MineablePlasteel>36~45</MineablePlasteel>
+				<MineableComponentsIndustrial>195~255</MineableComponentsIndustrial>
+				<MineableJade>60~105</MineableJade>
+			</mineableCounts>
+		</genStep>
+	</GenStepDef>
 
 	<GenStepDef>
 		<defName>LAO_FloatingIslandGiantFlat</defName>
@@ -94,7 +97,7 @@
 		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandGiant">
 			<Radius>0.28</Radius>
 			<WallThreshold>0.95</WallThreshold>
-			<numChunks>6~10</numChunks>
+			<numChunks>4~6</numChunks>
 			<SoilThreshold>0.6~0.92</SoilThreshold>
 			<ruinsChance>0.2</ruinsChance>
 			<archeanTreeChance>0.1</archeanTreeChance>
@@ -117,7 +120,7 @@
 			<Radius>0.3</Radius>
 			<radiuPercToStartFlood>0.4</radiuPercToStartFlood>
 			<WallThreshold>1</WallThreshold>
-			<numChunks>30~45</numChunks>
+			<numChunks>4~6</numChunks>
 			<ruinsChance>0.2</ruinsChance>
 			<archeanTreeChance>0.4</archeanTreeChance>
 			<mineableCounts>
@@ -136,7 +139,7 @@
 		<defName>LAO_FloatingIslandDebug</defName>
 		<order>200</order>
 		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandDebug">
-			<numChunks>6~10</numChunks>
+			<numChunks>4~6</numChunks>
 			<ruinsChance>0.2</ruinsChance>
 			<archeanTreeChance>0.1</archeanTreeChance>
 			<mineableCounts>
@@ -148,6 +151,16 @@
 				<MineableComponentsIndustrial>65~85</MineableComponentsIndustrial>
 				<MineableJade>20~35</MineableJade>
 			</mineableCounts>
+		</genStep>
+	</GenStepDef>
+	
+	
+	
+	<GenStepDef>
+		<defName>LAO_FloatingIslandHives</defName>
+		<order>1120</order>
+		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandHives">
+			<CaveCellsPerHive>100</CaveCellsPerHive>
 		</genStep>
 	</GenStepDef>
   

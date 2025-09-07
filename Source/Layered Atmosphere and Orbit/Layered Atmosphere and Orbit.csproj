@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GenStep\GenStep_FloatingIslandHives.cs" />
     <Compile Include="MapParent\FloatingIslandMapParent.cs" />
     <Compile Include="WITab_PlanetLayer.cs" />
     <Compile Include="PlanetLayerGroupDefOfLocal.cs" />

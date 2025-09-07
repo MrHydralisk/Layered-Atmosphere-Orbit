@@ -63,6 +63,7 @@
 			<li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
+			<li>CaveHives</li>
 			<li>Plants</li>
 			<li>Snow</li>
 		</genSteps>
@@ -87,7 +88,35 @@
 			<li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
-			<li>CaveHives</li>
+			<li>LAO_FloatingIslandHives</li>
+			<li>Snow</li>
+			<li>AncientMiningCharge_Asteroid</li>
+			<li>AncientExplosivesCrate_Asteroid</li>
+			<li>AncientDrillPlatform_Asteroid</li>
+			<li>AncientTuneller_Asteroid</li>
+		</genSteps>
+	</MapGeneratorDef>
+
+	<MapGeneratorDef ParentName="AtmosphereMapGenerator">
+		<defName>LAO_FloatingIslandGiantInfested</defName>
+		<label>giant floating island infested</label>
+		<genSteps>
+			<li>LAO_FloatingIslandGiantInfested</li>
+			<li>RockChunks</li>
+			<li>ScatterRuinsSimple</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientUtilityBuilding</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">MechanoidRemains</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientTurret</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientMechs</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientLandingPad</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientFences</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientPipelineSection</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
+			<li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
+			<li>LAO_FloatingIslandHives</li>
 			<li>Snow</li>
 			<li>AncientMiningCharge_Asteroid</li>
 			<li>AncientExplosivesCrate_Asteroid</li>
@@ -115,6 +144,7 @@
 			<li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
+			<li>LAO_FloatingIslandHives</li>
 			<li>Plants</li>
 			<li>Snow</li>
 		</genSteps>
@@ -144,6 +174,7 @@
 			<li>AncientExplosivesCrate_Asteroid</li>
 			<li>AncientDrillPlatform_Asteroid</li>
 			<li>AncientTuneller_Asteroid</li>
+			<li>CaveHives</li>
 		</genSteps>
 	</MapGeneratorDef>
 

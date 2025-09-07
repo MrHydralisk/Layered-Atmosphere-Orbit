@@ -46,6 +46,14 @@
 	</WorldObjectDef>
 
 	<WorldObjectDef ParentName="Generated_LAO_FloatingIsland">
+		<defName>LAO_FloatingIslandGiantInfested</defName>
+		<label>giant floating island infested</label>
+		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>
+		<mapGenerator>LAO_FloatingIslandGiantInfested</mapGenerator>
+		<overrideMapSize>(350,1,350)</overrideMapSize>
+	</WorldObjectDef>
+
+	<WorldObjectDef ParentName="Generated_LAO_FloatingIsland">
 		<defName>LAO_FloatingIslandGiantFlat</defName>
 		<label>giant floating island flat</label>
 		<expandingIconTexture>World/WorldObjects/Expanding/OrbitalItemStash</expandingIconTexture>

@@ -19,6 +19,23 @@
   </GeneratedLocationDef>
   
   <GeneratedLocationDef>
+    <defName>LAO_FloatingIslandGiantInfested</defName>
+    <worldObjectDef>LAO_FloatingIslandGiantInfested</worldObjectDef>
+    <layerDefs>
+      <li>LAO_Troposphere</li>
+    </layerDefs>
+    <preciousResources>
+      <li>MineableGold</li>
+      <li>MineableSilver</li>
+      <li>MineableSteel</li>
+      <li>MineableUranium</li>
+      <li>MineablePlasteel</li>
+      <li>MineableComponentsIndustrial</li>
+      <li>MineableJade</li>
+    </preciousResources>
+  </GeneratedLocationDef>
+  
+  <GeneratedLocationDef>
     <defName>LAO_FloatingIslandGiantFlat</defName>
     <worldObjectDef>LAO_FloatingIslandGiantFlat</worldObjectDef>
     <layerDefs>
