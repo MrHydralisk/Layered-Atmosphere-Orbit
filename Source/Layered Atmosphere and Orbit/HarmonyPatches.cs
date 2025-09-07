@@ -1,13 +1,16 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
+using RimWorld.QuestGen;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Security.Cryptography;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Verse;
+using Verse.Noise;
 
 namespace LayeredAtmosphereOrbit
 {
@@ -42,6 +45,8 @@ namespace LayeredAtmosphereOrbit
             }
             val.Patch(AccessTools.Method(typeof(TileTemperaturesComp.CachedTileTemperatureData), "CalculateOutdoorTemperatureAtTile"), postfix: new HarmonyMethod(patchType, "TTCCTT_CalculateOutdoorTemperatureAtTile_Postfix"));
             val.Patch(AccessTools.Method(typeof(GenTemperature), "GetTemperatureFromSeasonAtTile"), postfix: new HarmonyMethod(patchType, "GT_GetTemperatureFromSeasonAtTile_Postfix"));
+            //val.Patch(AccessTools.Method(typeof(QuestNode_GetMap), "IsAcceptableMap"), postfix: new HarmonyMethod(patchType, "QNGM_IsAcceptableMap_Postfix"));
+            val.Patch(AccessTools.Method(typeof(QuestNode_GetSiteTile), "TryFindTile"), transpiler: new HarmonyMethod(patchType, "QNGST_TryFindTile_Transpiler"));
         }
 
         public static void InjectPlanetLayersDefs()
@@ -178,6 +183,70 @@ namespace LayeredAtmosphereOrbit
             {
                 __result += tempOffest;
             }
+        }
+
+        public static void QNGM_IsAcceptableMap_Postfix(ref bool __result, QuestNode_GetMap __instance, Map map, Slate slate)
+        {
+            Log.Message($"{__result} && {(map?.Tile.LayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.isPreventQuestIfNotWhitelisted ?? false)} | {map?.Tile.LayerDef.ToString() ?? "---"}");
+            if (__result && (map?.Tile.LayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.isPreventQuestIfNotWhitelisted ?? false))
+            {                
+                List<PlanetLayerDef> value = __instance.layerWhitelist.GetValue(slate);
+                Log.Message($"{value == null} {value.NullOrEmpty()} || !{value?.Contains(map.Tile.LayerDef).ToString() ?? "---"}");
+                if (value.NullOrEmpty() || !value.Contains(map.Tile.LayerDef))
+                {
+                    __result = false;
+                    return;
+                }
+            }
+        }
+
+        public static IEnumerable<CodeInstruction> QNGST_TryFindTile_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
+        {
+            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count; i++)
+            {
+                if (codes[i].opcode == OpCodes.Call && (codes[i].operand?.ToString().Contains("TryFindNewSiteTile") ?? false))
+                {
+
+                    Label labelSkipIn = il.DefineLabel();
+                    Label labelSkipOut = il.DefineLabel();
+                    codes[codes.Count - 2].labels.Add(labelSkipIn);
+                    codes[codes.Count - 1].labels.Add(labelSkipOut);
+                    List<CodeInstruction> instructionsToInsert = new List<CodeInstruction>();
+                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Ldloc_1));
+                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HarmonyPatches), "IsLAOLayer")));
+                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Brtrue, labelSkipIn));
+                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Ldarg_1));
+                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HarmonyPatches), "TryFindNewSiteTile")));
+                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Br, labelSkipOut));
+                    codes.InsertRange(codes.Count - 2, instructionsToInsert);
+                    break;
+                }
+            }
+            return codes.AsEnumerable();
+        }
+
+        public static bool IsLAOLayer(PlanetTile nearTile)
+        {
+            if (nearTile.LayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.isPreventQuestIfNotWhitelisted ?? false)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryFindNewSiteTile(out PlanetTile tile, PlanetTile nearTile, int minDist = 7, int maxDist = 27, bool allowCaravans = false, List<LandmarkDef> allowedLandmarks = null, float selectLandmarkChance = 0.5f, bool canSelectComboLandmarks = true, TileFinderMode tileFinderMode = TileFinderMode.Near, bool exitOnFirstTileFound = false, bool canBeSpace = false, PlanetLayer layer = null, Predicate<PlanetTile> validator = null, Slate slate = null)
+        {
+            List<PlanetLayerDef> value = slate?.Get<List<PlanetLayerDef>>("layerWhitelist");
+            if (value.NullOrEmpty() || !value.Contains(nearTile.LayerDef))
+            {
+                if (!Find.WorldGrid.TryGetFirstLayerOfDef(PlanetLayerDefOf.Surface, out layer))
+                {
+                    tile = PlanetTile.Invalid;
+                    return false;
+                }
+            }
+            return TileFinder.TryFindNewSiteTile(out tile, nearTile, minDist, maxDist, allowCaravans, allowedLandmarks, selectLandmarkChance, canSelectComboLandmarks, tileFinderMode, exitOnFirstTileFound: exitOnFirstTileFound, canBeSpace, layer);
         }
     }
 }

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LayeredAtmosphereOrbit</RootNamespace>
     <AssemblyName>Layered Atmosphere and Orbit</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile>
@@ -80,6 +80,7 @@
     <Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.GenerateArcheanTree" />
     <Publicize Include="Assembly-CSharp:RimWorld.PlanetLayerDef.cachedTabs" />
     <Publicize Include="Assembly-CSharp" MemberPattern="^RimWorld\.Planet\.TileTemperaturesComp*" />
+    <Publicize Include="Assembly-CSharp:RimWorld.Planet.TileFinder.TryFillFindTile" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
