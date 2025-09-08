@@ -156,7 +156,6 @@
 		<genSteps>
 			<li>LAO_FloatingIslandCollapsing</li>
 			<li>RockChunks</li>
-			<!-- <li>ScatterRuinsSimple</li> -->
 			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>
 			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li>
 			<li MayRequire="Ludeon.RimWorld.Ideology">AncientUtilityBuilding</li>

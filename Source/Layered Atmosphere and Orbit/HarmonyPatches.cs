@@ -4,13 +4,10 @@ using RimWorld.Planet;
 using RimWorld.QuestGen;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
-using System.Security.Cryptography;
 using UnityEngine;
 using Verse;
-using Verse.Noise;
 
 namespace LayeredAtmosphereOrbit
 {
@@ -188,7 +185,7 @@ namespace LayeredAtmosphereOrbit
         {
             Log.Message($"{__result} && {(map?.Tile.LayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.isPreventQuestIfNotWhitelisted ?? false)} | {map?.Tile.LayerDef.ToString() ?? "---"}");
             if (__result && (map?.Tile.LayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.isPreventQuestIfNotWhitelisted ?? false))
-            {                
+            {
                 List<PlanetLayerDef> value = __instance.layerWhitelist.GetValue(slate);
                 Log.Message($"{value == null} {value.NullOrEmpty()} || !{value?.Contains(map.Tile.LayerDef).ToString() ?? "---"}");
                 if (value.NullOrEmpty() || !value.Contains(map.Tile.LayerDef))

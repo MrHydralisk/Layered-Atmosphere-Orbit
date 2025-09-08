@@ -1,14 +1,5 @@
-﻿using RimWorld.Planet;
-using RimWorld.SketchGen;
-using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using UnityEngine;
-using Verse;
+﻿using Verse;
 using Verse.Noise;
-using HarmonyLib;
-using System.Reflection;
 
 namespace LayeredAtmosphereOrbit
 {
