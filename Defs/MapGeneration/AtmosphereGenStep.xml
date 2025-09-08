@@ -172,5 +172,15 @@
 			<defaultPointsRange>1500~3000</defaultPointsRange>
 		</genStep>
 	</GenStepDef>
+	
+	<GenStepDef>
+		<defName>LAO_FloatingIslandCollapsingShrine</defName>
+		<order>750</order>
+		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandScatterShrines">
+			<SizeRange>16~22</SizeRange>
+			<count>1</count>
+			<nearMapCenter>true</nearMapCenter>
+		</genStep>
+	</GenStepDef>
   
 </Defs>

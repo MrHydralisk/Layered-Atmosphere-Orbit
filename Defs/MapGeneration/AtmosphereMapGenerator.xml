@@ -156,7 +156,7 @@
 		<genSteps>
 			<li>LAO_FloatingIslandCollapsing</li>
 			<li>RockChunks</li>
-			<li>ScatterRuinsSimple</li>
+			<!-- <li>ScatterRuinsSimple</li> -->
 			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>
 			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li>
 			<li MayRequire="Ludeon.RimWorld.Ideology">AncientUtilityBuilding</li>
@@ -169,7 +169,7 @@
 			<li MayRequire="Ludeon.RimWorld.Ideology">AncientJunkClusters</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">Pollution</li>
 			<li MayRequire="Ludeon.RimWorld.Biotech">AncientPollutionJunk</li>
-			<li>ScatterShrines</li>
+			<li>LAO_FloatingIslandCollapsingShrine</li>
 			<li>LAO_SleepingMechanoidsFICollapsing</li>
 			<li>AncientMiningCharge_Asteroid</li>
 			<li>AncientExplosivesCrate_Asteroid</li>

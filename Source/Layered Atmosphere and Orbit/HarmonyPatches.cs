@@ -45,7 +45,6 @@ namespace LayeredAtmosphereOrbit
             }
             val.Patch(AccessTools.Method(typeof(TileTemperaturesComp.CachedTileTemperatureData), "CalculateOutdoorTemperatureAtTile"), postfix: new HarmonyMethod(patchType, "TTCCTT_CalculateOutdoorTemperatureAtTile_Postfix"));
             val.Patch(AccessTools.Method(typeof(GenTemperature), "GetTemperatureFromSeasonAtTile"), postfix: new HarmonyMethod(patchType, "GT_GetTemperatureFromSeasonAtTile_Postfix"));
-            //val.Patch(AccessTools.Method(typeof(QuestNode_GetMap), "IsAcceptableMap"), postfix: new HarmonyMethod(patchType, "QNGM_IsAcceptableMap_Postfix"));
             val.Patch(AccessTools.Method(typeof(QuestNode_GetSiteTile), "TryFindTile"), transpiler: new HarmonyMethod(patchType, "QNGST_TryFindTile_Transpiler"));
         }
 
