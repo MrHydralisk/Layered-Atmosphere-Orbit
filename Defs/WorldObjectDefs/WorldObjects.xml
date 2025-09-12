@@ -7,6 +7,7 @@
 		<fullyExpandedInSpace>false</fullyExpandedInSpace>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<isRockColored>true</isRockColored>
 				<availableBiomes>
 					<li>BorealForest</li>
 					<li>Tundra</li>
@@ -75,7 +76,6 @@
 		<description>A landmass that was lifted off the planet's surface. Previously, it was the peak of a hill in the region below it.</description>
 		<expandingIconTexture>World/WorldObjects/Expanding/LAO_FloatingIslandMountain</expandingIconTexture>
 		<mapGenerator>LAO_FloatingIslandHill</mapGenerator>
-		<expandingIconDrawSize></expandingIconDrawSize>
 	</WorldObjectDef>
 
 	<WorldObjectDef ParentName="Generated_LAO_FloatingIsland">
@@ -108,7 +108,7 @@
 	<WorldObjectDef ParentName="GeneratedAsteroid">
 		<defName>LAO_AsteroidPrecious</defName>
 		<label>precious asteroid</label>
-		<description>An asteroid orbiting the planet, containing precious materials.</description>
+		<description>A vacstone asteroid that was towed into orbit around the planet as part of a mining operation long ago. However, mechanoid interference halted the process before most of its valuable resources could be extracted.\n\nThis location can be reached using transport pods, shuttles, or a gravship.</description>
 		<nameMaker>NamerWorldObject_AsteroidBasic</nameMaker>
 		<mapGenerator>LAO_AsteroidPrecious</mapGenerator>
 		<overrideMapSize>(350,1,350)</overrideMapSize>

@@ -1,5 +1,7 @@
 ﻿using RimWorld;
 using RimWorld.Planet;
+using System.Collections.Generic;
+using System;
 using Verse;
 
 namespace LayeredAtmosphereOrbit
@@ -9,12 +11,27 @@ namespace LayeredAtmosphereOrbit
         public override MapGeneratorDef MapGeneratorDef => def.mapGenerator ?? DefOfLocal.LAO_Atmosphere;
         public override string GetInspectString()
         {
-            string text = base.GetInspectString();
+            List<string> inspectStrings = new List<string>();
+            string extraIS = GetExtraInspectString();
+            if (!extraIS.NullOrEmpty())
+            {
+                inspectStrings.Add(extraIS);
+            }
+            string baseIS = base.GetInspectString();
+            if (!baseIS.NullOrEmpty())
+            {
+                inspectStrings.Add(baseIS);
+            }
+            return inspectStrings.NullOrEmpty() ? "" : String.Join("\n", inspectStrings);
+        }
+
+        public virtual string GetExtraInspectString()
+        {
             if (preciousResource != null)
             {
-                text += "\n" + "TracesOfPreciousResource".Translate(NamedArgumentUtility.Named(preciousResource, "RESOURCE"));
+                return "TracesOfPreciousResource".Translate(NamedArgumentUtility.Named(preciousResource, "RESOURCE"));
             }
-            return text.Trim();
+            return "";
         }
     }
 }

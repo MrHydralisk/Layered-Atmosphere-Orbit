@@ -42,6 +42,7 @@ namespace LayeredAtmosphereOrbit
             Widgets.BeginScrollView(outRect, ref scrollPosition, rect);
             Tile selTile = base.SelTile;
             PlanetTile selPlanerTile = base.SelPlanetTile;
+            WorldObject worldObject = SelObject;
             Listing_Standard listing_Standard = new Listing_Standard();
             listing_Standard.verticalSpacing = 0f;
             listing_Standard.Begin(rect);
@@ -68,12 +69,16 @@ namespace LayeredAtmosphereOrbit
             }
             listing_Standard.LabelDouble("Elevation".Translate(), selTile.Layer.Def.elevationString.Formatted(selTile.elevation.ToString("F0")));
             listing_Standard.LabelDouble("AvgTemp".Translate(), GetAverageTemperatureLabel(selPlanerTile));
+            if (worldObject is FloatingIslandMapParent floatingIslandMapParent && floatingIslandMapParent.rockDef != null)
+            {
+                listing_Standard.LabelDouble("LayeredAtmosphereOrbit.TabPlanetLayer.RockType".Translate(), floatingIslandMapParent.rockDef.LabelCap);
+            }
             listing_Standard.GapLine();
             listing_Standard.LabelDouble("TimeZone".Translate(), GenDate.TimeZoneAt(Find.WorldGrid.LongLatOf(selPlanerTile).x).ToStringWithSign());
             if (Prefs.DevMode)
             {
-                listing_Standard.LabelDouble("Debug world object def name", SelObject?.def.defName.ToStringSafe());
-                LayeredAtmosphereOrbitDefModExtension LAOObjectDefModExtension = SelObject?.def.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+                listing_Standard.LabelDouble("Debug world object def name", worldObject?.def.defName.ToStringSafe());
+                LayeredAtmosphereOrbitDefModExtension LAOObjectDefModExtension = worldObject?.def.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
                 if (LAOObjectDefModExtension?.availableBiomes.NullOrEmpty() ?? true)
                 {
                     listing_Standard.LabelDouble("Debug biome", $"{selTile.PrimaryBiome.LabelCap} [{selTile.PrimaryBiome.defName}]");

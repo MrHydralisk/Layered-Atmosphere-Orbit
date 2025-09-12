@@ -64,7 +64,7 @@ namespace LayeredAtmosphereOrbit
         {
             if (ModLister.OdysseyInstalled)
             {
-                rockDef = Find.World.NaturalRockTypesIn(map.Tile).RandomElement();
+                rockDef = ((FloatingIslandMapParent)map.ParentHolder).rockDef ?? Find.World.NaturalRockTypesIn(map.Tile).RandomElement();
                 GenerateAsteroidElevation(map, parms);
                 GenerateCaveElevation(map, parms);
                 SpawnFloatingIsland(map);

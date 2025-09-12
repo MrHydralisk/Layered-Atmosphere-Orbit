@@ -9,6 +9,7 @@ namespace LayeredAtmosphereOrbit
         public bool isReplaceConnections = false;
         public bool isOptionToAutoAdd = false;
         public bool isPreventQuestIfNotWhitelisted = false;
+        public bool isRockColored = false;
         public float elevation = 200;
         public float tempOffest = 0;
         public PlanetLayerGroupDef planetLayerGroup;
