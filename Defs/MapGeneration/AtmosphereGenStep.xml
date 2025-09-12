@@ -8,7 +8,7 @@
 	</GenStepDef>
 
 	<GenStepDef>
-		<defName>LAO_FloatingIsland</defName>
+		<defName>LAO_FloatingIslandHill</defName>
 		<order>200</order>
 		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIsland">
 			<Radius>0.2</Radius>
@@ -35,6 +35,7 @@
 			<numChunks>4~6</numChunks>
 			<SoilThreshold>0.6~0.92</SoilThreshold>
 			<ruinsChance>0.1</ruinsChance>
+			<archeanTreeChance>0.1</archeanTreeChance>
 			<mineableCounts>
 				<MineableGold>14~22</MineableGold>
 				<MineableSilver>50~70</MineableSilver>
@@ -48,13 +49,14 @@
 	</GenStepDef>
 
 	<GenStepDef>
-		<defName>LAO_FloatingIslandGiant</defName>
+		<defName>LAO_FloatingIslandGiantMountain</defName>
 		<order>200</order>
 		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandGiant">
 			<maxOpenTunnelsPerRockGroup>4</maxOpenTunnelsPerRockGroup>
 			<maxClosedTunnelsPerRockGroup>4</maxClosedTunnelsPerRockGroup>
 			<Radius>0.28</Radius>
 			<WallThreshold>0.75</WallThreshold>
+			<ThickRoofThreshold>0.8</ThickRoofThreshold>
 			<numChunks>8~12</numChunks>
 			<ruinsChance>0.2</ruinsChance>
 			<mineableCounts>
@@ -77,7 +79,8 @@
 			<maxClosedTunnelsPerRockGroup>12</maxClosedTunnelsPerRockGroup>
 			<branchChance>0.5</branchChance>
 			<Radius>0.3</Radius>
-			<WallThreshold>0.75</WallThreshold>
+			<WallThreshold>0.55</WallThreshold>
+			<ThickRoofThreshold>0.62</ThickRoofThreshold>
 			<numChunks>12~18</numChunks>
 			<mineableCounts>
 				<MineableGold>42~66</MineableGold>
@@ -100,7 +103,6 @@
 			<numChunks>4~6</numChunks>
 			<SoilThreshold>0.6~0.92</SoilThreshold>
 			<ruinsChance>0.2</ruinsChance>
-			<archeanTreeChance>0.1</archeanTreeChance>
 			<mineableCounts>
 				<MineableGold>14~22</MineableGold>
 				<MineableSilver>50~70</MineableSilver>

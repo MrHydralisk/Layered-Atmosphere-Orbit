@@ -2,8 +2,8 @@
 <Defs>
   
   <GeneratedLocationDef>
-    <defName>LAO_FloatingIslandGiant</defName>
-    <worldObjectDef>LAO_FloatingIslandGiant</worldObjectDef>
+    <defName>LAO_FloatingIslandGiantMountain</defName>
+    <worldObjectDef>LAO_FloatingIslandGiantMountain</worldObjectDef>
     <layerDefs>
       <li>LAO_Troposphere</li>
     </layerDefs>
@@ -21,6 +21,7 @@
   <GeneratedLocationDef>
     <defName>LAO_FloatingIslandGiantInfested</defName>
     <worldObjectDef>LAO_FloatingIslandGiantInfested</worldObjectDef>
+	<weight>0.5</weight>
     <layerDefs>
       <li>LAO_Troposphere</li>
     </layerDefs>
@@ -55,8 +56,8 @@
   
   
   <GeneratedLocationDef>
-    <defName>LAO_FloatingIsland</defName>
-    <worldObjectDef>LAO_FloatingIsland</worldObjectDef>
+    <defName>LAO_FloatingIslandHill</defName>
+    <worldObjectDef>LAO_FloatingIslandHill</worldObjectDef>
     <layerDefs>
       <li>LAO_Stratosphere</li>
     </layerDefs>

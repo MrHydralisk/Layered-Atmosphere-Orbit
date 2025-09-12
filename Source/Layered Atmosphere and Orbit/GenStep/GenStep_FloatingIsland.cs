@@ -46,6 +46,7 @@ namespace LayeredAtmosphereOrbit
 
         public float FloorThreshold = 0.5f;
         public float WallThreshold = 0.7f;
+        public float ThickRoofThreshold = float.MaxValue;
 
         public float radiuPercToStartFlood = 0.05f;
 
@@ -108,7 +109,12 @@ namespace LayeredAtmosphereOrbit
                     }
                     if (num > WallThreshold)
                     {
-                        map.roofGrid.SetRoof(allCell, RoofDefOf.RoofRockThin);
+                        RoofDef roofDef = RoofDefOf.RoofRockThin;
+                        if (num > ThickRoofThreshold)
+                        {
+                            roofDef = RoofDefOf.RoofRockThick;
+                        }
+                        map.roofGrid.SetRoof(allCell, roofDef);
                     }
                 }
                 HashSet<IntVec3> mainIsland = new HashSet<IntVec3>();

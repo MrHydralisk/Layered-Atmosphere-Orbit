@@ -17,10 +17,10 @@
 	</MapGeneratorDef>
 
 	<MapGeneratorDef ParentName="AtmosphereMapGenerator">
-		<defName>LAO_FloatingIsland</defName>
-		<label>floating island</label>
+		<defName>LAO_FloatingIslandHill</defName>
+		<label>floating island hill</label>
 		<genSteps>
-			<li>LAO_FloatingIsland</li>
+			<li>LAO_FloatingIslandHill</li>
 			<li>RockChunks</li>
 			<li>ScatterRuinsSimple</li>
 			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>
@@ -70,10 +70,10 @@
 	</MapGeneratorDef>
 
 	<MapGeneratorDef ParentName="AtmosphereMapGenerator">
-		<defName>LAO_FloatingIslandGiant</defName>
-		<label>giant floating island</label>
+		<defName>LAO_FloatingIslandGiantMountain</defName>
+		<label>giant floating island mountain</label>
 		<genSteps>
-			<li>LAO_FloatingIslandGiant</li>
+			<li>LAO_FloatingIslandGiantMountain</li>
 			<li>RockChunks</li>
 			<li>ScatterRuinsSimple</li>
 			<li MayRequire="Ludeon.RimWorld.Ideology">ScatterRoadDebris</li>

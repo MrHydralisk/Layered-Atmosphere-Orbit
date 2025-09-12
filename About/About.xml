@@ -9,7 +9,7 @@
 	<supportedVersions>
 		<li>1.6</li>
 	</supportedVersions>
-	<modIconPath IgnoreIfNoMatchingField="True">UI/Commands/ViewPlanet</modIconPath>
+	<modIconPath IgnoreIfNoMatchingField="True">UI/Icons/LAOModIcon</modIconPath>
 	<description>Adding multi-layered atmosphere and orbit. Includes automatic support for connection between planet layers based on it elevation.</description>
 	<modDependencies>
 		<li>

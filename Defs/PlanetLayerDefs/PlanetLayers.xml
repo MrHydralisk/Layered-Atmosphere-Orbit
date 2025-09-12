@@ -4,7 +4,7 @@
 	<PlanetLayerDef Name="LAO_LowOrbitLayer" ParentName="OrbitLayer" Abstract="True">
 		<defaultBiome>TemperateForest</defaultBiome>
 		<defaultMapWorldObject>LAO_Atmosphere</defaultMapWorldObject>
-		<viewGizmoTexPath>UI/Commands/ViewOrbit</viewGizmoTexPath>
+		<viewGizmoTexPath>UI/Commands/LAO_ViewAtmosphere</viewGizmoTexPath>
 		<isSpace>false</isSpace>
 		<settlementWorldObjectDef>SpaceSettlement</settlementWorldObjectDef>
 		<destroyedSettlementWorldObjectDef>DestroyedSpaceSettlement</destroyedSettlementWorldObjectDef>
@@ -17,10 +17,11 @@
 	<PlanetLayerDef ParentName="LAO_LowOrbitLayer">
 		<defName>LAO_Troposphere</defName>
 		<label>troposphere</label>
-		<viewGizmoTooltip>View locations that are orbiting the planet.</viewGizmoTooltip>
+		<viewGizmoTooltip>View locations within a planet's troposphere.</viewGizmoTooltip>
 		<elevationString>20km</elevationString>
 		<rangeDistanceFactor>20</rangeDistanceFactor>
 		<raidPointsFactor>0.98</raidPointsFactor>
+		<generatedLocationFactor>2</generatedLocationFactor>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isReplaceConnections>true</isReplaceConnections>
@@ -36,10 +37,11 @@
 	<PlanetLayerDef ParentName="LAO_LowOrbitLayer">
 		<defName>LAO_Stratosphere</defName>
 		<label>stratosphere</label>
-		<viewGizmoTooltip>View locations that are orbiting the planet.</viewGizmoTooltip>
+		<viewGizmoTooltip>View locations within a planet's stratosphere.</viewGizmoTooltip>
 		<elevationString>50km</elevationString>
 		<rangeDistanceFactor>18.5</rangeDistanceFactor>
 		<raidPointsFactor>0.96</raidPointsFactor>
+		<generatedLocationFactor>2.5</generatedLocationFactor>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isReplaceConnections>true</isReplaceConnections>
@@ -55,7 +57,7 @@
 	<PlanetLayerDef ParentName="LAO_LowOrbitLayer">
 		<defName>LAO_Mesosphere</defName>
 		<label>mesosphere</label>
-		<viewGizmoTooltip>View locations that are orbiting the planet.</viewGizmoTooltip>
+		<viewGizmoTooltip>View locations within a planet's mesosphere.</viewGizmoTooltip>
 		<elevationString>80km</elevationString>
 		<rangeDistanceFactor>17</rangeDistanceFactor>
 		<raidPointsFactor>0.94</raidPointsFactor>
@@ -79,6 +81,7 @@
 		<defaultBiome>Orbit</defaultBiome>
 		<rangeDistanceFactor>19</rangeDistanceFactor>
 		<raidPointsFactor>0.63</raidPointsFactor>
+		<generatedLocationFactor>1.5</generatedLocationFactor>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isReplaceConnections>true</isReplaceConnections>
