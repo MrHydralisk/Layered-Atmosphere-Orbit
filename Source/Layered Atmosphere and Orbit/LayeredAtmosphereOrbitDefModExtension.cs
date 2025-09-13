@@ -15,5 +15,11 @@ namespace LayeredAtmosphereOrbit
         public PlanetLayerGroupDef planetLayerGroup;
         public List<PlanetLayerDef> forcedConnectToPlanetLayer = new List<PlanetLayerDef>();
         public List<BiomeDef> availableBiomes = new List<BiomeDef>();
+        public List<FactionDef> WhitelistArrivalFactionDef = new List<FactionDef>();
+        public List<FactionDef> WhitelistFactionDef = new List<FactionDef>();
+        public List<IncidentDef> WhitelistIncidentDef = new List<IncidentDef>();
+        public List<GameConditionDef> WhitelistGameConditionDef = new List<GameConditionDef>();
+        public List<QuestScriptDef> WhitelistQuestScriptDef = new List<QuestScriptDef>();
+        public List<QuestScriptDef> BlacklistQuestScriptDef = new List<QuestScriptDef>();
     }
 }

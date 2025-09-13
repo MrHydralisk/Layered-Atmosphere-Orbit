@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using RimWorld.Planet;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -170,6 +171,13 @@ namespace LayeredAtmosphereOrbit
                 return planetLayerGroupSub.ContainsLayer(planetLayer);
             }
             return false;
+        }
+
+        public static List<PlanetLayerDef> ContainedLayers(this PlanetLayerGroupDef planetLayerGroup)
+        {
+            List<PlanetLayerDef> subPlanetLayers = new List<PlanetLayerDef>();
+            planetLayerGroups.TryGetValue(planetLayerGroup, out subPlanetLayers);
+            return subPlanetLayers;
         }
 
         public static float VisibleInBackgroundOfCurrentLayer(this PlanetLayerDef planetLayer)

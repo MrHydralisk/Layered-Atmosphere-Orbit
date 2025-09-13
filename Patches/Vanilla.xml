@@ -84,6 +84,31 @@
 					<li>LAO_HighOrbit</li>
 				</value>
 			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/PawnsArrivalModeDef[defName="EmergeFromWater"]/layerBlacklist</xpath>
+				<order>Append</order>
+				<value>
+					<li>LAO_HighOrbit</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[@Name="BaseArtilleryBuilding"]/comps/li[@Class="CompProperties_Mannable"]/planetLayerWhitelist</xpath>
+				<order>Append</order>
+				<value>
+					<li>LAO_Troposphere</li>
+					<li>LAO_Stratosphere</li>
+					<li>LAO_Mesosphere</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/RaidStrategyDef[defName="Siege"]/layerWhitelist</xpath>
+				<order>Append</order>
+				<value>
+					<li>LAO_Troposphere</li>
+					<li>LAO_Stratosphere</li>
+					<li>LAO_Mesosphere</li>
+				</value>
+			</li>
 		</operations>
 	</Operation>
 

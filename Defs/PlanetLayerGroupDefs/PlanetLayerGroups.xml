@@ -16,6 +16,79 @@
 		<label>atmosphere</label>
 		<description>A vast, breathable space dotted with floating islands that hover above the surface. The islands, suspended by a force of antigravity, create a layered geography where life can exist at multiple altitudes, far above the world's solid ground. It forms a complex, multi-level environment that bridges the gap between the world's core and the emptiness of space.</description>
 		<defaultPlanetLayer>LAO_Troposphere</defaultPlanetLayer>
+		<modExtensions>
+			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<WhitelistArrivalFactionDef>
+					<li>Mechanoid</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
+				</WhitelistArrivalFactionDef>
+				<WhitelistGameConditionDef>
+					<li>SolarFlare</li>
+					<li>ToxicFallout</li>
+					<li>VolcanicWinter</li>
+					<li>HeatWave</li>
+					<li>ColdSnap</li>
+					<li>Flashstorm</li>
+					<li>ClimateCycle</li>
+					<li>Planetkiller</li>
+					<li>PsychicDroner</li>
+					<li>WindyGameCondition</li>
+					<li>DroughtInitial</li>
+					<li>Drought</li>
+					<li>GillRot</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">SunBlocker</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">GiantSmokeCloud</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">ToxicSpewer</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">WeatherController</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">ClimateAdjustment</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">PsychicSuppression</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">EMIField</li>
+					<li MayRequire="Ludeon.RimWorld.Biotech">NoxiousHaze</li>
+					<li MayRequire="Ludeon.RimWorld.Anomaly">DeathPall</li>
+					<li MayRequire="Ludeon.RimWorld.Anomaly">GrayPall</li>
+					<li MayRequire="Ludeon.RimWorld.Anomaly">HateChantDrone</li>
+					<li MayRequire="Ludeon.RimWorld.Anomaly">UnnaturalDarkness</li>
+					<li MayRequire="Ludeon.RimWorld.Anomaly">BloodRain</li>
+					<li MayRequire="Ludeon.RimWorld.Anomaly">UnnaturalHeat</li>
+					<li MayRequire="MrHydralisk.AnomaliesExpected">AE_BloodFog</li>
+					<li MayRequire="MrHydralisk.AnomaliesExpected">AE_TemperatureDrop</li>
+					<li MayRequire="MrHydralisk.AnomaliesExpected">AE_UnnaturalCold</li>
+					<li MayRequire="MrHydralisk.AnomaliesExpected">AE_UnnaturalTemperature</li>
+				</WhitelistGameConditionDef>
+				<WhitelistIncidentDef>
+					<li>Disease_Flu</li>
+					<li>Disease_Plague</li>
+					<li>Disease_Malaria</li>
+					<li>Disease_SleepingSickness</li>
+					<li>Disease_FibrousMechanites</li>
+					<li>Disease_SensoryMechanites</li>
+					<li>Disease_GutWorms</li>
+					<li>Disease_MuscleParasites</li>
+					<li>Disease_AnimalFlu</li>
+					<li>Disease_AnimalPlague</li>
+					<li>Disease_OrganDecay</li>
+					<li>SelfTame</li>
+					<li>AmbrosiaSprout</li>
+					<li>RefugeePodCrash</li>
+					<li>ToxicFallout</li>
+					<li>VolcanicWinter</li>
+					<li>HeatWave</li>
+					<li>ColdSnap</li>
+					<li>Flashstorm</li>
+					<li>CropBlight</li>
+					<li>Infestation</li>
+					<li>DeepDrillInfestation</li>
+					<li>DefoliatorShipPartCrash</li>
+					<li>PsychicEmanatorShipPartCrash</li>
+					<li>AnimalInsanityMass</li>
+					<li>AnimalInsanitySingle</li>
+					<li>SolarFlare</li>
+				</WhitelistIncidentDef>
+				<BlacklistQuestScriptDef>
+					<li>ThreatReward_Raid_Joiner</li>
+				</BlacklistQuestScriptDef>
+			</li>
+		</modExtensions>
 	</LayeredAtmosphereOrbit.PlanetLayerGroupDef>
   
 	<LayeredAtmosphereOrbit.PlanetLayerGroupDef>
@@ -23,6 +96,19 @@
 		<label>orbit</label>
 		<description>Empty space a few hundred kilometers above the surface of the world. This is the region where satellites, spacecraft and asteroids orbit the planet. In this harsh vacuum, objects are exposed to a complete lack of oxygen and brutally low temperatures.</description>
 		<defaultPlanetLayer>Orbit</defaultPlanetLayer>
+		<modExtensions>
+			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<WhitelistArrivalFactionDef>
+					<li>Mechanoid</li>
+					<li>TradersGuild</li>
+					<li>Salvagers</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
+				</WhitelistArrivalFactionDef>
+				<WhitelistIncidentDef>
+					<li>OrbitalDebris</li>
+				</WhitelistIncidentDef>
+			</li>
+		</modExtensions>
 	</LayeredAtmosphereOrbit.PlanetLayerGroupDef>
   
 </Defs>
