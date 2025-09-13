@@ -18,6 +18,7 @@
 		<defaultPlanetLayer>LAO_Troposphere</defaultPlanetLayer>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<isPreventQuestMapIfNotWhitelisted>true</isPreventQuestMapIfNotWhitelisted>
 				<WhitelistArrivalFactionDef>
 					<li>Mechanoid</li>
 					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>

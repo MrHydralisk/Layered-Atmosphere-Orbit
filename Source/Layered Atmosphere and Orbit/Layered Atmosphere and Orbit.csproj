@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="QuestNode_GetLAOLayers.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandScatterShrines.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandSleepingMechanoids.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandHives.cs" />

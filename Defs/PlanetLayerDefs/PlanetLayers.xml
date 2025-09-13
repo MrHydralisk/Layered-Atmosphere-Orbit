@@ -26,7 +26,6 @@
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
-				<isPreventQuestIfNotWhitelisted>true</isPreventQuestIfNotWhitelisted>
 				<elevation>20</elevation>
 				<tempOffest>-10</tempOffest>
 				<planetLayerGroup>LAO_Atmosphere</planetLayerGroup>
@@ -46,7 +45,6 @@
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
-				<isPreventQuestIfNotWhitelisted>true</isPreventQuestIfNotWhitelisted>
 				<elevation>50</elevation>
 				<tempOffest>-20</tempOffest>
 				<planetLayerGroup>LAO_Atmosphere</planetLayerGroup>
@@ -65,7 +63,6 @@
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
-				<isPreventQuestIfNotWhitelisted>true</isPreventQuestIfNotWhitelisted>
 				<elevation>80</elevation>
 				<tempOffest>-40</tempOffest>
 				<planetLayerGroup>LAO_Atmosphere</planetLayerGroup>
@@ -86,7 +83,6 @@
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
-				<isPreventQuestIfNotWhitelisted>true</isPreventQuestIfNotWhitelisted>
 				<elevation>500</elevation>
 				<tempOffest>-95</tempOffest>
 				<planetLayerGroup>LAO_Orbit</planetLayerGroup>
