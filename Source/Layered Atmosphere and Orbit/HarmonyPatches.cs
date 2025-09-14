@@ -8,9 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using Verse;
-using Verse.Noise;
 
 namespace LayeredAtmosphereOrbit
 {

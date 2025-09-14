@@ -1,11 +1,8 @@
 ﻿using RimWorld;
 using RimWorld.Planet;
-using System;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 using Verse;
-using Verse.Noise;
 
 namespace LayeredAtmosphereOrbit
 {

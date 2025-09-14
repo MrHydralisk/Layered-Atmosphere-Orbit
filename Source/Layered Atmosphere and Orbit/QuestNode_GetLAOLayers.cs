@@ -1,7 +1,5 @@
-﻿using RimWorld;
-using RimWorld.QuestGen;
+﻿using RimWorld.QuestGen;
 using System.Collections.Generic;
-using System.Linq;
 using Verse;
 
 namespace LayeredAtmosphereOrbit

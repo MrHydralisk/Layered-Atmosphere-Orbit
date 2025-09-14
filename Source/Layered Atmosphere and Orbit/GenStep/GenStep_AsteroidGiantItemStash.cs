@@ -1,9 +1,6 @@
 ﻿using RimWorld;
-using RimWorld.Planet;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Verse;
 using Verse.Noise;
 
@@ -25,7 +22,7 @@ namespace LayeredAtmosphereOrbit
 
         public override void Generate(Map map, GenStepParams parms)
         {
-            if (!ModLister.CheckOdyssey("Asteroid Item Stash"))
+            if (!ModLister.OdysseyInstalled)
             {
                 return;
             }
