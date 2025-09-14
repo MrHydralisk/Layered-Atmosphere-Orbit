@@ -9,6 +9,8 @@ namespace LayeredAtmosphereOrbit
         public static MapGeneratorDef LAO_Atmosphere;
 
         public static TerrainDef LAO_Air;
+
+        public static PlanetLayerGroupDef LAO_Surface;
     }
 }
 
