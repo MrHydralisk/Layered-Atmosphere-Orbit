@@ -9,6 +9,10 @@
 		<planetLayerGroupsToShowToo>
 			<li>LAO_Atmosphere</li>
 		</planetLayerGroupsToShowToo>
+		<planetLayerGroupsDirectConnection>
+			<li>LAO_Atmosphere</li>
+			<li>LAO_Orbit</li>
+		</planetLayerGroupsDirectConnection>
 	</LayeredAtmosphereOrbit.PlanetLayerGroupDef>
   
 	<LayeredAtmosphereOrbit.PlanetLayerGroupDef>
@@ -16,6 +20,10 @@
 		<label>atmosphere</label>
 		<description>A vast, breathable space dotted with floating islands that hover above the surface. The islands, suspended by a force of antigravity, create a layered geography where life can exist at multiple altitudes, far above the world's solid ground. It forms a complex, multi-level environment that bridges the gap between the world's core and the emptiness of space.</description>
 		<defaultPlanetLayer>LAO_Troposphere</defaultPlanetLayer>
+		<planetLayerGroupsDirectConnection>
+			<li>LAO_Surface</li>
+			<li>LAO_Orbit</li>
+		</planetLayerGroupsDirectConnection>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isPreventQuestMapIfNotWhitelisted>true</isPreventQuestMapIfNotWhitelisted>
@@ -97,6 +105,10 @@
 		<label>orbit</label>
 		<description>Empty space a few hundred kilometers above the surface of the world. This is the region where satellites, spacecraft and asteroids orbit the planet. In this harsh vacuum, objects are exposed to a complete lack of oxygen and brutally low temperatures.</description>
 		<defaultPlanetLayer>Orbit</defaultPlanetLayer>
+		<planetLayerGroupsDirectConnection>
+			<li>LAO_Surface</li>
+			<li>LAO_Atmosphere</li>
+		</planetLayerGroupsDirectConnection>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<WhitelistArrivalFactionDef>

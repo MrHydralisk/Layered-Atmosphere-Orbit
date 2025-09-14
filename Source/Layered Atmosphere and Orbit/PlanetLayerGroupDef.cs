@@ -8,5 +8,6 @@ namespace LayeredAtmosphereOrbit
     {
         public PlanetLayerDef defaultPlanetLayer;
         public List<PlanetLayerGroupDef> planetLayerGroupsToShowToo = new List<PlanetLayerGroupDef>();
+        public List<PlanetLayerGroupDef> planetLayerGroupsDirectConnection = new List<PlanetLayerGroupDef>();
     }
 }
