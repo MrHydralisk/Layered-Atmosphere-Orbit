@@ -19,8 +19,8 @@
   </GeneratedLocationDef>
   
   <GeneratedLocationDef>
-    <defName>LAO_FloatingIslandGiantInfested</defName>
-    <worldObjectDef>LAO_FloatingIslandGiantInfested</worldObjectDef>
+    <defName>LAO_FloatingIslandGiantCrust</defName>
+    <worldObjectDef>LAO_FloatingIslandGiantCrust</worldObjectDef>
 	<weight>0.5</weight>
     <layerDefs>
       <li>LAO_Troposphere</li>
@@ -108,8 +108,8 @@
   
   
   <GeneratedLocationDef>
-    <defName>LAO_AsteroidPrecious</defName>
-    <worldObjectDef>LAO_AsteroidPrecious</worldObjectDef>
+    <defName>LAO_AsteroidGiant</defName>
+    <worldObjectDef>LAO_AsteroidGiant</worldObjectDef>
     <layerDefs>
       <li>LAO_HighOrbit</li>
     </layerDefs>

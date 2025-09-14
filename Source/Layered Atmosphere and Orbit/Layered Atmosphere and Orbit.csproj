@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GenStep\GenStep_AsteroidGiantItemStash.cs" />
     <Compile Include="QuestNode_GetLAOLayers.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandScatterShrines.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandSleepingMechanoids.cs" />

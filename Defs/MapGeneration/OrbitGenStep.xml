@@ -2,7 +2,7 @@
 <Defs>
 
 	<GenStepDef>
-		<defName>LAO_AsteroidPrecious</defName>
+		<defName>LAO_AsteroidGiant</defName>
 		<order>200</order>
 		<genStep Class="GenStep_BasicAsteroid">
 			<numChunks>4~6</numChunks>
@@ -21,7 +21,50 @@
 	</GenStepDef>
 
 	<GenStepDef>
-		<defName>LAO_SleepingMechanoidsAPrecious</defName>
+		<defName>LAO_AsteroidGiant_NoRuins</defName>
+		<order>200</order>
+		<genStep Class="GenStep_Asteroid">
+			<numChunks>4~6</numChunks>
+			<ruinsChance>0</ruinsChance>
+			<archeanTreeChance>0.25</archeanTreeChance>
+			<mineableCounts>
+				<MineableGold>28~44</MineableGold>
+				<MineableSilver>100~140</MineableSilver>
+				<MineableSteel>160~220</MineableSteel>
+				<MineableUranium>30~50</MineableUranium>
+				<MineablePlasteel>24~30</MineablePlasteel>
+				<MineableComponentsIndustrial>130~170</MineableComponentsIndustrial>
+				<MineableJade>40~70</MineableJade>
+			</mineableCounts>
+		</genStep>
+	</GenStepDef>
+
+	<GenStepDef>
+		<defName>LAO_AsteroidGiantMiningSite</defName>
+		<order>200</order>
+		<genStep Class="GenStep_Asteroid">
+			<numChunks>10~16</numChunks>
+			<ruinsChance>0.5</ruinsChance>
+			<archeanTreeChance>0.25</archeanTreeChance>
+			<mineableCounts>
+				<MineableGold>130~165</MineableGold>
+				<MineablePlasteel>200~260</MineablePlasteel>
+				<MineableUranium>135~192</MineableUranium>
+			</mineableCounts>
+		</genStep>
+	</GenStepDef>
+
+	<GenStepDef>
+		<defName>LAO_AsteroidGiantItemStash</defName>
+		<order>500</order>
+		<genStep Class="LayeredAtmosphereOrbit.GenStep_AsteroidGiantItemStash">
+			<StructureSizeRange>80~100</StructureSizeRange>
+			<layoutDef>OrbitalItemStash_LAO_ItemRoom</layoutDef>
+		</genStep>
+	</GenStepDef>
+
+	<GenStepDef>
+		<defName>LAO_SleepingMechanoidsGiant</defName>
 		<linkWithSite>SleepingMechanoids</linkWithSite>
 		<order>1600</order>
 		<genStep Class="LayeredAtmosphereOrbit.GenStep_FloatingIslandSleepingMechanoids">
