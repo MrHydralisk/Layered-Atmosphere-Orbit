@@ -34,12 +34,36 @@ namespace LayeredAtmosphereOrbit
             foreach (string defName in LAOMod.Settings.AutoAddLayersDefNames)
             {
                 ScenPart_PlanetLayerFixed scenPart_LAOPlanetLayer = new ScenPart_PlanetLayerFixed();
-                scenPart_LAOPlanetLayer.def = DefDatabase<ScenPartDef>.GetNamed(defName);
+                scenPart_LAOPlanetLayer.def = DefDatabase<ScenPartDef>.GetNamed(defName, false);
                 scenPart_LAOPlanetLayer.tag = defName;
-                scenPart_LAOPlanetLayer.layer = DefDatabase<PlanetLayerDef>.GetNamed(defName);
-                scenPart_LAOPlanetLayer.settingsDef = DefDatabase<PlanetLayerSettingsDef>.GetNamed(defName);
+                scenPart_LAOPlanetLayer.layer = DefDatabase<PlanetLayerDef>.GetNamed(defName, false);
+                scenPart_LAOPlanetLayer.settingsDef = DefDatabase<PlanetLayerSettingsDef>.GetNamed(defName, false);
                 scenPart_LAOPlanetLayer.hide = true;
-                planetLayersLAO.Add(scenPart_LAOPlanetLayer);
+                List<string> nullDefs = new List<string>();
+                if (scenPart_LAOPlanetLayer.def == null)
+                {
+                    nullDefs.Add("ScenPartDef");
+                }
+                if (scenPart_LAOPlanetLayer.layer == null)
+                {
+                    nullDefs.Add("PlanetLayerDef");
+                }
+                if (scenPart_LAOPlanetLayer.settingsDef == null)
+                {
+                    nullDefs.Add("PlanetLayerSettingsDef");
+                }
+                if (nullDefs.Empty())
+                {
+                    planetLayersLAO.Add(scenPart_LAOPlanetLayer);
+                }
+                else if (nullDefs.Count == 3)
+                {
+                    Log.Error($"Couldn't find defName \"{defName}\" for any ScenPartDef, PlanetLayerDef or PlanetLayerSettingsDef. Seems like related mod was uninstalled, then disable it in LAO mod settings.");
+                }
+                else
+                {
+                    Log.Error($"Couldn't find defName \"{defName}\" for {string.Join(", ", nullDefs)}.Seems like there is an issue in defNames, so report to developer.");
+                }
             }
         }
 
