@@ -3,6 +3,7 @@
 	<identifier>MrHydralisk.LayeredAtmosphereOrbit</identifier>
 	<version>1.0.0.0</version>
 	<suggests>
+		<li>MrHydralisk.ComplementaryOdyssey</li>
 		<li>MrHydralisk.AnomaliesExpected</li>
 		<li>MrHydralisk.VOEAdditionalOutposts</li>
 		<li>MrHydralisk.UndergroundVault</li>
