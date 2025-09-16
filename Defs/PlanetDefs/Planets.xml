@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  
+	<LayeredAtmosphereOrbit.PlanetDef>
+		<defName>LAO_Rimworld</defName>
+		<label>rimworld</label>
+		<description>rimworld.</description>
+	</LayeredAtmosphereOrbit.PlanetDef>
+  
+	<LayeredAtmosphereOrbit.PlanetDef>
+		<defName>LAO_Moon</defName>
+		<label>moon</label>
+		<description>moon.</description>
+	</LayeredAtmosphereOrbit.PlanetDef>
+  
+</Defs>

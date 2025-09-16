@@ -46,6 +46,9 @@ namespace LayeredAtmosphereOrbit
             val.Patch(AccessTools.Method(typeof(GenTemperature), "GetTemperatureFromSeasonAtTile"), postfix: new HarmonyMethod(patchType, "GT_GetTemperatureFromSeasonAtTile_Postfix"));
             val.Patch(AccessTools.FirstMethod(typeof(TileFinder), (MethodInfo mi) => mi.Name == "TryFindNewSiteTile" && mi.GetParameters().Count((ParameterInfo PI) => PI.ParameterType.Name.Contains(typeof(PlanetTile).Name)) > 1), prefix: new HarmonyMethod(patchType, "TF_TryFindNewSiteTile_Prefix"));
             val.Patch(AccessTools.Method(typeof(PlanetLayer), "DirectConnectionTo"), prefix: new HarmonyMethod(patchType, "PL_DirectConnectionTo_Prefix"));
+            
+            val.Patch(AccessTools.Property(typeof(PlanetLayer), "Visible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "PL_Visible_Prefix"));
+            val.Patch(AccessTools.Property(typeof(WorldSelector), "SelectedLayer").GetSetMethod(), postfix: new HarmonyMethod(patchType, "WS_SelectedLayer_Postfix"));
         }
 
         public static void InjectPlanetLayersDefs()
@@ -498,6 +501,23 @@ namespace LayeredAtmosphereOrbit
                 return false;
             }
             return true;
+        }
+
+        public static bool PL_Visible_Prefix(ref bool __result, PlanetLayer __instance)
+        {
+            Log.Message($"PL_Visible_Prefix {__instance.Def?.defName ?? "---"} | {__instance.Def.LayerGroup()?.planet?.defName ?? "---"} != {GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef?.defName ?? "---"} = {__instance.Def.LayerGroup()?.planet != GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef}");
+            if (__instance.Def.LayerGroup()?.planet != GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef)
+            {
+                __result = false;
+                return false;
+            }
+            return true;
+        }
+
+        public static void WS_SelectedLayer_Postfix(WorldSelector __instance, PlanetLayer value)
+        {
+            Log.Message($"WS_SelectedLayer_Postfix {GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef?.defName ?? "---"} = {value.Def.LayerGroup()?.planet?.defName ?? "---"}");
+            GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef = value.Def.LayerGroup()?.planet;
         }
     }
 }

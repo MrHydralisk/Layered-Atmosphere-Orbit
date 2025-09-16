@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Defs\PlanetDef.cs" />
     <Compile Include="GenStep\GenStep_AsteroidGiantItemStash.cs" />
     <Compile Include="QuestNode_GetLAOLayers.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandScatterShrines.cs" />
@@ -55,7 +56,7 @@
     <Compile Include="LAOSettings.cs" />
     <Compile Include="GenStep\GenStep_FloatingIsland.cs" />
     <Compile Include="MapParent\AtmosphereMapParent.cs" />
-    <Compile Include="PlanetLayerGroupDef.cs" />
+    <Compile Include="Defs\PlanetLayerGroupDef.cs" />
     <Compile Include="SectionLayer_TerrainEdgesFloatingIslands.cs" />
     <Compile Include="LayeredAtmosphereOrbitDefModExtension.cs" />
     <Compile Include="HarmonyPatches.cs" />

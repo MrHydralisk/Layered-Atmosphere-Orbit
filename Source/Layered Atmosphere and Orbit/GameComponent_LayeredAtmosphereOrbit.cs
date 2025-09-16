@@ -6,6 +6,8 @@ namespace LayeredAtmosphereOrbit
     {
         public static GameComponent_LayeredAtmosphereOrbit instance;
 
+        public PlanetDef currentPlanetDef;
+
         public GameComponent_LayeredAtmosphereOrbit(Game game)
         {
             instance = this;
