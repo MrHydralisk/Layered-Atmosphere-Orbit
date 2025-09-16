@@ -7,6 +7,7 @@ namespace LayeredAtmosphereOrbit
     {
         public bool UseFuelCostBetweenLayers = false;
         public float FuelPerKm = 1;
+        public float FuelPerKmSpace = 0.01f;
         public bool ShowLayerInGroup = true;
         public bool AutoSwapLayerOnSelection = true;
         public float TransparentInGroup = 0.6f;

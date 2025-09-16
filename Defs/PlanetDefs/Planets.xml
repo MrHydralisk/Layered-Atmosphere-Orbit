@@ -11,6 +11,7 @@
 		<defName>LAO_Moon</defName>
 		<label>moon</label>
 		<description>moon.</description>
+		<distanceToRimworld>385000</distanceToRimworld>
 	</LayeredAtmosphereOrbit.PlanetDef>
   
 </Defs>

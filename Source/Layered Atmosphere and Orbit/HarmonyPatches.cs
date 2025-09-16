@@ -49,6 +49,14 @@ namespace LayeredAtmosphereOrbit
             
             val.Patch(AccessTools.Property(typeof(PlanetLayer), "Visible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "PL_Visible_Prefix"));
             val.Patch(AccessTools.Property(typeof(WorldSelector), "SelectedLayer").GetSetMethod(), postfix: new HarmonyMethod(patchType, "WS_SelectedLayer_Postfix"));
+            if (true)
+            {
+                val.Patch(AccessTools.Method(typeof(GravshipUtility), "TravelTo"), prefix: new HarmonyMethod(patchType, "GU_TravelTo_Prefix"));
+                val.Patch(AccessTools.Property(typeof(Gravship), "DrawPos").GetGetMethod(true), prefix: new HarmonyMethod(patchType, "G_DrawPos_Prefix"));
+                val.Patch(AccessTools.Method(typeof(GravshipUtility), "ArriveExistingMap"), postfix: new HarmonyMethod(patchType, "GU_ArriveExistingMap_Postfix"));
+                val.Patch(AccessTools.Method(typeof(GravshipUtility), "ArriveNewMap"), postfix: new HarmonyMethod(patchType, "GU_ArriveExistingMap_Postfix"));
+                val.Patch(AccessTools.Property(typeof(Gravship), "TraveledPctStepPerTick").GetGetMethod(true), prefix: new HarmonyMethod(patchType, "G_TraveledPctStepPerTick_Prefix"));
+            }
         }
 
         public static void InjectPlanetLayersDefs()
@@ -505,7 +513,7 @@ namespace LayeredAtmosphereOrbit
 
         public static bool PL_Visible_Prefix(ref bool __result, PlanetLayer __instance)
         {
-            Log.Message($"PL_Visible_Prefix {__instance.Def?.defName ?? "---"} | {__instance.Def.LayerGroup()?.planet?.defName ?? "---"} != {GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef?.defName ?? "---"} = {__instance.Def.LayerGroup()?.planet != GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef}");
+            //Log.Message($"PL_Visible_Prefix {__instance.Def?.defName ?? "---"} | {__instance.Def.LayerGroup()?.planet?.defName ?? "---"} != {GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef?.defName ?? "---"} = {__instance.Def.LayerGroup()?.planet != GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef}");
             if (__instance.Def.LayerGroup()?.planet != GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef)
             {
                 __result = false;
@@ -518,6 +526,86 @@ namespace LayeredAtmosphereOrbit
         {
             Log.Message($"WS_SelectedLayer_Postfix {GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef?.defName ?? "---"} = {value.Def.LayerGroup()?.planet?.defName ?? "---"}");
             GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef = value.Def.LayerGroup()?.planet;
+        }
+
+        public static bool GU_TravelTo_Prefix(Gravship gravship, PlanetTile oldTile, PlanetTile newTile)
+        {
+            if (ModsConfig.OdysseyActive)
+            {
+                gravship.SetFaction(gravship.Engine.Faction);
+                gravship.Tile = oldTile;
+                if (gravship.Tile.Layer != newTile.Layer)
+                {
+                    gravship.Tile = newTile.Layer.GetClosestTile_NewTemp(gravship.Tile);
+                }
+                gravship.destinationTile = newTile;
+                List<Vector3> route = new List<Vector3>();
+                route.Add(Find.WorldGrid.GetTileCenter(gravship.Tile));
+                if (oldTile.Layer != newTile.Layer)
+                {
+                    route.Add(Find.WorldGrid.GetTileCenter(newTile.Layer.GetClosestTile_NewTemp(oldTile)));
+                }
+                route.Add(Find.WorldGrid.GetTileCenter(newTile));
+                GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.SetOrAdd(gravship, new GravshipRoute(route));
+                Find.WorldObjects.Add(gravship);
+                CameraJumper.TryJump(gravship);
+            }
+            return false;
+        }
+
+        public static bool G_DrawPos_Prefix(ref Vector3 __result, Gravship __instance, float ___traveledPct)
+        {
+            if (GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.TryGetValue(__instance, out GravshipRoute gravshipRoute))
+            {
+                __result = gravshipRoute.Evaluate(___traveledPct);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public static void GU_ArriveExistingMap_Postfix(Gravship gravship)
+        {
+            Log.Message($"GU_ArriveExistingMap_Postfix");
+            GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.Remove(gravship);
+            //__result += __instance.destinationTile.Layer.Origin;
+        }
+
+        public static bool G_TraveledPctStepPerTick_Prefix(ref float __result, Gravship __instance, float ___traveledPct)
+        {
+            if (GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.TryGetValue(__instance, out GravshipRoute gravshipRoute))
+            {
+                Vector3 start = gravshipRoute.routePoints.First();
+                Vector3 end = gravshipRoute.routePoints.Last();
+                if (start == end)
+                {
+                    __result = 1f;
+                    Log.Message($"G_TraveledPctStepPerTick_Prefix A {__result}");
+                }
+                float num = GenMath.SphericalDistance(start.normalized, end.normalized);
+                if (num == 0f)
+                {
+                    __result = 1f;
+                    Log.Message($"G_TraveledPctStepPerTick_Prefix B {__result}");
+                }
+                __result = 0.00025f / num;
+                Log.Message($"G_TraveledPctStepPerTick_Prefix C {__result} {num}");
+
+                gravshipRoute.TryCache();
+                __result = 0.00025f / gravshipRoute.routeLength;
+                if (__result <= 0)
+                {
+                    __result = 1;
+                }
+                Log.Message($"G_TraveledPctStepPerTick_Prefix D {__result} {gravshipRoute.routeLength}");
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }
