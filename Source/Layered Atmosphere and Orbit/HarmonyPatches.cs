@@ -81,9 +81,20 @@ namespace LayeredAtmosphereOrbit
             List<GeneratedLocationDef> AllGeneratedLocationDefs = DefDatabase<GeneratedLocationDef>.AllDefs.ToList();
             foreach (GeneratedLocationDef generatedLocationDef in AllGeneratedLocationDefs)
             {
-                if (generatedLocationDef.LayerDefs.Any((PlanetLayerDef pld) => pld.LayerGroup() != null) && !generatedLocationDef.worldObjectDef.inspectorTabsResolved.Any((InspectTabBase itb) => itb is WITab_PlanetLayer))
+                if (generatedLocationDef.LayerDefs.Any((PlanetLayerDef pld) => pld.LayerGroup() != null))
                 {
-                    generatedLocationDef.worldObjectDef.inspectorTabsResolved.Add((InspectTabBase)Activator.CreateInstance(typeof(WITab_PlanetLayer)));
+                    if (generatedLocationDef.worldObjectDef == null)
+                    {
+                        continue;
+                    }
+                    if (generatedLocationDef.worldObjectDef.inspectorTabsResolved == null)
+                    {
+                        generatedLocationDef.worldObjectDef.inspectorTabsResolved = new List<InspectTabBase>() { (InspectTabBase)Activator.CreateInstance(typeof(WITab_PlanetLayer)) };
+                    }
+                    else if(!generatedLocationDef.worldObjectDef.inspectorTabsResolved.Any((InspectTabBase itb) => itb is WITab_PlanetLayer))
+                    {
+                        generatedLocationDef.worldObjectDef.inspectorTabsResolved.Add((InspectTabBase)Activator.CreateInstance(typeof(WITab_PlanetLayer)));
+                    }
                 }
 
             }
