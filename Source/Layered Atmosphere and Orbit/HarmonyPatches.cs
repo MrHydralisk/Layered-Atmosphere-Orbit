@@ -48,9 +48,14 @@ namespace LayeredAtmosphereOrbit
             val.Patch(AccessTools.Method(typeof(GenTemperature), "GetTemperatureFromSeasonAtTile"), postfix: new HarmonyMethod(patchType, "GT_GetTemperatureFromSeasonAtTile_Postfix"));
             val.Patch(AccessTools.FirstMethod(typeof(TileFinder), (MethodInfo mi) => mi.Name == "TryFindNewSiteTile" && mi.GetParameters().Count((ParameterInfo PI) => PI.ParameterType.Name.Contains(typeof(PlanetTile).Name)) > 1), prefix: new HarmonyMethod(patchType, "TF_TryFindNewSiteTile_Prefix"));
             val.Patch(AccessTools.Method(typeof(PlanetLayer), "DirectConnectionTo"), prefix: new HarmonyMethod(patchType, "PL_DirectConnectionTo_Prefix"));
-            
-            val.Patch(AccessTools.Property(typeof(PlanetLayer), "Visible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "PL_Visible_Prefix"));
-            val.Patch(AccessTools.Property(typeof(WorldSelector), "SelectedLayer").GetSetMethod(), postfix: new HarmonyMethod(patchType, "WS_SelectedLayer_Postfix"));
+            if (LAOMod.Settings.PlanetPatches)
+            {
+                val.Patch(AccessTools.Property(typeof(PlanetLayer), "Visible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "PL_Visible_Prefix"));
+                val.Patch(AccessTools.Property(typeof(PlanetLayer), "Raycastable").GetGetMethod(), postfix: new HarmonyMethod(patchType, "PL_Raycastable_Postfix"));
+                val.Patch(AccessTools.Property(typeof(WorldDrawLayer), "Visible").GetGetMethod(), postfix: new HarmonyMethod(patchType, "WDL_Visible_Postfix"));
+                val.Patch(AccessTools.Property(typeof(WorldDrawLayer), "Raycastable").GetGetMethod(), postfix: new HarmonyMethod(patchType, "WDL_Raycastable_Postfix"));
+                val.Patch(AccessTools.Property(typeof(WorldSelector), "SelectedLayer").GetSetMethod(), postfix: new HarmonyMethod(patchType, "WS_SelectedLayer_Postfix"));
+            }
             if (LAOMod.Settings.GravshipRoute)
             {
                 val.Patch(AccessTools.Method(typeof(GravshipUtility), "TravelTo"), prefix: new HarmonyMethod(patchType, "GU_TravelTo_Prefix"));
@@ -518,6 +523,21 @@ namespace LayeredAtmosphereOrbit
                 return false;
             }
             return true;
+        }
+
+        public static void PL_Raycastable_Postfix(ref bool __result, PlanetLayer __instance)
+        {
+            __result = __result && __instance.Def.LayerGroup()?.planet == GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef;
+        }
+
+        public static void WDL_Visible_Postfix(ref bool __result, WorldDrawLayer __instance)
+        {
+            __result = __result && __instance.planetLayer.Def.LayerGroup()?.planet == GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef;
+        }
+
+        public static void WDL_Raycastable_Postfix(ref bool __result, WorldDrawLayer __instance)
+        {
+            __result = __result && __instance.planetLayer.Def.LayerGroup()?.planet == GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef;
         }
 
         public static void WS_SelectedLayer_Postfix(WorldSelector __instance, PlanetLayer value)

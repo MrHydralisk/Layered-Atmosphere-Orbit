@@ -8,7 +8,22 @@ namespace LayeredAtmosphereOrbit
     {
         public static GameComponent_LayeredAtmosphereOrbit instance;
 
-        public PlanetDef currentPlanetDef;
+        public PlanetDef currentPlanetDef
+        {
+            get
+            {
+                return currentPlanetDefInt;
+            }
+            set
+            {
+                if (currentPlanetDefInt != value)
+                {
+                    Find.World.renderer.RegenerateAllLayersNow();
+                }
+                currentPlanetDefInt = value;
+            }
+        }
+        private PlanetDef currentPlanetDefInt;
         public Dictionary<Gravship, GravshipRoute> gravshipRoutes = new Dictionary<Gravship, GravshipRoute>();
         private List<Gravship> tmpGravshipRoutesGravships = new List<Gravship>();
         private List<GravshipRoute> tmpGravshipRoutesRoutes = new List<GravshipRoute>();
@@ -27,6 +42,7 @@ namespace LayeredAtmosphereOrbit
         public override void ExposeData()
         {
             base.ExposeData();
+            Scribe_Defs.Look(ref currentPlanetDefInt, "currentPlanetDef");
             Scribe_Collections.Look(ref gravshipRoutes, "gravshipRoutes", LookMode.Reference, LookMode.Deep, ref tmpGravshipRoutesGravships, ref tmpGravshipRoutesRoutes);
             if (Scribe.mode != LoadSaveMode.PostLoadInit)
             {
