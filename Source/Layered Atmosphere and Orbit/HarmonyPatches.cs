@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Verse;
 
 namespace LayeredAtmosphereOrbit
@@ -539,14 +541,14 @@ namespace LayeredAtmosphereOrbit
                     gravship.Tile = newTile.Layer.GetClosestTile_NewTemp(gravship.Tile);
                 }
                 gravship.destinationTile = newTile;
-                List<Vector3> route = new List<Vector3>();
-                route.Add(Find.WorldGrid.GetTileCenter(gravship.Tile));
+                GravshipRoute route = new GravshipRoute();
+                route.AddRoutePoint(Find.WorldGrid.GetTileCenter(oldTile), oldTile.LayerDef);
                 if (oldTile.Layer != newTile.Layer)
                 {
-                    route.Add(Find.WorldGrid.GetTileCenter(newTile.Layer.GetClosestTile_NewTemp(oldTile)));
+                    route.AddRoutePoint(Find.WorldGrid.GetTileCenter(gravship.Tile.Layer.GetClosestTile_NewTemp(gravship.Tile)), gravship.Tile.LayerDef);
                 }
-                route.Add(Find.WorldGrid.GetTileCenter(newTile));
-                GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.SetOrAdd(gravship, new GravshipRoute(route));
+                route.AddRoutePoint(Find.WorldGrid.GetTileCenter(newTile), newTile.LayerDef);
+                GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.SetOrAdd(gravship, route);
                 Find.WorldObjects.Add(gravship);
                 CameraJumper.TryJump(gravship);
             }
@@ -557,7 +559,12 @@ namespace LayeredAtmosphereOrbit
         {
             if (GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.TryGetValue(__instance, out GravshipRoute gravshipRoute))
             {
-                __result = gravshipRoute.Evaluate(___traveledPct);
+                __result = gravshipRoute.Evaluate(___traveledPct, out PlanetLayerDef planetLayerDef);
+                Log.Message($"G_DrawPos_Prefix {___traveledPct} {planetLayerDef.defName}");
+                if (__instance.Tile.LayerDef != planetLayerDef && Find.WorldGrid.TryGetFirstLayerOfDef(planetLayerDef, out PlanetLayer layer))
+                {
+                    __instance.Tile = layer.GetClosestTile_NewTemp(__instance.initialTile);
+                }
                 return false;
             }
             else

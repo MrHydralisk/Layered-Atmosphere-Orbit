@@ -9,6 +9,7 @@ namespace LayeredAtmosphereOrbit
     public class GravshipRoute : IExposable
     {
         public List<Vector3> routePoints = new List<Vector3>();
+        public List<PlanetLayerDef> routePlanetLayers = new List<PlanetLayerDef>();
 
         public float routeLength 
         {
@@ -27,9 +28,10 @@ namespace LayeredAtmosphereOrbit
 
         }
 
-        public GravshipRoute(List<Vector3> route)
+        public void AddRoutePoint(Vector3 point, PlanetLayerDef planetLayerDef)
         {
-            routePoints = route;
+            routePoints.Add(point);
+            routePlanetLayers.Add(planetLayerDef);
         }
 
         public void TryCache()
@@ -65,17 +67,20 @@ namespace LayeredAtmosphereOrbit
             }
         }
 
-        public Vector3 Evaluate(float x)
+        public Vector3 Evaluate(float x, out PlanetLayerDef planetLayerDef)
         {
             TryCache();
             Vector3 v = new Vector3(curveX.Evaluate(x),curveY.Evaluate(x),curveZ.Evaluate(x));
-            Log.Message($"Evaluate {x} as {v} [{v.normalized}]");
+            int index = curveX.Points.FindLastIndex((CurvePoint cp) => x >= cp.x);
+            planetLayerDef = routePlanetLayers[index];
+            Log.Message($"Evaluate {x} as {v} [{v.normalized}] {index} {planetLayerDef.defName}");
             return v;
         }
 
         public void ExposeData()
         {
             Scribe_Collections.Look(ref routePoints, "routePoints", LookMode.Value);
+            Scribe_Collections.Look(ref routePlanetLayers, "routePlanetLayers", LookMode.Def);
         }
     }
 }
