@@ -5,7 +5,7 @@
 		<defName>LAO_Surface_Moon</defName>
 		<label>Default surface</label>
 		<settings>
-			<origin>(-300,25,0)</origin>
+			<!-- <origin>(-300,25,0)</origin> -->
 			<radius>25</radius>
 			<subdivisions>6</subdivisions>
 			<useSurfaceViewAngle>true</useSurfaceViewAngle>

@@ -70,7 +70,7 @@ namespace LayeredAtmosphereOrbit
             options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.ReplaceAllViewLayerGizmo".Translate().RawText, ref Settings.ReplaceAllViewLayerGizmo);
             options.GapLine();
             options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.PlanetPatches".Translate().RawText, ref Settings.PlanetPatches);
-            options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.HideOtherPlanets".Translate().RawText, ref Settings.HideOtherPlanets);
+            //options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.HideOtherPlanets".Translate().RawText, ref Settings.HideOtherPlanets);
             options.GapLine();
             options.Label("LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Total".Translate());
             foreach (PlanetLayerDef planetLayerDef in AutoAddLayerOptions)
