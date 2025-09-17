@@ -45,10 +45,8 @@ namespace LayeredAtmosphereOrbit
                 for (int i = 1; i < routePoints.Count - 1; i++)
                 {
                     routeLength += Vector3.Distance(routePoints[i], routePoints[i - 1]) / 100;
-                    Log.Message($"TryCache [{i}] {routeLength} += {Vector3.Distance(routePoints[i], routePoints[i - 1])} Vector3.Distance({routePoints[i]}|{routePoints[i].normalized}, {routePoints[i - 1]}|{routePoints[i - 1].normalized}) | {Vector3.Distance(routePoints[i].normalized, routePoints[i - 1].normalized)} | {GenMath.SphericalDistance(routePoints[i], routePoints[i - 1])} | {GenMath.SphericalDistance(routePoints[i].normalized, routePoints[i - 1].normalized)}");
                 }
                 routeLength += GenMath.SphericalDistance(routePoints[routePoints.Count - 2].normalized, routePoints[routePoints.Count - 1].normalized);
-                Log.Message($"TryCache [{routePoints.Count - 1}] {routeLength} += {GenMath.SphericalDistance(routePoints[routePoints.Count - 2], routePoints[routePoints.Count - 1])} Vector3.Distance({routePoints[routePoints.Count - 2]}|{routePoints[routePoints.Count - 2].normalized}, {routePoints[routePoints.Count - 1]}|{routePoints[routePoints.Count - 1].normalized}) | {GenMath.SphericalDistance(routePoints[routePoints.Count - 2].normalized, routePoints[routePoints.Count - 1].normalized)} | {Vector3.Distance(routePoints[routePoints.Count - 2], routePoints[routePoints.Count - 1])} | {Vector3.Distance(routePoints[routePoints.Count - 2].normalized, routePoints[routePoints.Count - 1].normalized)}");
                 float passedLength = 0;
                 curveX.Add(0, routePoints[0].x);
                 curveY.Add(0, routePoints[0].y);
@@ -73,7 +71,6 @@ namespace LayeredAtmosphereOrbit
             Vector3 v = new Vector3(curveX.Evaluate(x),curveY.Evaluate(x),curveZ.Evaluate(x));
             int index = curveX.Points.FindLastIndex((CurvePoint cp) => x >= cp.x);
             planetLayerDef = routePlanetLayers[index];
-            Log.Message($"Evaluate {x} as {v} [{v.normalized}] {index} {planetLayerDef.defName}");
             return v;
         }
 

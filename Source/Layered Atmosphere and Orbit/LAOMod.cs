@@ -59,6 +59,8 @@ namespace LayeredAtmosphereOrbit
             options.Label("LayeredAtmosphereOrbit.Settings.FuelPerKm".Translate(Settings.FuelPerKm));
             Settings.FuelPerKm = Mathf.Round(options.Slider(Settings.FuelPerKm, 0f, 5f) * 100f) / 100f;
             options.GapLine();
+            options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.GravshipRoute".Translate().RawText, ref Settings.GravshipRoute);
+            options.GapLine();
             options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.ShowLayerInGroup".Translate().RawText, ref Settings.ShowLayerInGroup);
             options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.AutoSwapLayerOnSelection".Translate().RawText, ref Settings.AutoSwapLayerOnSelection);
             options.Label("LayeredAtmosphereOrbit.Settings.TransparentInGroup".Translate(Settings.TransparentInGroup.ToStringPercent()));

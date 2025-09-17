@@ -51,7 +51,7 @@ namespace LayeredAtmosphereOrbit
             
             val.Patch(AccessTools.Property(typeof(PlanetLayer), "Visible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "PL_Visible_Prefix"));
             val.Patch(AccessTools.Property(typeof(WorldSelector), "SelectedLayer").GetSetMethod(), postfix: new HarmonyMethod(patchType, "WS_SelectedLayer_Postfix"));
-            if (true)
+            if (LAOMod.Settings.GravshipRoute)
             {
                 val.Patch(AccessTools.Method(typeof(GravshipUtility), "TravelTo"), prefix: new HarmonyMethod(patchType, "GU_TravelTo_Prefix"));
                 val.Patch(AccessTools.Property(typeof(Gravship), "DrawPos").GetGetMethod(true), prefix: new HarmonyMethod(patchType, "G_DrawPos_Prefix"));
@@ -411,17 +411,14 @@ namespace LayeredAtmosphereOrbit
         public static PlanetLayer CheckSiteLayer(PlanetLayer layer)
         {
             Slate slate = QuestGen.slate;
-            Log.Message($"slate {slate != null} {layer?.Def.defName ?? "---"}");
             if (slate != null)
             {
                 List<PlanetLayerGroupDef> planetLayerGroupDefs = slate.Get<List<PlanetLayerGroupDef>>("layerGroupWhitelist");
                 PlanetLayerGroupDef planetLayerGroupDef = layer.Def.LayerGroup();
                 LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerGroupDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
-                Log.Message($"{laoDefModExtension?.isPreventQuestMapIfNotWhitelisted.ToString() ?? "---"} && {planetLayerGroupDef?.defName ?? "---"} !({planetLayerGroupDefs?.Contains(planetLayerGroupDef).ToString() ?? "---"})");
                 if ((laoDefModExtension?.isPreventQuestMapIfNotWhitelisted ?? false) && !(planetLayerGroupDefs?.Contains(planetLayerGroupDef) ?? false))
                 {
                     Find.WorldGrid.TryGetFirstLayerOfDef(PlanetLayerDefOf.Surface, out layer);
-                    Log.Message($"changed to {layer?.Def.defName ?? "---"}");
                 }
             }
             return layer;
@@ -515,7 +512,6 @@ namespace LayeredAtmosphereOrbit
 
         public static bool PL_Visible_Prefix(ref bool __result, PlanetLayer __instance)
         {
-            //Log.Message($"PL_Visible_Prefix {__instance.Def?.defName ?? "---"} | {__instance.Def.LayerGroup()?.planet?.defName ?? "---"} != {GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef?.defName ?? "---"} = {__instance.Def.LayerGroup()?.planet != GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef}");
             if (__instance.Def.LayerGroup()?.planet != GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef)
             {
                 __result = false;
@@ -526,7 +522,6 @@ namespace LayeredAtmosphereOrbit
 
         public static void WS_SelectedLayer_Postfix(WorldSelector __instance, PlanetLayer value)
         {
-            Log.Message($"WS_SelectedLayer_Postfix {GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef?.defName ?? "---"} = {value.Def.LayerGroup()?.planet?.defName ?? "---"}");
             GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef = value.Def.LayerGroup()?.planet;
         }
 
@@ -536,16 +531,24 @@ namespace LayeredAtmosphereOrbit
             {
                 gravship.SetFaction(gravship.Engine.Faction);
                 gravship.Tile = oldTile;
-                if (gravship.Tile.Layer != newTile.Layer)
-                {
-                    gravship.Tile = newTile.Layer.GetClosestTile_NewTemp(gravship.Tile);
-                }
                 gravship.destinationTile = newTile;
                 GravshipRoute route = new GravshipRoute();
+                List<PlanetLayerConnection> path = new List<PlanetLayerConnection>();
                 route.AddRoutePoint(Find.WorldGrid.GetTileCenter(oldTile), oldTile.LayerDef);
-                if (oldTile.Layer != newTile.Layer)
+                if (PlanetLayer.TryGetPath(oldTile.Layer, newTile.Layer, path, out _))
                 {
-                    route.AddRoutePoint(Find.WorldGrid.GetTileCenter(gravship.Tile.Layer.GetClosestTile_NewTemp(gravship.Tile)), gravship.Tile.LayerDef);
+                    for(int i = 0; i < path.Count; i++)
+                    {
+                        PlanetLayer planetLayer = path[i].target;
+                        route.AddRoutePoint(Find.WorldGrid.GetTileCenter(planetLayer.GetClosestTile_NewTemp(oldTile)), planetLayer.Def);
+                    }
+                }
+                else
+                {
+                    if (oldTile.Layer != newTile.Layer)
+                    {
+                        route.AddRoutePoint(Find.WorldGrid.GetTileCenter(gravship.Tile.Layer.GetClosestTile_NewTemp(gravship.Tile)), gravship.Tile.LayerDef);
+                    }
                 }
                 route.AddRoutePoint(Find.WorldGrid.GetTileCenter(newTile), newTile.LayerDef);
                 GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.SetOrAdd(gravship, route);
@@ -560,10 +563,21 @@ namespace LayeredAtmosphereOrbit
             if (GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.TryGetValue(__instance, out GravshipRoute gravshipRoute))
             {
                 __result = gravshipRoute.Evaluate(___traveledPct, out PlanetLayerDef planetLayerDef);
-                Log.Message($"G_DrawPos_Prefix {___traveledPct} {planetLayerDef.defName}");
                 if (__instance.Tile.LayerDef != planetLayerDef && Find.WorldGrid.TryGetFirstLayerOfDef(planetLayerDef, out PlanetLayer layer))
                 {
+                    bool isLooking = Find.WorldSelector.SelectedLayer == __instance.Tile.Layer && WorldRendererUtility.WorldSelected && new Rect(0f, 0f, UI.screenWidth, UI.screenHeight).Contains(GenWorldUI.WorldToUIPosition(__instance.Tile.Layer.Origin + Find.WorldGrid.GetTileCenter(__instance.Tile)));
                     __instance.Tile = layer.GetClosestTile_NewTemp(__instance.initialTile);
+                    if (isLooking)
+                    {
+                        if (Find.WorldSelector.IsSelected(__instance))
+                        {
+                            CameraJumper.TryJumpAndSelect(__instance);
+                        }
+                        else
+                        {
+                            Find.WorldSelector.SelectedLayer = __instance.Tile.Layer;
+                        }
+                    }
                 }
                 return false;
             }
@@ -575,38 +589,19 @@ namespace LayeredAtmosphereOrbit
 
         public static void GU_ArriveExistingMap_Postfix(Gravship gravship)
         {
-            Log.Message($"GU_ArriveExistingMap_Postfix");
             GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.Remove(gravship);
-            //__result += __instance.destinationTile.Layer.Origin;
         }
 
         public static bool G_TraveledPctStepPerTick_Prefix(ref float __result, Gravship __instance, float ___traveledPct)
         {
             if (GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.TryGetValue(__instance, out GravshipRoute gravshipRoute))
             {
-                Vector3 start = gravshipRoute.routePoints.First();
-                Vector3 end = gravshipRoute.routePoints.Last();
-                if (start == end)
-                {
-                    __result = 1f;
-                    Log.Message($"G_TraveledPctStepPerTick_Prefix A {__result}");
-                }
-                float num = GenMath.SphericalDistance(start.normalized, end.normalized);
-                if (num == 0f)
-                {
-                    __result = 1f;
-                    Log.Message($"G_TraveledPctStepPerTick_Prefix B {__result}");
-                }
-                __result = 0.00025f / num;
-                Log.Message($"G_TraveledPctStepPerTick_Prefix C {__result} {num}");
-
                 gravshipRoute.TryCache();
                 __result = 0.00025f / gravshipRoute.routeLength;
                 if (__result <= 0)
                 {
                     __result = 1;
                 }
-                Log.Message($"G_TraveledPctStepPerTick_Prefix D {__result} {gravshipRoute.routeLength}");
                 return false;
             }
             else

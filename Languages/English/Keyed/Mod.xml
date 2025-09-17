@@ -6,6 +6,8 @@
 	<LayeredAtmosphereOrbit.Settings.UseFuelCostBetweenLayers>Add fuel cost to travel between layers based on distance in km. (Vanilla is disabled.)</LayeredAtmosphereOrbit.Settings.UseFuelCostBetweenLayers>
 	<LayeredAtmosphereOrbit.Settings.FuelPerKm>Fuel cost to travel between layers: {0} per km. (Vanilla is 0.)</LayeredAtmosphereOrbit.Settings.FuelPerKm>
 	
+	<LayeredAtmosphereOrbit.Settings.GravshipRoute>Gravship will move between planet layers by changing it own elevation, when traveling. Making it move XYZ instead of XZ only. (In Vanilla gravship teleports to needed layer right away. Require game restart.)</LayeredAtmosphereOrbit.Settings.GravshipRoute>
+	
 	<LayeredAtmosphereOrbit.Settings.ShowLayerInGroup>Show planet layers in same or similar group. (For example, allows to see floating islands, when surface layer selected. Require game restart.)</LayeredAtmosphereOrbit.Settings.ShowLayerInGroup>
 	<LayeredAtmosphereOrbit.Settings.AutoSwapLayerOnSelection>On world object selection not within current planet layer will automatically swap to that layer. (Useful for fast swap between layers in same planet layer group. Require game restart.)</LayeredAtmosphereOrbit.Settings.AutoSwapLayerOnSelection>
 	<LayeredAtmosphereOrbit.Settings.TransparentInGroup>Transparency of world objects in layer within same planet layer group {0}. (When above 50% allows to select world objects from same planet layer group. Default 60%. Vanilla 30%.)</LayeredAtmosphereOrbit.Settings.TransparentInGroup>
