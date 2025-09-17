@@ -14,6 +14,7 @@
 	<LayeredAtmosphereOrbit.Settings.TransparentInGroupSub>Transparency of world objects in layer within similar planet layer group {0}. (For example, refer to value of floating islands, when surface layer selected. Default 30%.)</LayeredAtmosphereOrbit.Settings.TransparentInGroupSub>
 	<LayeredAtmosphereOrbit.Settings.ReplaceAllViewLayerGizmo>Remove vanilla buttons to view layers and keep only custom one. (Useful when have a lot of planet layers. Require game restart.)</LayeredAtmosphereOrbit.Settings.ReplaceAllViewLayerGizmo>
 	<LayeredAtmosphereOrbit.Settings.PlanetPatches>Enable Planet patches. (Needed for Moons and other Planets to work. Require game restart.)</LayeredAtmosphereOrbit.Settings.PlanetPatches>
+	<LayeredAtmosphereOrbit.Settings.HideOtherPlanets>Hide other Planets, except currently selected. (Require game restart.)</LayeredAtmosphereOrbit.Settings.HideOtherPlanets>
 	
 	<LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Total>Planet Layers that will be added: (Require game restart.)</LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Total>
 	<LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Option>- {0}</LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Option>

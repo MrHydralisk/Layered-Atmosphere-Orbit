@@ -12,6 +12,7 @@
 		<label>moon</label>
 		<description>moon.</description>
 		<distanceToRimworld>385000</distanceToRimworld>
+		<permamentGameConditionDefs />
 	</LayeredAtmosphereOrbit.PlanetDef>
   
 </Defs>

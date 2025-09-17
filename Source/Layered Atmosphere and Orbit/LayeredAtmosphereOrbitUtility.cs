@@ -179,6 +179,11 @@ namespace LayeredAtmosphereOrbit
             return planetLayer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.planetLayerGroup ?? null;
         }
 
+        public static PlanetDef Planet(this PlanetLayerDef planetLayer)
+        {
+            return planetLayer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.planetLayerGroup?.planet ?? null;
+        }
+
         public static bool ContainsLayer(this PlanetLayerGroupDef planetLayerGroup, PlanetLayerDef planetLayer)
         {
             if (planetLayerGroups.TryGetValue(planetLayerGroup, out List<PlanetLayerDef> subPlanetLayers))

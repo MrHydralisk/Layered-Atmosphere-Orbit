@@ -7,5 +7,6 @@ namespace LayeredAtmosphereOrbit
     public class PlanetDef : Def
     {
         public float distanceToRimworld = 0;
+        public List<GameConditionDef> permamentGameConditionDefs = new List<GameConditionDef>();
     }
 }

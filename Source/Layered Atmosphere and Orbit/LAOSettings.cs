@@ -15,6 +15,7 @@ namespace LayeredAtmosphereOrbit
         public bool ReplaceAllViewLayerGizmo = true;
         public bool GravshipRoute = true;
         public bool PlanetPatches = true;
+        public bool HideOtherPlanets = false;
         public List<string> AutoAddLayersDefNames = new List<string>();
         //debug
         public bool isOpenDebugFloatingIslandMapGen = false;
@@ -61,6 +62,7 @@ namespace LayeredAtmosphereOrbit
             Scribe_Values.Look(ref ReplaceAllViewLayerGizmo, "ReplaceAllViewLayerGizmo", defaultValue: true);
             Scribe_Values.Look(ref GravshipRoute, "GravshipRoute", defaultValue: true);
             Scribe_Values.Look(ref PlanetPatches, "PlanetPatches", defaultValue: true);
+            Scribe_Values.Look(ref HideOtherPlanets, "HideOtherPlanets", defaultValue: false);
             Scribe_Collections.Look(ref AutoAddLayersDefNames, "AutoAddLayersDefNames", LookMode.Value);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {

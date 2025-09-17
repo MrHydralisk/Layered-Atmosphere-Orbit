@@ -50,11 +50,15 @@ namespace LayeredAtmosphereOrbit
             val.Patch(AccessTools.Method(typeof(PlanetLayer), "DirectConnectionTo"), prefix: new HarmonyMethod(patchType, "PL_DirectConnectionTo_Prefix"));
             if (LAOMod.Settings.PlanetPatches)
             {
-                val.Patch(AccessTools.Property(typeof(PlanetLayer), "Visible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "PL_Visible_Prefix"));
-                val.Patch(AccessTools.Property(typeof(PlanetLayer), "Raycastable").GetGetMethod(), postfix: new HarmonyMethod(patchType, "PL_Raycastable_Postfix"));
-                val.Patch(AccessTools.Property(typeof(WorldDrawLayer), "Visible").GetGetMethod(), postfix: new HarmonyMethod(patchType, "WDL_Visible_Postfix"));
-                val.Patch(AccessTools.Property(typeof(WorldDrawLayer), "Raycastable").GetGetMethod(), postfix: new HarmonyMethod(patchType, "WDL_Raycastable_Postfix"));
+                if (LAOMod.Settings.HideOtherPlanets)
+                {
+                    val.Patch(AccessTools.Property(typeof(PlanetLayer), "Visible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "PL_Visible_Prefix"));
+                    val.Patch(AccessTools.Property(typeof(PlanetLayer), "Raycastable").GetGetMethod(), postfix: new HarmonyMethod(patchType, "PL_Raycastable_Postfix"));
+                    val.Patch(AccessTools.Property(typeof(WorldDrawLayer), "Visible").GetGetMethod(), postfix: new HarmonyMethod(patchType, "WDL_Visible_Postfix"));
+                    val.Patch(AccessTools.Property(typeof(WorldDrawLayer), "Raycastable").GetGetMethod(), postfix: new HarmonyMethod(patchType, "WDL_Raycastable_Postfix"));
+                }
                 val.Patch(AccessTools.Property(typeof(WorldSelector), "SelectedLayer").GetSetMethod(), postfix: new HarmonyMethod(patchType, "WS_SelectedLayer_Postfix"));
+                val.Patch(AccessTools.Method(typeof(Map), "FinalizeInit"), postfix: new HarmonyMethod(patchType, "M_FinalizeInit_Postfix"));
             }
             if (LAOMod.Settings.GravshipRoute)
             {
@@ -517,7 +521,7 @@ namespace LayeredAtmosphereOrbit
 
         public static bool PL_Visible_Prefix(ref bool __result, PlanetLayer __instance)
         {
-            if (__instance.Def.LayerGroup()?.planet != GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef)
+            if (__instance.Def.Planet() != GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef)
             {
                 __result = false;
                 return false;
@@ -527,22 +531,22 @@ namespace LayeredAtmosphereOrbit
 
         public static void PL_Raycastable_Postfix(ref bool __result, PlanetLayer __instance)
         {
-            __result = __result && __instance.Def.LayerGroup()?.planet == GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef;
+            __result = __result && __instance.Def.Planet() == GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef;
         }
 
         public static void WDL_Visible_Postfix(ref bool __result, WorldDrawLayer __instance)
         {
-            __result = __result && __instance.planetLayer.Def.LayerGroup()?.planet == GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef;
+            __result = __result && __instance.planetLayer.Def.Planet() == GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef;
         }
 
         public static void WDL_Raycastable_Postfix(ref bool __result, WorldDrawLayer __instance)
         {
-            __result = __result && __instance.planetLayer.Def.LayerGroup()?.planet == GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef;
+            __result = __result && __instance.planetLayer.Def.Planet() == GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef;
         }
 
         public static void WS_SelectedLayer_Postfix(WorldSelector __instance, PlanetLayer value)
         {
-            GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef = value.Def.LayerGroup()?.planet;
+            GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef = value.Def.Planet();
         }
 
         public static bool GU_TravelTo_Prefix(Gravship gravship, PlanetTile oldTile, PlanetTile newTile)
@@ -554,7 +558,6 @@ namespace LayeredAtmosphereOrbit
                 gravship.destinationTile = newTile;
                 GravshipRoute route = new GravshipRoute();
                 List<PlanetLayerConnection> path = new List<PlanetLayerConnection>();
-                List<string> strings = new List<string>() { "GU_TravelTo_Prefix:" };
                 if (PlanetLayer.TryGetPath(oldTile.Layer, newTile.Layer, path, out _))
                 {
                     PlanetTile curTile = oldTile;
@@ -568,15 +571,11 @@ namespace LayeredAtmosphereOrbit
                         }
                         curTile = planetLayerConnection.origin.GetClosestTile_NewTemp(curTile);
                         route.AddRoutePoint(Find.WorldGrid.GetTileCenter(curTile), planetLayer.Def);
-                        strings.Add($"{Find.WorldGrid.GetTileCenter(curTile)} {planetLayer.Def.defName} | {planetLayerConnection.target.Def.defName}[{planetLayerConnection.target.Def.Elevation()}] > {planetLayerConnection.origin.Def.defName}[{planetLayerConnection.origin.Def.Elevation()}]");
                         curTile = planetLayerConnection.target.GetClosestTile_NewTemp(curTile);
                         route.AddRoutePoint(Find.WorldGrid.GetTileCenter(curTile), planetLayer.Def);
-                        strings.Add($"{Find.WorldGrid.GetTileCenter(curTile)} {planetLayer.Def.defName} | {planetLayerConnection.target.Def.defName}[{planetLayerConnection.target.Def.Elevation()}] > {planetLayerConnection.origin.Def.defName}[{planetLayerConnection.origin.Def.Elevation()}]");
                     }
                     route.AddRoutePoint(Find.WorldGrid.GetTileCenter(curTile), newTile.LayerDef);
-                    strings.Add($"{Find.WorldGrid.GetTileCenter(curTile)} {newTile.LayerDef.defName}");
                     route.AddRoutePoint(Find.WorldGrid.GetTileCenter(newTile), newTile.LayerDef);
-                    strings.Add($"{Find.WorldGrid.GetTileCenter(newTile)} {newTile.LayerDef.defName}");
                 }
                 else
                 {
@@ -587,7 +586,6 @@ namespace LayeredAtmosphereOrbit
                     }
                     route.AddRoutePoint(Find.WorldGrid.GetTileCenter(newTile), newTile.LayerDef);
                 }
-                Log.Message(string.Join("\n", strings));
                 GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.SetOrAdd(gravship, route);
                 Find.WorldObjects.Add(gravship);
                 CameraJumper.TryJump(gravship);
@@ -644,6 +642,17 @@ namespace LayeredAtmosphereOrbit
             else
             {
                 return true;
+            }
+        }
+
+
+
+        public static void M_FinalizeInit_Postfix(Map __instance)
+        {
+            List<GameConditionDef> permamentGameConditionDefs = __instance.Tile.LayerDef.Planet()?.permamentGameConditionDefs;
+            foreach(GameConditionDef gameConditionDef in permamentGameConditionDefs)
+            {
+                __instance.GameConditionManager.RegisterCondition(GameConditionMaker.MakeConditionPermanent(gameConditionDef));
             }
         }
     }
