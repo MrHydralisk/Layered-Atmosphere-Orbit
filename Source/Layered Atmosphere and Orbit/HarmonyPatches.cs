@@ -554,23 +554,40 @@ namespace LayeredAtmosphereOrbit
                 gravship.destinationTile = newTile;
                 GravshipRoute route = new GravshipRoute();
                 List<PlanetLayerConnection> path = new List<PlanetLayerConnection>();
-                route.AddRoutePoint(Find.WorldGrid.GetTileCenter(oldTile), oldTile.LayerDef);
+                List<string> strings = new List<string>() { "GU_TravelTo_Prefix:" };
                 if (PlanetLayer.TryGetPath(oldTile.Layer, newTile.Layer, path, out _))
                 {
-                    for(int i = 0; i < path.Count; i++)
+                    PlanetTile curTile = oldTile;
+                    for (int i = 0; i < path.Count; i++)
                     {
-                        PlanetLayer planetLayer = path[i].target;
-                        route.AddRoutePoint(Find.WorldGrid.GetTileCenter(planetLayer.GetClosestTile_NewTemp(oldTile)), planetLayer.Def);
+                        PlanetLayerConnection planetLayerConnection = path[i];
+                        PlanetLayer planetLayer = planetLayerConnection.target;
+                        if (planetLayerConnection.target.Def.Elevation() > planetLayerConnection.origin.Def.Elevation())
+                        {
+                            planetLayer = planetLayerConnection.origin;
+                        }
+                        curTile = planetLayerConnection.origin.GetClosestTile_NewTemp(curTile);
+                        route.AddRoutePoint(Find.WorldGrid.GetTileCenter(curTile), planetLayer.Def);
+                        strings.Add($"{Find.WorldGrid.GetTileCenter(curTile)} {planetLayer.Def.defName} | {planetLayerConnection.target.Def.defName}[{planetLayerConnection.target.Def.Elevation()}] > {planetLayerConnection.origin.Def.defName}[{planetLayerConnection.origin.Def.Elevation()}]");
+                        curTile = planetLayerConnection.target.GetClosestTile_NewTemp(curTile);
+                        route.AddRoutePoint(Find.WorldGrid.GetTileCenter(curTile), planetLayer.Def);
+                        strings.Add($"{Find.WorldGrid.GetTileCenter(curTile)} {planetLayer.Def.defName} | {planetLayerConnection.target.Def.defName}[{planetLayerConnection.target.Def.Elevation()}] > {planetLayerConnection.origin.Def.defName}[{planetLayerConnection.origin.Def.Elevation()}]");
                     }
+                    route.AddRoutePoint(Find.WorldGrid.GetTileCenter(curTile), newTile.LayerDef);
+                    strings.Add($"{Find.WorldGrid.GetTileCenter(curTile)} {newTile.LayerDef.defName}");
+                    route.AddRoutePoint(Find.WorldGrid.GetTileCenter(newTile), newTile.LayerDef);
+                    strings.Add($"{Find.WorldGrid.GetTileCenter(newTile)} {newTile.LayerDef.defName}");
                 }
                 else
                 {
+                    route.AddRoutePoint(Find.WorldGrid.GetTileCenter(oldTile), oldTile.LayerDef);
                     if (oldTile.Layer != newTile.Layer)
                     {
                         route.AddRoutePoint(Find.WorldGrid.GetTileCenter(gravship.Tile.Layer.GetClosestTile_NewTemp(gravship.Tile)), gravship.Tile.LayerDef);
                     }
+                    route.AddRoutePoint(Find.WorldGrid.GetTileCenter(newTile), newTile.LayerDef);
                 }
-                route.AddRoutePoint(Find.WorldGrid.GetTileCenter(newTile), newTile.LayerDef);
+                Log.Message(string.Join("\n", strings));
                 GameComponent_LayeredAtmosphereOrbit.instance.gravshipRoutes.SetOrAdd(gravship, route);
                 Find.WorldObjects.Add(gravship);
                 CameraJumper.TryJump(gravship);
