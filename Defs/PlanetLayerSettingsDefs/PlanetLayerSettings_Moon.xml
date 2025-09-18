@@ -2,8 +2,8 @@
 <Defs>
   
 	<PlanetLayerSettingsDef>
-		<defName>LAO_Surface_Moon</defName>
-		<label>Default surface</label>
+		<defName>LAO_Surface_Luna</defName>
+		<label>Luna surface</label>
 		<settings>
 			<!-- <origin>(-300,25,0)</origin> -->
 			<radius>25</radius>

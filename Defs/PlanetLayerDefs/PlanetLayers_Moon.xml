@@ -6,7 +6,7 @@
 		<tileType>SurfaceTile</tileType>
 		<elevationString>{0}m</elevationString>
 		<gerundLabel>on the</gerundLabel>
-		<!-- <backgroundBiome>Ocean</backgroundBiome> -->
+		<backgroundBiome>LAO_Luna</backgroundBiome>
 		<onlyAllowWhitelistedIncidents>true</onlyAllowWhitelistedIncidents>
 		<onlyAllowWhitelistedBiomes>true</onlyAllowWhitelistedBiomes>
 		<onlyAllowWhitelistedGameConditions>true</onlyAllowWhitelistedGameConditions>
@@ -14,12 +14,12 @@
 	</PlanetLayerDef>
 
 	<PlanetLayerDef ParentName="LAO_MoonSurfaceBase">
-		<defName>LAO_Surface_Moon</defName>
-		<label>planet moon</label>
-		<viewGizmoTooltip>View locations that are on the moon surface.</viewGizmoTooltip>
+		<defName>LAO_Surface_Luna</defName>
+		<label>Luna moon</label>
+		<viewGizmoTooltip>View locations that are on the Luna moon surface.</viewGizmoTooltip>
 		<viewGizmoTexPath>UI/Commands/ViewPlanet</viewGizmoTexPath>
-		<defaultBiome>IceSheet</defaultBiome>
-		<backgroundBiome>SeaIce</backgroundBiome>
+		<defaultBiome>LAO_Luna</defaultBiome>
+		<backgroundBiome>LAO_Luna</backgroundBiome>
 		<worldGenSteps>
 			<li>Terrain</li>
 			<!-- <li>Mutators</li> -->
@@ -40,7 +40,7 @@
 			<li>WorldDrawLayer_WorldObjects_NonExpandable</li>
 			<li>WorldDrawLayer_DebugNoise</li>
 			<!-- <li>WorldDrawLayer_Landmarks</li> -->
-			<li>WorldDrawLayer_Glow</li>
+			<!-- <li>WorldDrawLayer_Glow</li> -->
 			<li>WorldDrawLayer_Hills</li>
 			<li>WorldDrawLayer_Terrain</li>
 		</worldDrawLayers>
@@ -53,7 +53,7 @@
 				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<elevation>0</elevation>
-				<planetLayerGroup>LAO_Surface_Moon</planetLayerGroup>
+				<planetLayerGroup>LAO_Surface_Luna</planetLayerGroup>
 			</li>
 		</modExtensions>
 	</PlanetLayerDef>

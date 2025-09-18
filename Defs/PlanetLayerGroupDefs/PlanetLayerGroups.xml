@@ -111,7 +111,6 @@
 		<planetLayerGroupsDirectConnection>
 			<li>LAO_Surface</li>
 			<li>LAO_Atmosphere</li>
-			<!-- <li>LAO_Surface_Moon</li> -->
 		</planetLayerGroupsDirectConnection>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
@@ -131,22 +130,11 @@
 	
   
 	<LayeredAtmosphereOrbit.PlanetLayerGroupDef>
-		<defName>LAO_Surface_Moon</defName>
+		<defName>LAO_Surface_Luna</defName>
 		<label>surface</label>
-		<description>The foundational layer of rock and soil where life and landforms are found. This is the solid ground that forms the outermost shell of the planet. This crucial surface is where oceans meet land and where diverse ecosystems have taken root. It provides the base for all of the world's natural geography, from soaring mountains to deep valleys.</description>
-		<defaultPlanetLayer>LAO_Surface_Moon</defaultPlanetLayer>
-		<planet>LAO_Moon</planet>
-		<!-- <planetLayerGroupsDirectConnection> -->
-			<!-- <li>LAO_Orbit</li> -->
-		<!-- </planetLayerGroupsDirectConnection> -->
-		<modExtensions>
-			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
-				<WhitelistBiomeDef>
-					<li>IceSheet</li>
-					<li>SeaIce</li>
-				</WhitelistBiomeDef>
-			</li>
-		</modExtensions>
+		<description>The foundational layer of pulverized rock and dust where ancient impacts scar the terrain. This is the airless ground that forms the outermost shell of the Luna. This stark surface is where sunlight meets shadow and where vast, barren plains stretch endlessly. It provides the base for all of the Moon's natural geography, from towering peaks of crater rims to deep, shadowed chasms.</description>
+		<defaultPlanetLayer>LAO_Surface_Luna</defaultPlanetLayer>
+		<planet>LAO_Luna</planet>
 	</LayeredAtmosphereOrbit.PlanetLayerGroupDef>
   
 </Defs>

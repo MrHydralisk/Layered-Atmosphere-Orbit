@@ -44,8 +44,8 @@
 	
   
 	<ScenPartDef>
-		<defName>LAO_Surface_Moon</defName>
-		<label>surface layer type</label>
+		<defName>LAO_Surface_Luna</defName>
+		<label>Luna surface layer type</label>
 		<scenPartClass>ScenPart_PlanetLayerFixed</scenPartClass>
 		<category>Fixed</category>
 		<summaryPriority>100</summaryPriority>

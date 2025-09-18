@@ -10,9 +10,9 @@
 	</LayeredAtmosphereOrbit.PlanetDef>
   
 	<LayeredAtmosphereOrbit.PlanetDef>
-		<defName>LAO_Moon</defName>
-		<label>moon</label>
-		<description>moon.</description>
+		<defName>LAO_Luna</defName>
+		<label>Luna</label>
+		<description>Luna.</description>
 		<posFromRimworld>(-56055.71, 4671.31, 0)</posFromRimworld>
 		<gravityWellExitElevation>300</gravityWellExitElevation>
 		<gravityWellRadius>75</gravityWellRadius>
