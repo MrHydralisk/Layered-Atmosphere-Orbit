@@ -59,6 +59,7 @@ namespace LayeredAtmosphereOrbit
                 }
                 val.Patch(AccessTools.Property(typeof(WorldSelector), "SelectedLayer").GetSetMethod(), postfix: new HarmonyMethod(patchType, "WS_SelectedLayer_Postfix"));
                 val.Patch(AccessTools.Method(typeof(Map), "FinalizeInit"), postfix: new HarmonyMethod(patchType, "M_FinalizeInit_Postfix"));
+                //val.Patch(AccessTools.Method(typeof(MapInterface), "Notify_SwitchedMap"), postfix: new HarmonyMethod(patchType, "MI_Notify_SwitchedMap_Postfix"));
             }
             if (LAOMod.Settings.GravshipRoute)
             {
@@ -113,20 +114,21 @@ namespace LayeredAtmosphereOrbit
 
         public static void InjectWhitelists()
         {
-            List<PlanetLayerDef> AlwaysArrivalFactionPlanetLayerDefs = new List<PlanetLayerDef>();
             List<PlanetLayerDef> AlwaysIncidentPlanetLayerDefs = new List<PlanetLayerDef>();
+            List<PlanetLayerDef> AlwaysBiomePlanetLayerDefs = new List<PlanetLayerDef>();
             List<PlanetLayerDef> AlwaysGameConditionPlanetLayerDefs = new List<PlanetLayerDef>();
             List<PlanetLayerDef> AlwaysQuestScriptPlanetLayerDefs = new List<PlanetLayerDef>();
+            List<PlanetLayerDef> AlwaysArrivalFactionPlanetLayerDefs = new List<PlanetLayerDef>();
             List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
             foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
             {
-                if (!planetLayerDef.onlyAllowWhitelistedArrivals)
-                {
-                    AlwaysArrivalFactionPlanetLayerDefs.Add(planetLayerDef);
-                }
                 if (!planetLayerDef.onlyAllowWhitelistedIncidents)
                 {
                     AlwaysIncidentPlanetLayerDefs.Add(planetLayerDef);
+                }
+                if (!planetLayerDef.onlyAllowWhitelistedBiomes)
+                {
+                    AlwaysBiomePlanetLayerDefs.Add(planetLayerDef);
                 }
                 if (!planetLayerDef.onlyAllowWhitelistedGameConditions)
                 {
@@ -136,34 +138,20 @@ namespace LayeredAtmosphereOrbit
                 {
                     AlwaysQuestScriptPlanetLayerDefs.Add(planetLayerDef);
                 }
+                if (!planetLayerDef.onlyAllowWhitelistedGameConditions)
+                {
+                    AlwaysIncidentPlanetLayerDefs.Add(planetLayerDef);
+                }
+                if (!planetLayerDef.onlyAllowWhitelistedArrivals)
+                {
+                    AlwaysArrivalFactionPlanetLayerDefs.Add(planetLayerDef);
+                }
             }
             foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
             {
                 LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
                 if (laoDefModExtension != null)
                 {
-                    if (!laoDefModExtension.WhitelistArrivalFactionDef.NullOrEmpty())
-                    {
-                        foreach (FactionDef factionDef in laoDefModExtension.WhitelistArrivalFactionDef)
-                        {
-                            if (factionDef.arrivalLayerWhitelist == null)
-                            {
-                                factionDef.arrivalLayerWhitelist = AlwaysArrivalFactionPlanetLayerDefs.ToList();
-                            }
-                            factionDef.arrivalLayerWhitelist.AddDistinct(planetLayerDef);
-                        }
-                    }
-                    if (!laoDefModExtension.WhitelistFactionDef.NullOrEmpty())
-                    {
-                        foreach (FactionDef factionDef in laoDefModExtension.WhitelistFactionDef)
-                        {
-                            if (factionDef.layerWhitelist == null)
-                            {
-                                factionDef.layerWhitelist = new List<PlanetLayerDef>();
-                            }
-                            factionDef.layerWhitelist.AddDistinct(planetLayerDef);
-                        }
-                    }
                     if (!laoDefModExtension.WhitelistIncidentDef.NullOrEmpty())
                     {
                         foreach (IncidentDef incidentDef in laoDefModExtension.WhitelistIncidentDef)
@@ -173,6 +161,17 @@ namespace LayeredAtmosphereOrbit
                                 incidentDef.layerWhitelist = AlwaysIncidentPlanetLayerDefs.ToList();
                             }
                             incidentDef.layerWhitelist.AddDistinct(planetLayerDef);
+                        }
+                    }
+                    if (!laoDefModExtension.WhitelistBiomeDef.NullOrEmpty())
+                    {
+                        foreach (BiomeDef biomeDef in laoDefModExtension.WhitelistBiomeDef)
+                        {
+                            if (biomeDef.layerWhitelist == null)
+                            {
+                                biomeDef.layerWhitelist = AlwaysBiomePlanetLayerDefs.ToList();
+                            }
+                            biomeDef.layerWhitelist.AddDistinct(planetLayerDef);
                         }
                     }
                     if (!laoDefModExtension.WhitelistGameConditionDef.NullOrEmpty())
@@ -208,14 +207,6 @@ namespace LayeredAtmosphereOrbit
                             questScriptDef.layerBlacklist.AddDistinct(planetLayerDef);
                         }
                     }
-                }
-            }
-            List<PlanetLayerGroupDef> AllPlanetLayerGroupDefs = DefDatabase<PlanetLayerGroupDef>.AllDefs.ToList();
-            foreach (PlanetLayerGroupDef planetLayerGroupDef in AllPlanetLayerGroupDefs)
-            {
-                LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerGroupDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
-                if (laoDefModExtension != null)
-                {
                     if (!laoDefModExtension.WhitelistArrivalFactionDef.NullOrEmpty())
                     {
                         foreach (FactionDef factionDef in laoDefModExtension.WhitelistArrivalFactionDef)
@@ -224,10 +215,7 @@ namespace LayeredAtmosphereOrbit
                             {
                                 factionDef.arrivalLayerWhitelist = AlwaysArrivalFactionPlanetLayerDefs.ToList();
                             }
-                            foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
-                            {
-                                factionDef.arrivalLayerWhitelist.AddDistinct(planetLayerDef);
-                            }
+                            factionDef.arrivalLayerWhitelist.AddDistinct(planetLayerDef);
                         }
                     }
                     if (!laoDefModExtension.WhitelistFactionDef.NullOrEmpty())
@@ -238,12 +226,17 @@ namespace LayeredAtmosphereOrbit
                             {
                                 factionDef.layerWhitelist = new List<PlanetLayerDef>();
                             }
-                            foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
-                            {
-                                factionDef.layerWhitelist.AddDistinct(planetLayerDef);
-                            }
+                            factionDef.layerWhitelist.AddDistinct(planetLayerDef);
                         }
                     }
+                }
+            }
+            List<PlanetLayerGroupDef> AllPlanetLayerGroupDefs = DefDatabase<PlanetLayerGroupDef>.AllDefs.ToList();
+            foreach (PlanetLayerGroupDef planetLayerGroupDef in AllPlanetLayerGroupDefs)
+            {
+                LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerGroupDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+                if (laoDefModExtension != null)
+                {
                     if (!laoDefModExtension.WhitelistIncidentDef.NullOrEmpty())
                     {
                         foreach (IncidentDef incidentDef in laoDefModExtension.WhitelistIncidentDef)
@@ -255,6 +248,20 @@ namespace LayeredAtmosphereOrbit
                             foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
                             {
                                 incidentDef.layerWhitelist.AddDistinct(planetLayerDef);
+                            }
+                        }
+                    }
+                    if (!laoDefModExtension.WhitelistBiomeDef.NullOrEmpty())
+                    {
+                        foreach (BiomeDef biomeDef in laoDefModExtension.WhitelistBiomeDef)
+                        {
+                            if (biomeDef.layerWhitelist == null)
+                            {
+                                biomeDef.layerWhitelist = AlwaysBiomePlanetLayerDefs.ToList();
+                            }
+                            foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
+                            {
+                                biomeDef.layerWhitelist.AddDistinct(planetLayerDef);
                             }
                         }
                     }
@@ -297,6 +304,34 @@ namespace LayeredAtmosphereOrbit
                             foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
                             {
                                 questScriptDef.layerBlacklist.AddDistinct(planetLayerDef);
+                            }
+                        }
+                    }
+                    if (!laoDefModExtension.WhitelistArrivalFactionDef.NullOrEmpty())
+                    {
+                        foreach (FactionDef factionDef in laoDefModExtension.WhitelistArrivalFactionDef)
+                        {
+                            if (factionDef.arrivalLayerWhitelist == null)
+                            {
+                                factionDef.arrivalLayerWhitelist = AlwaysArrivalFactionPlanetLayerDefs.ToList();
+                            }
+                            foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
+                            {
+                                factionDef.arrivalLayerWhitelist.AddDistinct(planetLayerDef);
+                            }
+                        }
+                    }
+                    if (!laoDefModExtension.WhitelistFactionDef.NullOrEmpty())
+                    {
+                        foreach (FactionDef factionDef in laoDefModExtension.WhitelistFactionDef)
+                        {
+                            if (factionDef.layerWhitelist == null)
+                            {
+                                factionDef.layerWhitelist = new List<PlanetLayerDef>();
+                            }
+                            foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
+                            {
+                                factionDef.layerWhitelist.AddDistinct(planetLayerDef);
                             }
                         }
                     }
@@ -519,6 +554,8 @@ namespace LayeredAtmosphereOrbit
             return true;
         }
 
+        //Planet
+
         public static bool PL_Visible_Prefix(ref bool __result, PlanetLayer __instance)
         {
             if (__instance.Def.Planet() != GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef)
@@ -548,6 +585,22 @@ namespace LayeredAtmosphereOrbit
         {
             GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef = value.Def.Planet();
         }
+
+        public static void M_FinalizeInit_Postfix(Map __instance)
+        {
+            List<GameConditionDef> permamentGameConditionDefs = __instance.Tile.LayerDef.Planet()?.permamentGameConditionDefs;
+            foreach (GameConditionDef gameConditionDef in permamentGameConditionDefs)
+            {
+                __instance.GameConditionManager.RegisterCondition(GameConditionMaker.MakeConditionPermanent(gameConditionDef));
+            }
+        }
+
+        public static void MI_Notify_SwitchedMap_Postfix(MapInterface __instance)
+        {
+            GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef = Find.CurrentMap.Tile.LayerDef.Planet();
+        }
+
+        //Gravship Route
 
         public static bool GU_TravelTo_Prefix(Gravship gravship, PlanetTile oldTile, PlanetTile newTile)
         {
@@ -642,17 +695,6 @@ namespace LayeredAtmosphereOrbit
             else
             {
                 return true;
-            }
-        }
-
-
-
-        public static void M_FinalizeInit_Postfix(Map __instance)
-        {
-            List<GameConditionDef> permamentGameConditionDefs = __instance.Tile.LayerDef.Planet()?.permamentGameConditionDefs;
-            foreach(GameConditionDef gameConditionDef in permamentGameConditionDefs)
-            {
-                __instance.GameConditionManager.RegisterCondition(GameConditionMaker.MakeConditionPermanent(gameConditionDef));
             }
         }
     }

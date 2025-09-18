@@ -17,6 +17,7 @@ namespace LayeredAtmosphereOrbit
         public List<BiomeDef> availableBiomes = new List<BiomeDef>();
         public List<FactionDef> WhitelistArrivalFactionDef = new List<FactionDef>();
         public List<FactionDef> WhitelistFactionDef = new List<FactionDef>();
+        public List<BiomeDef> WhitelistBiomeDef = new List<BiomeDef>();
         public List<IncidentDef> WhitelistIncidentDef = new List<IncidentDef>();
         public List<GameConditionDef> WhitelistGameConditionDef = new List<GameConditionDef>();
         public List<QuestScriptDef> WhitelistQuestScriptDef = new List<QuestScriptDef>();

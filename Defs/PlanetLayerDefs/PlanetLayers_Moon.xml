@@ -8,7 +8,7 @@
 		<gerundLabel>on the</gerundLabel>
 		<!-- <backgroundBiome>Ocean</backgroundBiome> -->
 		<onlyAllowWhitelistedIncidents>true</onlyAllowWhitelistedIncidents>
-		<!-- <onlyAllowWhitelistedBiomes>true</onlyAllowWhitelistedBiomes> -->
+		<onlyAllowWhitelistedBiomes>true</onlyAllowWhitelistedBiomes>
 		<onlyAllowWhitelistedGameConditions>true</onlyAllowWhitelistedGameConditions>
 		<onlyAllowWhitelistedQuests>true</onlyAllowWhitelistedQuests>
 	</PlanetLayerDef>
@@ -35,7 +35,7 @@
 			<li>WorldDrawLayer_SettleTile</li>
 			<li>WorldDrawLayer_MouseTile</li>
 			<li>WorldDrawLayer_ClosestTile</li>
-			<li>WorldDrawLayer_UngeneratedPlanetParts</li>
+			<li>LayeredAtmosphereOrbit.WorldDrawLayer_UngeneratedPlanetPartsBackgroundBiome</li>
 			<li>WorldDrawLayer_WorldObjects_Expandable</li>
 			<li>WorldDrawLayer_WorldObjects_NonExpandable</li>
 			<li>WorldDrawLayer_DebugNoise</li>

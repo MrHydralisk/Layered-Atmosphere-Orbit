@@ -139,6 +139,14 @@
 		<planetLayerGroupsDirectConnection>
 			<li>LAO_Orbit</li>
 		</planetLayerGroupsDirectConnection>
+		<modExtensions>
+			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<WhitelistBiomeDef>
+					<li>IceSheet</li>
+					<li>SeaIce</li>
+				</WhitelistBiomeDef>
+			</li>
+		</modExtensions>
 	</LayeredAtmosphereOrbit.PlanetLayerGroupDef>
   
 </Defs>
