@@ -5,6 +5,7 @@
 	
 	<LayeredAtmosphereOrbit.Settings.UseFuelCostBetweenLayers>Add fuel cost to travel between layers based on distance in km. (Vanilla is disabled.)</LayeredAtmosphereOrbit.Settings.UseFuelCostBetweenLayers>
 	<LayeredAtmosphereOrbit.Settings.FuelPerKm>Fuel cost to travel between layers: {0} per km. (Vanilla is 0.)</LayeredAtmosphereOrbit.Settings.FuelPerKm>
+	<LayeredAtmosphereOrbit.Settings.KmPerFuelSpace>Fuel cost to travel between planets: {0} km per 1 fuel. (Vanilla is -1, which is free.)</LayeredAtmosphereOrbit.Settings.KmPerFuelSpace>
 	
 	<LayeredAtmosphereOrbit.Settings.GravshipRoute>Gravship will move between planet layers by changing it own elevation, when traveling. Making it move XYZ instead of XZ only. (In Vanilla gravship teleports to needed layer right away. Require game restart.)</LayeredAtmosphereOrbit.Settings.GravshipRoute>
 	

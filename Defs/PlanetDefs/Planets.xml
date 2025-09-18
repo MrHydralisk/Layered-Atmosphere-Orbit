@@ -5,13 +5,17 @@
 		<defName>LAO_Rimworld</defName>
 		<label>rimworld</label>
 		<description>rimworld.</description>
+		<gravityWellExitElevation>1000</gravityWellExitElevation>
+		<gravityWellRadius>200</gravityWellRadius>
 	</LayeredAtmosphereOrbit.PlanetDef>
   
 	<LayeredAtmosphereOrbit.PlanetDef>
 		<defName>LAO_Moon</defName>
 		<label>moon</label>
 		<description>moon.</description>
-		<!-- <distanceToRimworld>385000</distanceToRimworld> -->
+		<posFromRimworld>(-56055.71, 4671.31, 0)</posFromRimworld>
+		<gravityWellExitElevation>300</gravityWellExitElevation>
+		<gravityWellRadius>75</gravityWellRadius>
 		<permamentGameConditionDefs />
 	</LayeredAtmosphereOrbit.PlanetDef>
   

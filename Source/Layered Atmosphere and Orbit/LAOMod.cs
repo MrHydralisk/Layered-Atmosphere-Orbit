@@ -16,6 +16,8 @@ namespace LayeredAtmosphereOrbit
         private float prevHeight = float.MaxValue;
         private Vector2 scrollPos;
 
+        private string inputKmPerFuelSpace;
+
         private string worldObjectDefName = "LAO_FloatingIslandDebug";
         WorldObjectDef worldObjectDef;
         private string inputDebugFloatingIslandRotation;
@@ -58,6 +60,9 @@ namespace LayeredAtmosphereOrbit
             options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.UseFuelCostBetweenLayers".Translate().RawText, ref Settings.UseFuelCostBetweenLayers);
             options.Label("LayeredAtmosphereOrbit.Settings.FuelPerKm".Translate(Settings.FuelPerKm));
             Settings.FuelPerKm = Mathf.Round(options.Slider(Settings.FuelPerKm, 0f, 5f) * 100f) / 100f;
+            options.Label("LayeredAtmosphereOrbit.Settings.KmPerFuelSpace".Translate(Settings.KmPerFuelSpace));
+            options.TextFieldNumeric(ref Settings.KmPerFuelSpace, ref inputKmPerFuelSpace, -1, 100000);
+            Settings.KmPerFuelSpace = Mathf.Round(options.Slider(Settings.KmPerFuelSpace, 0f, 5f) * 100f) / 100f;
             options.GapLine();
             options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.GravshipRoute".Translate().RawText, ref Settings.GravshipRoute);
             options.GapLine();
