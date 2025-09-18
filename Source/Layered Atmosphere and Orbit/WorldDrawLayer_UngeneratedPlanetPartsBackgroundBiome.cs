@@ -1,7 +1,5 @@
-﻿using RimWorld;
-using RimWorld.Planet;
+﻿using RimWorld.Planet;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 

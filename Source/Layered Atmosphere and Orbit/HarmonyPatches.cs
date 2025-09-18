@@ -7,9 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Verse;
 
 namespace LayeredAtmosphereOrbit
@@ -59,7 +57,8 @@ namespace LayeredAtmosphereOrbit
                 }
                 val.Patch(AccessTools.Property(typeof(WorldSelector), "SelectedLayer").GetSetMethod(), postfix: new HarmonyMethod(patchType, "WS_SelectedLayer_Postfix"));
                 val.Patch(AccessTools.Method(typeof(Map), "FinalizeInit"), postfix: new HarmonyMethod(patchType, "M_FinalizeInit_Postfix"));
-                val.Patch(AccessTools.Method(typeof(CameraJumper), "TryHideWorld"), postfix: new HarmonyMethod(patchType, "MI_Notify_SwitchedMap_Postfix"));
+                val.Patch(AccessTools.Method(typeof(CameraJumper), "TryHideWorld"), postfix: new HarmonyMethod(patchType, "CJ_TryHideWorld_Postfix"));
+                val.Patch(AccessTools.Method(typeof(Page_SelectStartingSite), "PreOpen"), postfix: new HarmonyMethod(patchType, "PSSS_PreOpen_Postfix"));
             }
             if (LAOMod.Settings.GravshipRoute)
             {
@@ -595,13 +594,18 @@ namespace LayeredAtmosphereOrbit
             }
         }
 
-        public static void MI_Notify_SwitchedMap_Postfix()
+        public static void CJ_TryHideWorld_Postfix()
         {
             PlanetLayer planetLayer = Find.CurrentMap?.Tile.Layer;
             if (planetLayer != null && GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef != planetLayer.Def.Planet())
             {
                 Find.WorldSelector.SelectedLayer = planetLayer;
             }
+        }
+
+        public static void PSSS_PreOpen_Postfix()
+        {
+            GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef = Find.GameInitData.startingTile.LayerDef.Planet();
         }
 
         //Gravship Route

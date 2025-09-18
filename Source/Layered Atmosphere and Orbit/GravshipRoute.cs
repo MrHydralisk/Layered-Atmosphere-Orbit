@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using RimWorld;
+using System.Collections.Generic;
 using UnityEngine;
-using RimWorld;
 using Verse;
 
 namespace LayeredAtmosphereOrbit
@@ -11,7 +10,7 @@ namespace LayeredAtmosphereOrbit
         public List<Vector3> routePoints = new List<Vector3>();
         public List<PlanetLayerDef> routePlanetLayers = new List<PlanetLayerDef>();
 
-        public float routeLength 
+        public float routeLength
         {
             get;
             private set;
@@ -68,7 +67,7 @@ namespace LayeredAtmosphereOrbit
         public Vector3 Evaluate(float x, out PlanetLayerDef planetLayerDef)
         {
             TryCache();
-            Vector3 v = new Vector3(curveX.Evaluate(x),curveY.Evaluate(x),curveZ.Evaluate(x));
+            Vector3 v = new Vector3(curveX.Evaluate(x), curveY.Evaluate(x), curveZ.Evaluate(x));
             int index = curveX.Points.FindLastIndex((CurvePoint cp) => x >= cp.x);
             planetLayerDef = routePlanetLayers[index];
             return v;
