@@ -29,7 +29,7 @@
 			<Orbit>1</Orbit>
 		</baseWeatherCommonalities>
 		<layerWhitelist>
-			<li>LAO_Surface_Moon</li>
+			<li>LAO_Surface_Luna</li>
 		</layerWhitelist>
 		<diseases>
 			<li>
@@ -55,6 +55,11 @@
 		<forceRockTypes>
 			<li>Vacstone</li>
 		</forceRockTypes>
+		<extraGenSteps>
+			<li>LAO_MoonCratersLarge</li>
+			<li>LAO_MoonCratersMedium</li>
+			<li>LAO_MoonCratersSmall</li>
+		</extraGenSteps>
 	</BiomeDef>
 
 </Defs>
