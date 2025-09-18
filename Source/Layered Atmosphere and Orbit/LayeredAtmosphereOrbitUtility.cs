@@ -45,7 +45,7 @@ namespace LayeredAtmosphereOrbit
                     }
                 }
             }
-            Log.Message($"All layer groupds:\n{string.Join("\n", planetLayerGroups.SelectMany(x => x.Value.Select(y => $"- {x.Key.label} > {y.label}")))}");
+            //Log.Message($"All layer groupds:\n{string.Join("\n", planetLayerGroups.SelectMany(x => x.Value.Select(y => $"- {x.Key.label} > {y.label}")))}");
             planetLayersLAO = new List<ScenPart_PlanetLayer>();
             foreach (string defName in LAOMod.Settings.AutoAddLayersDefNames)
             {
@@ -107,7 +107,7 @@ namespace LayeredAtmosphereOrbit
                     planetLayers.Add((scenPart_PlanetLayer, laoDefModExtension));
                 }
             }
-            Log.Message($"All layer connections Before:\n{string.Join("\n", planetLayers.SelectMany(x => x.Item1.connections.Select(y => $"- {x.Item1.layer.defName} > {y.tag} = {y.zoomMode}")))}");
+            //Log.Message($"All layer connections Before:\n{string.Join("\n", planetLayers.SelectMany(x => x.Item1.connections.Select(y => $"- {x.Item1.layer.defName} > {y.tag} = {y.zoomMode}")))}");
             planetLayers.SortBy((spLayer) => spLayer.Item2?.elevation ?? 200);
             for (int i = 0; i < planetLayers.Count; i++)
             {
@@ -118,7 +118,7 @@ namespace LayeredAtmosphereOrbit
                     (ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension) spPlanetLayerTo = planetLayers.FirstOrDefault(pl => pl.Item1.tag == layerConnection.tag);
                     if ((spPlanetLayerFrom.Item2?.isReplaceConnections ?? false) || (spPlanetLayerTo.Item2?.isReplaceConnections ?? false))
                     {
-                        //Log.Message($"Remove {spPlanetLayerFrom.Item1.layer.defName} > {spPlanetLayerTo.Item1.layer.defName} = {layerConnection.zoomMode}");
+                        //Log.Message($"A Remove {spPlanetLayerFrom.Item1.layer.defName} > {spPlanetLayerTo.Item1.layer.defName} = {layerConnection.zoomMode}");
                         spPlanetLayerFrom.Item1.connections.RemoveAt(j);
                     }
                 }
@@ -130,44 +130,46 @@ namespace LayeredAtmosphereOrbit
                         PlanetLayerDef planetLayerDef = forcedConnectToPlanetLayer[j];
                         if (!spPlanetLayerFrom.Item1.connections.Any((LayerConnection lc) => lc.tag == planetLayerDef.defName))
                         {
-                            //Log.Message($"Add Forced {spPlanetLayerFrom.Item1.layer.defName} > {planetLayerDef.defName} = {LayerConnection.ZoomMode.ZoomOut}");
+                            //Log.Message($"A Add Forced {spPlanetLayerFrom.Item1.layer.defName} > {planetLayerDef.defName} = {LayerConnection.ZoomMode.ZoomOut}");
                             spPlanetLayerFrom.Item1.connections.Add(new LayerConnection() { tag = planetLayerDef.defName, zoomMode = (spPlanetLayerFrom.Item1.layer.DistanceToReachPlanetLayer(planetLayerDef) < 0 ? LayerConnection.ZoomMode.ZoomIn : LayerConnection.ZoomMode.ZoomOut) });
                         }
                     }
                 }
             }
             List<(ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension)> planetLayersKnown = planetLayers.Where(sppl => sppl.Item2?.planetLayerGroup != null).ToList();
+            //Log.Message($"B planetLayersKnown:\n{string.Join("\n", planetLayersKnown.Select(x => x.Item1.layer.defName))}");
             List<(PlanetDef, ScenPart_PlanetLayer)> planetWells = new List<(PlanetDef, ScenPart_PlanetLayer)>();
             foreach (PlanetDef planetDef in planets.Keys)
             {
                 List<(ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension)> planetKnown = planetLayersKnown.Where(sppl => sppl.Item2?.planetLayerGroup?.planet == planetDef).ToList();
+                //Log.Message($"B planetKnown {planetDef.defName}:\n{string.Join("\n", planetKnown.Select(x => x.Item1.layer.defName))}");
                 for (int i = 1; i < planetKnown.Count; i++)
                 {
-                    (ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension) spPlanetLayerFrom = planetLayersKnown[i - 1];
-                    (ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension) spPlanetLayerTo = planetLayersKnown[i];
-                    Log.Message($"Check {planetDef.defName} {spPlanetLayerFrom.Item1.layer.defName} > {spPlanetLayerTo.Item1.layer.defName} =\n{string.Join("\n", spPlanetLayerFrom.Item1.connections.Select(y => $"- {y.tag} = {y.zoomMode}"))}\n>\n{string.Join("\n", spPlanetLayerTo.Item1.connections.Select(y => $"- {y.tag} = {y.zoomMode}"))}");
+                    (ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension) spPlanetLayerFrom = planetKnown[i - 1];
+                    (ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension) spPlanetLayerTo = planetKnown[i];
+                    //Log.Message($"B Check {planetDef.defName} {spPlanetLayerFrom.Item1.layer.defName} > {spPlanetLayerTo.Item1.layer.defName} =\n{string.Join("\n", spPlanetLayerFrom.Item1.connections.Select(y => $"- {y.tag} = {y.zoomMode}"))}\n>\n{string.Join("\n", spPlanetLayerTo.Item1.connections.Select(y => $"- {y.tag} = {y.zoomMode}"))}\n\\---/");
                     if (!spPlanetLayerFrom.Item1.connections.Any((LayerConnection lc) => lc.tag == spPlanetLayerTo.Item1.tag))
                     {
-                        Log.Message($"Add {spPlanetLayerFrom.Item1.layer.defName} > {spPlanetLayerTo.Item1.layer.defName} = {LayerConnection.ZoomMode.ZoomOut}");
+                        //Log.Message($"B Add {spPlanetLayerFrom.Item1.layer.defName} > {spPlanetLayerTo.Item1.layer.defName} = {LayerConnection.ZoomMode.ZoomOut}");
                         spPlanetLayerFrom.Item1.connections.Add(new LayerConnection() { tag = spPlanetLayerTo.Item1.tag, zoomMode = LayerConnection.ZoomMode.ZoomOut });
                     }
                     if (!spPlanetLayerTo.Item1.connections.Any((LayerConnection lc) => lc.tag == spPlanetLayerFrom.Item1.tag))
                     {
-                        Log.Message($"Add {spPlanetLayerTo.Item1.layer.defName} > {spPlanetLayerFrom.Item1.layer.defName} = {LayerConnection.ZoomMode.ZoomIn}");
+                        //Log.Message($"B Add {spPlanetLayerTo.Item1.layer.defName} > {spPlanetLayerFrom.Item1.layer.defName} = {LayerConnection.ZoomMode.ZoomIn}");
                         spPlanetLayerTo.Item1.connections.Add(new LayerConnection() { tag = spPlanetLayerFrom.Item1.tag, zoomMode = LayerConnection.ZoomMode.ZoomIn });
                     }
 
                 }
                 ScenPart_PlanetLayer scenPart_PlanetLayer = null;
                 float elevationDiff = float.MaxValue;
-                for (int i = 0; i < planetLayersKnown.Count; i++)
+                for (int i = 0; i < planetKnown.Count; i++)
                 {
-                    (ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension) spPlanetLayer = planetLayersKnown[i];
+                    (ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension) spPlanetLayer = planetKnown[i];
                     if (spPlanetLayer.Item1.layer.Planet() != planetDef)
                     {
                         continue;
                     }
-                    Log.Message($"{planetDef.defName} {spPlanetLayer.Item1.layer.defName}: {planetDef.gravityWellExitElevation} - {spPlanetLayer.Item2.elevation} < {elevationDiff}");
+                    //Log.Message($"{planetDef.defName} {spPlanetLayer.Item1.layer.defName}: {planetDef.gravityWellExitElevation} - {spPlanetLayer.Item2.elevation} < {elevationDiff}");
                     if (planetDef.gravityWellExitElevation - spPlanetLayer.Item2.elevation < elevationDiff)
                     {
                         elevationDiff = planetDef.gravityWellExitElevation - spPlanetLayer.Item2.elevation;
@@ -185,7 +187,7 @@ namespace LayeredAtmosphereOrbit
                 {
                     fuelBetweenPlanets = Vector3.Distance(spPlanetTo.Item1.posFromRimworld, spPlanetFrom.Item1.posFromRimworld) / LAOMod.Settings.KmPerFuelSpace;
                 }
-                Log.Message($"Check {spPlanetFrom.Item2.layer.defName} > {spPlanetTo.Item2.layer.defName} =\n{string.Join("\n", spPlanetFrom.Item2.connections.Select(y => $"- {y.tag} = {y.zoomMode}"))}\n>\n{string.Join("\n", spPlanetTo.Item2.connections.Select(y => $"- {y.tag} = {y.zoomMode}"))}");
+                //Log.Message($"C Check {spPlanetFrom.Item2.layer.defName} > {spPlanetTo.Item2.layer.defName} =\n{string.Join("\n", spPlanetFrom.Item2.connections.Select(y => $"- {y.tag} = {y.zoomMode}"))}\n>\n{string.Join("\n", spPlanetTo.Item2.connections.Select(y => $"- {y.tag} = {y.zoomMode}"))}");
                 if (!spPlanetFrom.Item2.connections.Any((LayerConnection lc) => lc.tag == spPlanetTo.Item2.tag))
                 {
                     LayerConnection layerConnection = new LayerConnection() { tag = spPlanetTo.Item2.tag, zoomMode = LayerConnection.ZoomMode.None };
@@ -193,7 +195,7 @@ namespace LayeredAtmosphereOrbit
                     {
                         layerConnection.fuelCost = fuelBetweenPlanets + (spPlanetFrom.Item1.gravityWellExitElevation - spPlanetFrom.Item2.layer.Elevation()) * LAOMod.Settings.FuelPerKm;
                     }
-                    Log.Message($"Add {spPlanetFrom.Item2.layer.defName} > {spPlanetTo.Item2.layer.defName} = {LayerConnection.ZoomMode.ZoomOut} [{layerConnection.fuelCost}]");
+                    //Log.Message($"C Add {spPlanetFrom.Item2.layer.defName} > {spPlanetTo.Item2.layer.defName} = {LayerConnection.ZoomMode.ZoomOut} [{layerConnection.fuelCost}]");
                     spPlanetFrom.Item2.connections.Add(layerConnection);
                 }
                 if (!spPlanetTo.Item2.connections.Any((LayerConnection lc) => lc.tag == spPlanetFrom.Item2.tag))
@@ -203,7 +205,7 @@ namespace LayeredAtmosphereOrbit
                     {
                         layerConnection.fuelCost = fuelBetweenPlanets + (spPlanetTo.Item1.gravityWellExitElevation - spPlanetTo.Item2.layer.Elevation()) * LAOMod.Settings.FuelPerKm;
                     }
-                    Log.Message($"Add {spPlanetTo.Item2.layer.defName} > {spPlanetFrom.Item2.layer.defName} = {LayerConnection.ZoomMode.ZoomIn} [{layerConnection.fuelCost}]");
+                    //Log.Message($"C Add {spPlanetTo.Item2.layer.defName} > {spPlanetFrom.Item2.layer.defName} = {LayerConnection.ZoomMode.ZoomIn} [{layerConnection.fuelCost}]");
                     spPlanetTo.Item2.connections.Add(layerConnection);
                 }
             }
@@ -230,7 +232,7 @@ namespace LayeredAtmosphereOrbit
                     }
                 }
             }
-            Log.Message($"All layer connections After:\n{string.Join("\n", planetLayers.SelectMany(x => x.Item1.connections.Select(y => $"- {x.Item1.layer.defName} > {y.tag} = {y.zoomMode} [{y.fuelCost}]")))}");
+            //Log.Message($"All layer connections After:\n{string.Join("\n", planetLayers.SelectMany(x => x.Item1.connections.Select(y => $"- {x.Item1.layer.defName} > {y.tag} = {y.zoomMode} [{y.fuelCost}]")))}");
         }
 
         public static float DistanceToReachPlanetLayer(this PlanetLayerDef from, PlanetLayerDef to)

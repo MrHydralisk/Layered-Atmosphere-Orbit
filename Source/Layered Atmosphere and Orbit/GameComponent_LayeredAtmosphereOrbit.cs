@@ -16,11 +16,14 @@ namespace LayeredAtmosphereOrbit
             }
             set
             {
-                if (currentPlanetDefInt != value)
+                if (value != null && currentPlanetDefInt != value)
                 {
-                    Find.World.renderer.RegenerateAllLayersNow();
+                    if (currentPlanetDefInt != null)
+                    {
+                        Find.World.renderer.RegenerateAllLayersNow();
+                    }
+                    currentPlanetDefInt = value;
                 }
-                currentPlanetDefInt = value;
             }
         }
         private PlanetDef currentPlanetDefInt;

@@ -50,6 +50,7 @@
 		</worldTabs>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<elevation>0</elevation>
 				<planetLayerGroup>LAO_Surface_Moon</planetLayerGroup>
