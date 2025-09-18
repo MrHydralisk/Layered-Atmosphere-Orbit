@@ -621,21 +621,32 @@ namespace LayeredAtmosphereOrbit
                 List<PlanetLayerConnection> path = new List<PlanetLayerConnection>();
                 if (PlanetLayer.TryGetPath(oldTile.Layer, newTile.Layer, path, out _))
                 {
-                    PlanetTile curTile = oldTile;
+                    Vector3 oldTileVerticalTrajectory = Find.WorldGrid.GetTileCenter(oldTile).normalized;
                     for (int i = 0; i < path.Count; i++)
                     {
                         PlanetLayerConnection planetLayerConnection = path[i];
-                        PlanetLayer planetLayer = planetLayerConnection.target;
-                        if (planetLayerConnection.target.Def.Elevation() > planetLayerConnection.origin.Def.Elevation())
+                        PlanetDef targetPlanet = planetLayerConnection.target.Def.Planet();
+                        PlanetDef originPlanet = planetLayerConnection.origin.Def.Planet();
+                        bool isInterplanetary = targetPlanet != null && originPlanet != null && targetPlanet != originPlanet;
+                        if (isInterplanetary)
                         {
-                            planetLayer = planetLayerConnection.origin;
+                            route.AddRoutePoint(planetLayerConnection.origin.Radius * oldTileVerticalTrajectory, planetLayerConnection.origin.Def);
+                            route.AddInterplanetaryJumpPoint(originPlanet.gravityWellRadius * oldTileVerticalTrajectory, planetLayerConnection.origin.Def);
+                            route.AddRoutePoint(targetPlanet.gravityWellRadius * oldTileVerticalTrajectory, planetLayerConnection.target.Def);
+                            route.AddRoutePoint(planetLayerConnection.target.Radius * oldTileVerticalTrajectory, planetLayerConnection.target.Def);
                         }
-                        curTile = planetLayerConnection.origin.GetClosestTile_NewTemp(curTile);
-                        route.AddRoutePoint(Find.WorldGrid.GetTileCenter(curTile), planetLayer.Def);
-                        curTile = planetLayerConnection.target.GetClosestTile_NewTemp(curTile);
-                        route.AddRoutePoint(Find.WorldGrid.GetTileCenter(curTile), planetLayer.Def);
+                        else
+                        {
+                            PlanetLayer planetLayer = planetLayerConnection.target;
+                            if (planetLayerConnection.target.Def.Elevation() > planetLayerConnection.origin.Def.Elevation())
+                            {
+                                planetLayer = planetLayerConnection.origin;
+                            }
+                            route.AddRoutePoint(planetLayerConnection.origin.Radius * oldTileVerticalTrajectory, planetLayer.Def);
+                            route.AddRoutePoint(planetLayerConnection.origin.Radius * oldTileVerticalTrajectory, planetLayer.Def);
+                        }
                     }
-                    route.AddRoutePoint(Find.WorldGrid.GetTileCenter(curTile), newTile.LayerDef);
+                    route.AddRoutePoint(newTile.Layer.Radius * oldTileVerticalTrajectory, newTile.LayerDef);
                     route.AddRoutePoint(Find.WorldGrid.GetTileCenter(newTile), newTile.LayerDef);
                 }
                 else

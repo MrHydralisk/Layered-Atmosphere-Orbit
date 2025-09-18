@@ -9,6 +9,7 @@ namespace LayeredAtmosphereOrbit
     {
         public List<Vector3> routePoints = new List<Vector3>();
         public List<PlanetLayerDef> routePlanetLayers = new List<PlanetLayerDef>();
+        public List<int> routeInterplanetaryJumpPoints = new List<int>();
 
         public float routeLength
         {
@@ -33,6 +34,12 @@ namespace LayeredAtmosphereOrbit
             routePlanetLayers.Add(planetLayerDef);
         }
 
+        public void AddInterplanetaryJumpPoint(Vector3 point, PlanetLayerDef planetLayerDef)
+        {
+            routeInterplanetaryJumpPoints.Add(routePoints.Count);
+            AddRoutePoint(point, planetLayerDef);
+        }
+
         public void TryCache()
         {
             if (!isCached)
@@ -43,6 +50,10 @@ namespace LayeredAtmosphereOrbit
                 routeLength = 0;
                 for (int i = 1; i < routePoints.Count - 1; i++)
                 {
+                    if (routeInterplanetaryJumpPoints.Contains(i - 1))
+                    {
+                        continue;
+                    }
                     routeLength += Vector3.Distance(routePoints[i], routePoints[i - 1]) / 100;
                 }
                 routeLength += GenMath.SphericalDistance(routePoints[routePoints.Count - 2].normalized, routePoints[routePoints.Count - 1].normalized);
@@ -52,7 +63,14 @@ namespace LayeredAtmosphereOrbit
                 curveZ.Add(0, routePoints[0].z);
                 for (int i = 1; i < routePoints.Count - 1; i++)
                 {
-                    passedLength += Vector3.Distance(routePoints[i], routePoints[i - 1]) / 100;
+                    if (routeInterplanetaryJumpPoints.Contains(i - 1))
+                    {
+                        passedLength += 0.000001f;
+                    }
+                    else
+                    {
+                        passedLength += Vector3.Distance(routePoints[i], routePoints[i - 1]) / 100;
+                    }
                     curveX.Add(passedLength / routeLength, routePoints[i].x);
                     curveY.Add(passedLength / routeLength, routePoints[i].y);
                     curveZ.Add(passedLength / routeLength, routePoints[i].z);
@@ -76,6 +94,7 @@ namespace LayeredAtmosphereOrbit
         public void ExposeData()
         {
             Scribe_Collections.Look(ref routePoints, "routePoints", LookMode.Value);
+            Scribe_Collections.Look(ref routeInterplanetaryJumpPoints, "routeInterplanetaryJumpPoints", LookMode.Value);
             Scribe_Collections.Look(ref routePlanetLayers, "routePlanetLayers", LookMode.Def);
         }
     }
