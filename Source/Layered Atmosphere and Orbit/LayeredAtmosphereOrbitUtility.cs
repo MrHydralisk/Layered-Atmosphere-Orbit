@@ -186,6 +186,7 @@ namespace LayeredAtmosphereOrbit
                 {
                     fuelBetweenPlanets = Vector3.Distance(spPlanetTo.Item1.posFromRimworld, spPlanetFrom.Item1.posFromRimworld) / LAOMod.Settings.KmPerFuelSpace;
                 }
+                //Log.Message($"{spPlanetFrom.Item1.defName} > {spPlanetTo.Item1.defName}: {fuelBetweenPlanets} = {Vector3.Distance(spPlanetTo.Item1.posFromRimworld, spPlanetFrom.Item1.posFromRimworld)} ({spPlanetTo.Item1.posFromRimworld}, {spPlanetFrom.Item1.posFromRimworld}) / {LAOMod.Settings.KmPerFuelSpace}");
                 //Log.Message($"C Check {spPlanetFrom.Item2.layer.defName} > {spPlanetTo.Item2.layer.defName} =\n{string.Join("\n", spPlanetFrom.Item2.connections.Select(y => $"- {y.tag} = {y.zoomMode}"))}\n>\n{string.Join("\n", spPlanetTo.Item2.connections.Select(y => $"- {y.tag} = {y.zoomMode}"))}");
                 if (!spPlanetFrom.Item2.connections.Any((LayerConnection lc) => lc.tag == spPlanetTo.Item2.tag))
                 {
@@ -193,6 +194,7 @@ namespace LayeredAtmosphereOrbit
                     if (LAOMod.Settings.UseFuelCostBetweenLayers)
                     {
                         layerConnection.fuelCost = fuelBetweenPlanets + (spPlanetFrom.Item1.gravityWellExitElevation - spPlanetFrom.Item2.layer.Elevation()) * LAOMod.Settings.FuelPerKm;
+                        //Log.Message($"{layerConnection.fuelCost} = {fuelBetweenPlanets} + {spPlanetFrom.Item1.gravityWellExitElevation - spPlanetFrom.Item2.layer.Elevation()}({spPlanetFrom.Item1.gravityWellExitElevation} - {spPlanetFrom.Item2.layer.Elevation()}) * {LAOMod.Settings.FuelPerKm}");
                     }
                     //Log.Message($"C Add {spPlanetFrom.Item2.layer.defName} > {spPlanetTo.Item2.layer.defName} = {LayerConnection.ZoomMode.ZoomOut} [{layerConnection.fuelCost}]");
                     spPlanetFrom.Item2.connections.Add(layerConnection);
@@ -203,6 +205,7 @@ namespace LayeredAtmosphereOrbit
                     if (LAOMod.Settings.UseFuelCostBetweenLayers)
                     {
                         layerConnection.fuelCost = fuelBetweenPlanets + (spPlanetTo.Item1.gravityWellExitElevation - spPlanetTo.Item2.layer.Elevation()) * LAOMod.Settings.FuelPerKm;
+                        //Log.Message($"{layerConnection.fuelCost} = {fuelBetweenPlanets} + {spPlanetTo.Item1.gravityWellExitElevation - spPlanetTo.Item2.layer.Elevation()}({spPlanetTo.Item1.gravityWellExitElevation} - {spPlanetTo.Item2.layer.Elevation()}) * {LAOMod.Settings.FuelPerKm}");
                     }
                     //Log.Message($"C Add {spPlanetTo.Item2.layer.defName} > {spPlanetFrom.Item2.layer.defName} = {LayerConnection.ZoomMode.ZoomIn} [{layerConnection.fuelCost}]");
                     spPlanetTo.Item2.connections.Add(layerConnection);

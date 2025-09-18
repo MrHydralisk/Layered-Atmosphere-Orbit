@@ -7,7 +7,7 @@ namespace LayeredAtmosphereOrbit
     {
         public bool UseFuelCostBetweenLayers = false;
         public float FuelPerKm = 1;
-        public float KmPerFuelSpace = 100;
+        public float KmPerFuelSpace = 15;
         public bool ShowLayerInGroup = true;
         public bool AutoSwapLayerOnSelection = true;
         public float TransparentInGroup = 0.6f;
@@ -55,7 +55,7 @@ namespace LayeredAtmosphereOrbit
             base.ExposeData();
             Scribe_Values.Look(ref UseFuelCostBetweenLayers, "UseFuelCostBetweenLayers", defaultValue: false);
             Scribe_Values.Look(ref FuelPerKm, "FuelPerKm", defaultValue: 1);
-            Scribe_Values.Look(ref KmPerFuelSpace, "KmPerFuelSpace", defaultValue: 100);
+            Scribe_Values.Look(ref KmPerFuelSpace, "KmPerFuelSpace", defaultValue: 15);
             Scribe_Values.Look(ref ShowLayerInGroup, "ShowLayerInGroup", defaultValue: true);
             Scribe_Values.Look(ref AutoSwapLayerOnSelection, "AutoSwapLayerOnSelection", defaultValue: true);
             Scribe_Values.Look(ref TransparentInGroup, "TransparentInGroup", defaultValue: 0.6f);

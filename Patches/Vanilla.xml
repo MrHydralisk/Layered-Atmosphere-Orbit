@@ -13,9 +13,6 @@
 							<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 								<elevation>0</elevation>
 								<planetLayerGroup>LAO_Surface</planetLayerGroup>
-								<forcedConnectToPlanetLayer>
-									<li>Orbit</li>
-								</forcedConnectToPlanetLayer>
 							</li>
 						</modExtensions>
 					</value>
@@ -27,9 +24,6 @@
 						<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 							<elevation>0</elevation>
 							<planetLayerGroup>LAO_Surface</planetLayerGroup>
-							<forcedConnectToPlanetLayer>
-								<li>Orbit</li>
-							</forcedConnectToPlanetLayer>
 						</li>
 					</value>
 				</match>
@@ -45,9 +39,6 @@
 								<elevation>200</elevation>
 								<tempOffest>-95</tempOffest>
 								<planetLayerGroup>LAO_Orbit</planetLayerGroup>
-								<forcedConnectToPlanetLayer>
-									<li>Surface</li>
-								</forcedConnectToPlanetLayer>
 							</li>
 						</modExtensions>
 					</value>
@@ -60,9 +51,6 @@
 							<elevation>200</elevation>
 							<tempOffest>-95</tempOffest>
 							<planetLayerGroup>LAO_Orbit</planetLayerGroup>
-							<forcedConnectToPlanetLayer>
-								<li>Surface</li>
-							</forcedConnectToPlanetLayer>
 						</li>
 					</value>
 				</match>
