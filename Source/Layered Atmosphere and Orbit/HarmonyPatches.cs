@@ -673,6 +673,10 @@ namespace LayeredAtmosphereOrbit
                 if (__instance.Tile.LayerDef != planetLayerDef && Find.WorldGrid.TryGetFirstLayerOfDef(planetLayerDef, out PlanetLayer layer))
                 {
                     bool isLooking = Find.WorldSelector.SelectedLayer == __instance.Tile.Layer && WorldRendererUtility.WorldSelected && new Rect(0f, 0f, UI.screenWidth, UI.screenHeight).Contains(GenWorldUI.WorldToUIPosition(__instance.Tile.Layer.Origin + Find.WorldGrid.GetTileCenter(__instance.Tile)));
+                    if (__instance.Tile.LayerDef.Planet() != planetLayerDef.Planet())
+                    {
+                        Messages.Message("LayeredAtmosphereOrbit.Gravship.GravityJumpPerformed".Translate(__instance.LabelCap, __instance.Tile.LayerDef.Planet().LabelCap, planetLayerDef.Planet().LabelCap).RawText, __instance, MessageTypeDefOf.TaskCompletion);
+                    }
                     __instance.Tile = layer.GetClosestTile_NewTemp(__instance.initialTile);
                     if (isLooking)
                     {
