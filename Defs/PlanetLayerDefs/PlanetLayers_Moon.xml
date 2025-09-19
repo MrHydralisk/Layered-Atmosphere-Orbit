@@ -54,6 +54,11 @@
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
 				<elevation>0</elevation>
 				<planetLayerGroup>LAO_Surface_Luna</planetLayerGroup>
+				<IncidentChanceMultipliers>
+					<OrbitalDebris>5</OrbitalDebris>
+					<SolarFlare>2.3</SolarFlare>
+					<MeteoriteImpact>4</MeteoriteImpact>
+				</IncidentChanceMultipliers>
 			</li>
 		</modExtensions>
 	</PlanetLayerDef>

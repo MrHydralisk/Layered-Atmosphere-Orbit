@@ -22,5 +22,6 @@ namespace LayeredAtmosphereOrbit
         public List<GameConditionDef> WhitelistGameConditionDef = new List<GameConditionDef>();
         public List<QuestScriptDef> WhitelistQuestScriptDef = new List<QuestScriptDef>();
         public List<QuestScriptDef> BlacklistQuestScriptDef = new List<QuestScriptDef>();
+        public List<IncidentChanceMultiplier> IncidentChanceMultipliers = new List<IncidentChanceMultiplier>();
     }
 }

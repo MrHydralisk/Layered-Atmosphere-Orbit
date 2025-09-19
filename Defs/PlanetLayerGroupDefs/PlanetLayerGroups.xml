@@ -135,6 +135,40 @@
 		<description>The foundational layer of pulverized rock and dust where ancient impacts scar the terrain. This is the airless ground that forms the outermost shell of the Luna. This stark surface is where sunlight meets shadow and where vast, barren plains stretch endlessly. It provides the base for all of the Moon's natural geography, from towering peaks of crater rims to deep, shadowed chasms.</description>
 		<defaultPlanetLayer>LAO_Surface_Luna</defaultPlanetLayer>
 		<planet>LAO_Luna</planet>
+		<modExtensions>
+			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<isPreventQuestMapIfNotWhitelisted>true</isPreventQuestMapIfNotWhitelisted>
+				<WhitelistArrivalFactionDef>
+					<li>Ancients</li>
+					<li>AncientsHostile</li>
+					<li>Mechanoid</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
+					<li>TradersGuild</li>
+					<li>Salvagers</li>
+				</WhitelistArrivalFactionDef>
+				<WhitelistGameConditionDef>
+					<li>SolarFlare</li>
+					<li>Planetkiller</li>
+					<li>PsychicDroner</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">SunBlocker</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">PsychicSuppression</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">EMIField</li>
+					<li MayRequire="Ludeon.RimWorld.Anomaly">GrayPall</li>
+					<li MayRequire="Ludeon.RimWorld.Anomaly">HateChantDrone</li>
+					<li MayRequire="Ludeon.RimWorld.Anomaly">UnnaturalDarkness</li>
+					<li MayRequire="MrHydralisk.AnomaliesExpected">AE_TemperatureDrop</li>
+					<li MayRequire="MrHydralisk.AnomaliesExpected">AE_UnnaturalCold</li>
+					<li MayRequire="MrHydralisk.AnomaliesExpected">AE_UnnaturalTemperature</li>
+				</WhitelistGameConditionDef>
+				<WhitelistIncidentDef>
+					<li>Disease_OrganDecay</li>
+					<li>RefugeePodCrash</li>
+					<li>PsychicEmanatorShipPartCrash</li>
+					<li>SolarFlare</li>
+					<li>OrbitalDebris</li>
+				</WhitelistIncidentDef>
+			</li>
+		</modExtensions>
 	</LayeredAtmosphereOrbit.PlanetLayerGroupDef>
   
 </Defs>

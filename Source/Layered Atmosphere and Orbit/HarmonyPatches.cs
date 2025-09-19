@@ -33,6 +33,7 @@ namespace LayeredAtmosphereOrbit
                 val.Patch(AccessTools.Method(typeof(WorldGrid).GetNestedTypes(AccessTools.all).First((Type t) => t.Name.Contains("<GetGizmos>d__103")), "MoveNext"), transpiler: new HarmonyMethod(patchType, "WG_GetGizmos_Transpiler"));
             }
             val.Patch(AccessTools.Method(typeof(WorldGrid), "GetGizmos"), postfix: new HarmonyMethod(patchType, "WG_GetGizmos_Postfix"));
+            val.Patch(AccessTools.Method(typeof(StorytellerComp), "IncidentChanceFinal"), transpiler: new HarmonyMethod(patchType, "SC_IncidentChanceFinal_Transpiler"));
             if (LAOMod.Settings.ShowLayerInGroup)
             {
                 val.Patch(AccessTools.Method(typeof(ExpandableWorldObjectsUtility), "TransitionPct"), postfix: new HarmonyMethod(patchType, "EWOU_TransitionPct_Postfix"));
@@ -390,6 +391,50 @@ namespace LayeredAtmosphereOrbit
             __result = NGizmos;
         }
 
+        public static IEnumerable<CodeInstruction> SC_IncidentChanceFinal_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
+        {
+            int countStloc0 = 0;
+            int startIndex = -1;
+            int endIndex = -1;
+            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count - 1; i++)
+            {
+                if (codes[i].opcode == OpCodes.Stloc_0)
+                {
+                    countStloc0++;
+                    if (countStloc0 == 2)
+                    {
+                        startIndex = i + 1;
+                    }
+                    if (countStloc0 == 3 && startIndex > -1)
+                    {
+                        endIndex = i + 1;
+                        List<CodeInstruction> instructionsToInsert = codes.GetRange(startIndex, endIndex - startIndex);
+                        instructionsToInsert.RemoveAt(1);
+                        instructionsToInsert.Insert(2, new CodeInstruction(OpCodes.Ldarg_2));
+                        instructionsToInsert[3] = new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HarmonyPatches), "IncidentChanceFactor_PlanetLayer"));
+                        codes.InsertRange(endIndex, instructionsToInsert);
+                        break;
+                    }
+                }
+            }
+            return codes.AsEnumerable();
+        }
+
+        public static float IncidentChanceFactor_PlanetLayer(IncidentDef def, IIncidentTarget target)
+        {
+            LayeredAtmosphereOrbitDefModExtension layeredAtmosphereOrbitDefModExtension = target?.Tile.LayerDef?.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+            if (!(layeredAtmosphereOrbitDefModExtension?.IncidentChanceMultipliers.NullOrEmpty() ?? true))
+            {
+                int index = layeredAtmosphereOrbitDefModExtension.IncidentChanceMultipliers.FindIndex((IncidentChanceMultiplier icm) => icm.incident == def);
+                if (index > -1)
+                {
+                    return layeredAtmosphereOrbitDefModExtension.IncidentChanceMultipliers[index].multiplier;
+                }
+            }
+            return 1f;
+        }
+
         public static void EWOU_TransitionPct_Postfix(ref float __result, WorldObject wo)
         {
             if ((__result == 1 || wo.def.fullyExpandedInSpace) && wo.Tile.Layer != Find.WorldSelector.SelectedLayer)
@@ -431,40 +476,6 @@ namespace LayeredAtmosphereOrbit
             {
                 __result += tempOffest;
             }
-        }
-
-        public static IEnumerable<CodeInstruction> TF_TryFindNewSiteTile_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
-        {
-            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
-            for (int i = 0; i < codes.Count; i++)
-            {
-                if (codes[i].opcode == OpCodes.Stloc_1)
-                {
-                    List<CodeInstruction> instructionsToInsert = new List<CodeInstruction>();
-                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Ldarg_S, 11));
-                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HarmonyPatches), "CheckSiteLayer")));
-                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Starg_S, 11));
-                    codes.InsertRange(i + 1, instructionsToInsert);
-                    break;
-                }
-            }
-            return codes.AsEnumerable();
-        }
-
-        public static PlanetLayer CheckSiteLayer(PlanetLayer layer)
-        {
-            Slate slate = QuestGen.slate;
-            if (slate != null)
-            {
-                List<PlanetLayerGroupDef> planetLayerGroupDefs = slate.Get<List<PlanetLayerGroupDef>>("layerGroupWhitelist");
-                PlanetLayerGroupDef planetLayerGroupDef = layer.Def.LayerGroup();
-                LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerGroupDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
-                if ((laoDefModExtension?.isPreventQuestMapIfNotWhitelisted ?? false) && !(planetLayerGroupDefs?.Contains(planetLayerGroupDef) ?? false))
-                {
-                    Find.WorldGrid.TryGetFirstLayerOfDef(PlanetLayerDefOf.Surface, out layer);
-                }
-            }
-            return layer;
         }
 
         public static bool TF_TryFindNewSiteTile_Prefix(ref bool __result, out PlanetTile tile, PlanetTile nearTile, int minDist = 7, int maxDist = 27, bool allowCaravans = false, List<LandmarkDef> allowedLandmarks = null, float selectLandmarkChance = 0.5f, bool canSelectComboLandmarks = true, TileFinderMode tileFinderMode = TileFinderMode.Near, bool exitOnFirstTileFound = false, bool canBeSpace = false, PlanetLayer layer = null, Predicate<PlanetTile> validator = null)
