@@ -115,7 +115,7 @@ namespace LayeredAtmosphereOrbit
                 {
                     LayerConnection layerConnection = spPlanetLayerFrom.Item1.connections[j];
                     (ScenPart_PlanetLayer, LayeredAtmosphereOrbitDefModExtension) spPlanetLayerTo = planetLayers.FirstOrDefault(pl => pl.Item1.tag == layerConnection.tag);
-                    if ((spPlanetLayerFrom.Item2?.isReplaceConnections ?? false) || (spPlanetLayerTo.Item2?.isReplaceConnections ?? false))
+                    if ((spPlanetLayerFrom.Item2?.isReplaceConnections ?? false) && (spPlanetLayerTo.Item2?.isReplaceConnections ?? false))
                     {
                         //Log.Message($"A Remove {spPlanetLayerFrom.Item1.layer.defName} > {spPlanetLayerTo.Item1.layer.defName} = {layerConnection.zoomMode}");
                         spPlanetLayerFrom.Item1.connections.RemoveAt(j);

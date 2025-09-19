@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
+using Verse.Noise;
 
 namespace LayeredAtmosphereOrbit
 {
@@ -114,119 +115,303 @@ namespace LayeredAtmosphereOrbit
 
         public static void InjectWhitelists()
         {
-            List<PlanetLayerDef> AlwaysIncidentPlanetLayerDefs = new List<PlanetLayerDef>();
-            List<PlanetLayerDef> AlwaysBiomePlanetLayerDefs = new List<PlanetLayerDef>();
-            List<PlanetLayerDef> AlwaysGameConditionPlanetLayerDefs = new List<PlanetLayerDef>();
-            List<PlanetLayerDef> AlwaysQuestScriptPlanetLayerDefs = new List<PlanetLayerDef>();
-            List<PlanetLayerDef> AlwaysArrivalFactionPlanetLayerDefs = new List<PlanetLayerDef>();
             List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
-            foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
-            {
-                if (!planetLayerDef.onlyAllowWhitelistedIncidents)
-                {
-                    AlwaysIncidentPlanetLayerDefs.Add(planetLayerDef);
-                }
-                if (!planetLayerDef.onlyAllowWhitelistedBiomes)
-                {
-                    AlwaysBiomePlanetLayerDefs.Add(planetLayerDef);
-                }
-                if (!planetLayerDef.onlyAllowWhitelistedGameConditions)
-                {
-                    AlwaysGameConditionPlanetLayerDefs.Add(planetLayerDef);
-                }
-                if (!planetLayerDef.onlyAllowWhitelistedQuests)
-                {
-                    AlwaysQuestScriptPlanetLayerDefs.Add(planetLayerDef);
-                }
-                if (!planetLayerDef.onlyAllowWhitelistedGameConditions)
-                {
-                    AlwaysIncidentPlanetLayerDefs.Add(planetLayerDef);
-                }
-                if (!planetLayerDef.onlyAllowWhitelistedArrivals)
-                {
-                    AlwaysArrivalFactionPlanetLayerDefs.Add(planetLayerDef);
-                }
-            }
+            List<IncidentDef> AllIncidentDefs = DefDatabase<IncidentDef>.AllDefs.ToList();
+            List<BiomeDef> AllBiomeDefs = DefDatabase<BiomeDef>.AllDefs.ToList();
+            List<GameConditionDef> AllGameConditionDefs = DefDatabase<GameConditionDef>.AllDefs.ToList();
+            List<QuestScriptDef> AllQuestScriptDefs = DefDatabase<QuestScriptDef>.AllDefs.ToList();
+            List<FactionDef> AllFactionDefs = DefDatabase<FactionDef>.AllDefs.ToList();
             foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
             {
                 LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+                //IncidentDefs
+                List<IncidentDef> WhitelistIncidentDefs = AllIncidentDefs.Where((IncidentDef id) => id.canOccurOnAllPlanetLayers || (id.layerWhitelist?.Contains(planetLayerDef) ?? false)).ToList();
+                List<IncidentDef> BlacklistIncidentDefs = AllIncidentDefs.Where((IncidentDef id) => id.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
                 if (laoDefModExtension != null)
                 {
-                    if (!laoDefModExtension.WhitelistIncidentDef.NullOrEmpty())
+                    if (laoDefModExtension.BlacklistIncidentDef != null)
                     {
-                        foreach (IncidentDef incidentDef in laoDefModExtension.WhitelistIncidentDef)
+                        BlacklistIncidentDefs.AddRangeUnique(laoDefModExtension.BlacklistIncidentDef);
+                    }
+                    if (!BlacklistIncidentDefs.NullOrEmpty())
+                    {
+                        WhitelistIncidentDefs.RemoveAll((IncidentDef id) => BlacklistIncidentDefs.Contains(id));
+                    }
+                    if (laoDefModExtension.WhitelistIncidentDef != null)
+                    {
+                        WhitelistIncidentDefs.AddRangeUnique(laoDefModExtension.WhitelistIncidentDef);
+                    }
+                    if (!BlacklistIncidentDefs.NullOrEmpty())
+                    {
+                        BlacklistIncidentDefs.RemoveAll((IncidentDef id) => WhitelistIncidentDefs.Contains(id));
+                    }
+                }
+                if (!WhitelistIncidentDefs.NullOrEmpty())
+                {
+                    foreach (IncidentDef incidentDef in WhitelistIncidentDefs)
+                    {
+                        if (!incidentDef.canOccurOnAllPlanetLayers)
                         {
                             if (incidentDef.layerWhitelist == null)
                             {
-                                incidentDef.layerWhitelist = AlwaysIncidentPlanetLayerDefs.ToList();
+                                incidentDef.layerWhitelist = new List<PlanetLayerDef>();
                             }
                             incidentDef.layerWhitelist.AddDistinct(planetLayerDef);
                         }
                     }
-                    if (!laoDefModExtension.WhitelistBiomeDef.NullOrEmpty())
+                }
+                if (!planetLayerDef.onlyAllowWhitelistedIncidents)
+                {
+                    if (!BlacklistIncidentDefs.NullOrEmpty())
                     {
-                        foreach (BiomeDef biomeDef in laoDefModExtension.WhitelistBiomeDef)
+                        foreach (IncidentDef incidentDef in BlacklistIncidentDefs)
                         {
-                            if (biomeDef.layerWhitelist == null)
+                            if (incidentDef.layerBlacklist == null)
                             {
-                                biomeDef.layerWhitelist = AlwaysBiomePlanetLayerDefs.ToList();
+                                incidentDef.layerBlacklist = new List<PlanetLayerDef>();
                             }
-                            biomeDef.layerWhitelist.AddDistinct(planetLayerDef);
+                            incidentDef.layerBlacklist.AddDistinct(planetLayerDef);
                         }
                     }
-                    if (!laoDefModExtension.WhitelistGameConditionDef.NullOrEmpty())
+                }
+                //BiomeDefs
+                List<BiomeDef> WhitelistBiomeDefs = AllBiomeDefs.Where((BiomeDef bd) => bd.layerWhitelist?.Contains(planetLayerDef) ?? false).ToList();
+                List<BiomeDef> BlacklistBiomeDefs = AllBiomeDefs.Where((BiomeDef bd) => bd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+                if (laoDefModExtension != null)
+                {
+                    if (laoDefModExtension.BlacklistBiomeDef != null)
                     {
-                        foreach (GameConditionDef gameConditionDef in laoDefModExtension.WhitelistGameConditionDef)
+                        BlacklistBiomeDefs.AddRangeUnique(laoDefModExtension.BlacklistBiomeDef);
+                    }
+                    if (!BlacklistBiomeDefs.NullOrEmpty())
+                    {
+                        WhitelistBiomeDefs.RemoveAll((BiomeDef bd) => BlacklistBiomeDefs.Contains(bd));
+                    }
+                    if (laoDefModExtension.WhitelistBiomeDef != null)
+                    {
+                        WhitelistBiomeDefs.AddRangeUnique(laoDefModExtension.WhitelistBiomeDef);
+                    }
+                    if (!BlacklistBiomeDefs.NullOrEmpty())
+                    {
+                        BlacklistBiomeDefs.RemoveAll((BiomeDef id) => WhitelistBiomeDefs.Contains(id));
+                    }
+                }
+                if (!WhitelistBiomeDefs.NullOrEmpty())
+                {
+                    foreach (BiomeDef biomeDef in WhitelistBiomeDefs)
+                    {
+                        if (biomeDef.layerWhitelist == null)
+                        {
+                            biomeDef.layerWhitelist = new List<PlanetLayerDef>();
+                        }
+                        biomeDef.layerWhitelist.AddDistinct(planetLayerDef);
+                    }
+                }
+                if (!planetLayerDef.onlyAllowWhitelistedBiomes)
+                {
+                    if (!BlacklistBiomeDefs.NullOrEmpty())
+                    {
+                        foreach (BiomeDef biomeDef in BlacklistBiomeDefs)
+                        {
+                            if (biomeDef.layerBlacklist == null)
+                            {
+                                biomeDef.layerBlacklist = new List<PlanetLayerDef>();
+                            }
+                            biomeDef.layerBlacklist.AddDistinct(planetLayerDef);
+                        }
+                    }
+                }
+                //GameConditionDefs
+                List<GameConditionDef> WhitelistGameConditionDefs = AllGameConditionDefs.Where((GameConditionDef bd) => bd.canAffectAllPlanetLayers || (bd.layerWhitelist?.Contains(planetLayerDef) ?? false)).ToList();
+                List<GameConditionDef> BlacklistGameConditionDefs = AllGameConditionDefs.Where((GameConditionDef bd) => bd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+                if (laoDefModExtension != null)
+                {
+                    if (laoDefModExtension.BlacklistGameConditionDef != null)
+                    {
+                        BlacklistGameConditionDefs.AddRangeUnique(laoDefModExtension.BlacklistGameConditionDef);
+                    }
+                    if (!BlacklistGameConditionDefs.NullOrEmpty())
+                    {
+                        WhitelistGameConditionDefs.RemoveAll((GameConditionDef bd) => BlacklistGameConditionDefs.Contains(bd));
+                    }
+                    if (laoDefModExtension.WhitelistGameConditionDef != null)
+                    {
+                        WhitelistGameConditionDefs.AddRangeUnique(laoDefModExtension.WhitelistGameConditionDef);
+                    }
+                    if (!BlacklistGameConditionDefs.NullOrEmpty())
+                    {
+                        BlacklistGameConditionDefs.RemoveAll((GameConditionDef id) => WhitelistGameConditionDefs.Contains(id));
+                    }
+                }
+                if (!WhitelistGameConditionDefs.NullOrEmpty())
+                {
+                    foreach (GameConditionDef gameConditionDef in WhitelistGameConditionDefs)
+                    {
+                        if (!gameConditionDef.canAffectAllPlanetLayers)
                         {
                             if (gameConditionDef.layerWhitelist == null)
                             {
-                                gameConditionDef.layerWhitelist = AlwaysGameConditionPlanetLayerDefs.ToList();
+                                gameConditionDef.layerWhitelist = new List<PlanetLayerDef>();
                             }
                             gameConditionDef.layerWhitelist.AddDistinct(planetLayerDef);
                         }
                     }
-                    if (!laoDefModExtension.WhitelistQuestScriptDef.NullOrEmpty())
+                }
+                if (!planetLayerDef.onlyAllowWhitelistedGameConditions)
+                {
+                    if (!BlacklistGameConditionDefs.NullOrEmpty())
                     {
-                        foreach (QuestScriptDef questScriptDef in laoDefModExtension.WhitelistQuestScriptDef)
+                        foreach (GameConditionDef gameConditionDef in BlacklistGameConditionDefs)
+                        {
+                            if (gameConditionDef.layerBlacklist == null)
+                            {
+                                gameConditionDef.layerBlacklist = new List<PlanetLayerDef>();
+                            }
+                            gameConditionDef.layerBlacklist.AddDistinct(planetLayerDef);
+                        }
+                    }
+                }
+                //QuestScriptDefs
+                List<QuestScriptDef> WhitelistQuestScriptDefs = AllQuestScriptDefs.Where((QuestScriptDef qsd) => qsd.canOccurOnAllPlanetLayers || (qsd.layerWhitelist?.Contains(planetLayerDef) ?? false) || (qsd.everAcceptableInSpace && planetLayerDef.isSpace)).ToList();
+                List<QuestScriptDef> BlacklistQuestScriptDefs = AllQuestScriptDefs.Where((QuestScriptDef qsd) => (qsd.layerBlacklist?.Contains(planetLayerDef) ?? false) || (qsd.everAcceptableInSpace && planetLayerDef.isSpace)).ToList();
+                if (laoDefModExtension != null)
+                {
+                    if (laoDefModExtension.BlacklistQuestScriptDef != null)
+                    {
+                        BlacklistQuestScriptDefs.AddRangeUnique(laoDefModExtension.BlacklistQuestScriptDef);
+                    }
+                    if (!BlacklistQuestScriptDefs.NullOrEmpty())
+                    {
+                        WhitelistQuestScriptDefs.RemoveAll((QuestScriptDef bd) => BlacklistQuestScriptDefs.Contains(bd));
+                    }
+                    if (laoDefModExtension.WhitelistQuestScriptDef != null)
+                    {
+                        WhitelistQuestScriptDefs.AddRangeUnique(laoDefModExtension.WhitelistQuestScriptDef);
+                    }
+                    if (!BlacklistQuestScriptDefs.NullOrEmpty())
+                    {
+                        BlacklistQuestScriptDefs.RemoveAll((QuestScriptDef id) => WhitelistQuestScriptDefs.Contains(id));
+                    }
+                }
+                if (!WhitelistQuestScriptDefs.NullOrEmpty())
+                {
+                    foreach (QuestScriptDef questScriptDef in WhitelistQuestScriptDefs)
+                    {
+                        if (!(questScriptDef.canOccurOnAllPlanetLayers || (questScriptDef.everAcceptableInSpace && planetLayerDef.isSpace)))
                         {
                             if (questScriptDef.layerWhitelist == null)
                             {
-                                questScriptDef.layerWhitelist = AlwaysQuestScriptPlanetLayerDefs.ToList();
+                                questScriptDef.layerWhitelist = new List<PlanetLayerDef>();
                             }
                             questScriptDef.layerWhitelist.AddDistinct(planetLayerDef);
                         }
                     }
-                    if (!laoDefModExtension.BlacklistQuestScriptDef.NullOrEmpty())
+                }
+                if (!planetLayerDef.onlyAllowWhitelistedQuests)
+                {
+                    if (!BlacklistQuestScriptDefs.NullOrEmpty())
                     {
-                        foreach (QuestScriptDef questScriptDef in laoDefModExtension.BlacklistQuestScriptDef)
+                        foreach (QuestScriptDef questScriptDef in BlacklistQuestScriptDefs)
                         {
                             if (questScriptDef.layerBlacklist == null)
                             {
-                                questScriptDef.layerBlacklist = AlwaysQuestScriptPlanetLayerDefs.ToList();
+                                questScriptDef.layerBlacklist = new List<PlanetLayerDef>();
                             }
                             questScriptDef.layerBlacklist.AddDistinct(planetLayerDef);
                         }
                     }
-                    if (!laoDefModExtension.WhitelistArrivalFactionDef.NullOrEmpty())
+                }
+                //ArrivalFactionDefs
+                List<FactionDef> WhitelistArrivalFactionDefs = AllFactionDefs.Where((FactionDef fd) => fd.arrivalLayerWhitelist?.Contains(planetLayerDef) ?? false).ToList();
+                List<FactionDef> BlacklistArrivalFactionDefs = AllFactionDefs.Where((FactionDef fd) => fd.arrivalLayerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+                if (laoDefModExtension != null)
+                {
+                    if (laoDefModExtension.BlacklistArrivalFactionDef != null)
                     {
-                        foreach (FactionDef factionDef in laoDefModExtension.WhitelistArrivalFactionDef)
+                        BlacklistArrivalFactionDefs.AddRangeUnique(laoDefModExtension.BlacklistArrivalFactionDef);
+                    }
+                    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
+                    {
+                        WhitelistArrivalFactionDefs.RemoveAll((FactionDef fd) => BlacklistArrivalFactionDefs.Contains(fd));
+                    }
+                    if (laoDefModExtension.WhitelistArrivalFactionDef != null)
+                    {
+                        WhitelistArrivalFactionDefs.AddRangeUnique(laoDefModExtension.WhitelistArrivalFactionDef);
+                    }
+                    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
+                    {
+                        BlacklistArrivalFactionDefs.RemoveAll((FactionDef fd) => WhitelistArrivalFactionDefs.Contains(fd));
+                    }
+                }
+                if (!WhitelistArrivalFactionDefs.NullOrEmpty())
+                {
+                    foreach (FactionDef factionDef in WhitelistArrivalFactionDefs)
+                    {
+                        if (factionDef.arrivalLayerWhitelist == null)
                         {
-                            if (factionDef.arrivalLayerWhitelist == null)
+                            factionDef.arrivalLayerWhitelist = new List<PlanetLayerDef>();
+                        }
+                        factionDef.arrivalLayerWhitelist.AddDistinct(planetLayerDef);
+                    }
+                }
+                if (!planetLayerDef.onlyAllowWhitelistedQuests)
+                {
+                    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
+                    {
+                        foreach (FactionDef factionDef in BlacklistArrivalFactionDefs)
+                        {
+                            if (factionDef.arrivalLayerBlacklist == null)
                             {
-                                factionDef.arrivalLayerWhitelist = AlwaysArrivalFactionPlanetLayerDefs.ToList();
+                                factionDef.arrivalLayerBlacklist = new List<PlanetLayerDef>();
                             }
-                            factionDef.arrivalLayerWhitelist.AddDistinct(planetLayerDef);
+                            factionDef.arrivalLayerBlacklist.AddDistinct(planetLayerDef);
                         }
                     }
-                    if (!laoDefModExtension.WhitelistFactionDef.NullOrEmpty())
+                }
+                //FactionDefs
+                List<FactionDef> WhitelistFactionDefs = AllFactionDefs.Where((FactionDef fd) => fd.layerWhitelist?.Contains(planetLayerDef) ?? false).ToList();
+                List<FactionDef> BlacklistFactionDefs = AllFactionDefs.Where((FactionDef fd) => fd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+                if (laoDefModExtension != null)
+                {
+                    if (laoDefModExtension.BlacklistFactionDef != null)
                     {
-                        foreach (FactionDef factionDef in laoDefModExtension.WhitelistFactionDef)
+                        BlacklistFactionDefs.AddRangeUnique(laoDefModExtension.BlacklistFactionDef);
+                    }
+                    if (!BlacklistFactionDefs.NullOrEmpty())
+                    {
+                        WhitelistFactionDefs.RemoveAll((FactionDef fd) => BlacklistFactionDefs.Contains(fd));
+                    }
+                    if (laoDefModExtension.WhitelistFactionDef != null)
+                    {
+                        WhitelistFactionDefs.AddRangeUnique(laoDefModExtension.WhitelistFactionDef);
+                    }
+                    if (!BlacklistFactionDefs.NullOrEmpty())
+                    {
+                        BlacklistFactionDefs.RemoveAll((FactionDef fd) => WhitelistFactionDefs.Contains(fd));
+                    }
+                }
+                if (!WhitelistFactionDefs.NullOrEmpty())
+                {
+                    foreach (FactionDef factionDef in WhitelistFactionDefs)
+                    {
+                        if (factionDef.layerWhitelist == null)
                         {
-                            if (factionDef.layerWhitelist == null)
+                            factionDef.layerWhitelist = new List<PlanetLayerDef>();
+                        }
+                        factionDef.layerWhitelist.AddDistinct(planetLayerDef);
+                    }
+                }
+                if (!(laoDefModExtension?.onlyAllowWhitelistedFactions ?? false))
+                {
+                    if (!BlacklistFactionDefs.NullOrEmpty())
+                    {
+                        foreach (FactionDef factionDef in BlacklistFactionDefs)
+                        {
+                            if (factionDef.layerBlacklist == null)
                             {
-                                factionDef.layerWhitelist = new List<PlanetLayerDef>();
+                                factionDef.layerBlacklist = new List<PlanetLayerDef>();
                             }
-                            factionDef.layerWhitelist.AddDistinct(planetLayerDef);
+                            factionDef.layerBlacklist.AddDistinct(planetLayerDef);
                         }
                     }
                 }
@@ -235,103 +420,296 @@ namespace LayeredAtmosphereOrbit
             foreach (PlanetLayerGroupDef planetLayerGroupDef in AllPlanetLayerGroupDefs)
             {
                 LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerGroupDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
-                if (laoDefModExtension != null)
+                foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
                 {
-                    if (!laoDefModExtension.WhitelistIncidentDef.NullOrEmpty())
+                    //IncidentDefs
+                    List<IncidentDef> WhitelistIncidentDefs = AllIncidentDefs.Where((IncidentDef id) => id.canOccurOnAllPlanetLayers || (id.layerWhitelist?.Contains(planetLayerDef) ?? false)).ToList();
+                    List<IncidentDef> BlacklistIncidentDefs = AllIncidentDefs.Where((IncidentDef id) => id.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+                    if (laoDefModExtension != null)
                     {
-                        foreach (IncidentDef incidentDef in laoDefModExtension.WhitelistIncidentDef)
+                        if (laoDefModExtension.BlacklistIncidentDef != null)
                         {
-                            if (incidentDef.layerWhitelist == null)
+                            BlacklistIncidentDefs.AddRangeUnique(laoDefModExtension.BlacklistIncidentDef);
+                        }
+                        if (!BlacklistIncidentDefs.NullOrEmpty())
+                        {
+                            WhitelistIncidentDefs.RemoveAll((IncidentDef id) => BlacklistIncidentDefs.Contains(id));
+                        }
+                        if (laoDefModExtension.WhitelistIncidentDef != null)
+                        {
+                            WhitelistIncidentDefs.AddRangeUnique(laoDefModExtension.WhitelistIncidentDef);
+                        }
+                        if (!BlacklistIncidentDefs.NullOrEmpty())
+                        {
+                            BlacklistIncidentDefs.RemoveAll((IncidentDef id) => WhitelistIncidentDefs.Contains(id));
+                        }
+                    }
+                    if (!WhitelistIncidentDefs.NullOrEmpty())
+                    {
+                        foreach (IncidentDef incidentDef in WhitelistIncidentDefs)
+                        {
+                            if (!incidentDef.canOccurOnAllPlanetLayers)
                             {
-                                incidentDef.layerWhitelist = AlwaysIncidentPlanetLayerDefs.ToList();
-                            }
-                            foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
-                            {
+                                if (incidentDef.layerWhitelist == null)
+                                {
+                                    incidentDef.layerWhitelist = new List<PlanetLayerDef>();
+                                }
                                 incidentDef.layerWhitelist.AddDistinct(planetLayerDef);
                             }
                         }
                     }
-                    if (!laoDefModExtension.WhitelistBiomeDef.NullOrEmpty())
+                    if (!planetLayerDef.onlyAllowWhitelistedIncidents)
                     {
-                        foreach (BiomeDef biomeDef in laoDefModExtension.WhitelistBiomeDef)
+                        if (!BlacklistIncidentDefs.NullOrEmpty())
                         {
-                            if (biomeDef.layerWhitelist == null)
+                            foreach (IncidentDef incidentDef in BlacklistIncidentDefs)
                             {
-                                biomeDef.layerWhitelist = AlwaysBiomePlanetLayerDefs.ToList();
-                            }
-                            foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
-                            {
-                                biomeDef.layerWhitelist.AddDistinct(planetLayerDef);
+                                if (incidentDef.layerBlacklist == null)
+                                {
+                                    incidentDef.layerBlacklist = new List<PlanetLayerDef>();
+                                }
+                                incidentDef.layerBlacklist.AddDistinct(planetLayerDef);
                             }
                         }
                     }
-                    if (!laoDefModExtension.WhitelistGameConditionDef.NullOrEmpty())
+                    //BiomeDefs
+                    List<BiomeDef> WhitelistBiomeDefs = AllBiomeDefs.Where((BiomeDef bd) => bd.layerWhitelist?.Contains(planetLayerDef) ?? false).ToList();
+                    List<BiomeDef> BlacklistBiomeDefs = AllBiomeDefs.Where((BiomeDef bd) => bd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+                    if (laoDefModExtension != null)
                     {
-                        foreach (GameConditionDef gameConditionDef in laoDefModExtension.WhitelistGameConditionDef)
+                        if (laoDefModExtension.BlacklistBiomeDef != null)
                         {
-                            if (gameConditionDef.layerWhitelist == null)
+                            BlacklistBiomeDefs.AddRangeUnique(laoDefModExtension.BlacklistBiomeDef);
+                        }
+                        if (!BlacklistBiomeDefs.NullOrEmpty())
+                        {
+                            WhitelistBiomeDefs.RemoveAll((BiomeDef bd) => BlacklistBiomeDefs.Contains(bd));
+                        }
+                        if (laoDefModExtension.WhitelistBiomeDef != null)
+                        {
+                            WhitelistBiomeDefs.AddRangeUnique(laoDefModExtension.WhitelistBiomeDef);
+                        }
+                        if (!BlacklistBiomeDefs.NullOrEmpty())
+                        {
+                            BlacklistBiomeDefs.RemoveAll((BiomeDef id) => WhitelistBiomeDefs.Contains(id));
+                        }
+                    }
+                    if (!WhitelistBiomeDefs.NullOrEmpty())
+                    {
+                        foreach (BiomeDef biomeDef in WhitelistBiomeDefs)
+                        {
+                            if (biomeDef.layerWhitelist == null)
                             {
-                                gameConditionDef.layerWhitelist = AlwaysGameConditionPlanetLayerDefs.ToList();
+                                biomeDef.layerWhitelist = new List<PlanetLayerDef>();
                             }
-                            foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
+                            biomeDef.layerWhitelist.AddDistinct(planetLayerDef);
+                        }
+                    }
+                    if (!planetLayerDef.onlyAllowWhitelistedBiomes)
+                    {
+                        if (!BlacklistBiomeDefs.NullOrEmpty())
+                        {
+                            foreach (BiomeDef biomeDef in BlacklistBiomeDefs)
                             {
+                                if (biomeDef.layerBlacklist == null)
+                                {
+                                    biomeDef.layerBlacklist = new List<PlanetLayerDef>();
+                                }
+                                biomeDef.layerBlacklist.AddDistinct(planetLayerDef);
+                            }
+                        }
+                    }
+                    //GameConditionDefs
+                    List<GameConditionDef> WhitelistGameConditionDefs = AllGameConditionDefs.Where((GameConditionDef bd) => bd.canAffectAllPlanetLayers || (bd.layerWhitelist?.Contains(planetLayerDef) ?? false)).ToList();
+                    List<GameConditionDef> BlacklistGameConditionDefs = AllGameConditionDefs.Where((GameConditionDef bd) => bd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+                    if (laoDefModExtension != null)
+                    {
+                        if (laoDefModExtension.BlacklistGameConditionDef != null)
+                        {
+                            BlacklistGameConditionDefs.AddRangeUnique(laoDefModExtension.BlacklistGameConditionDef);
+                        }
+                        if (!BlacklistGameConditionDefs.NullOrEmpty())
+                        {
+                            WhitelistGameConditionDefs.RemoveAll((GameConditionDef bd) => BlacklistGameConditionDefs.Contains(bd));
+                        }
+                        if (laoDefModExtension.WhitelistGameConditionDef != null)
+                        {
+                            WhitelistGameConditionDefs.AddRangeUnique(laoDefModExtension.WhitelistGameConditionDef);
+                        }
+                        if (!BlacklistGameConditionDefs.NullOrEmpty())
+                        {
+                            BlacklistGameConditionDefs.RemoveAll((GameConditionDef id) => WhitelistGameConditionDefs.Contains(id));
+                        }
+                    }
+                    if (!WhitelistGameConditionDefs.NullOrEmpty())
+                    {
+                        foreach (GameConditionDef gameConditionDef in WhitelistGameConditionDefs)
+                        {
+                            if (!gameConditionDef.canAffectAllPlanetLayers)
+                            {
+                                if (gameConditionDef.layerWhitelist == null)
+                                {
+                                    gameConditionDef.layerWhitelist = new List<PlanetLayerDef>();
+                                }
                                 gameConditionDef.layerWhitelist.AddDistinct(planetLayerDef);
                             }
                         }
                     }
-                    if (!laoDefModExtension.WhitelistQuestScriptDef.NullOrEmpty())
+                    if (!planetLayerDef.onlyAllowWhitelistedGameConditions)
                     {
-                        foreach (QuestScriptDef questScriptDef in laoDefModExtension.WhitelistQuestScriptDef)
+                        if (!BlacklistGameConditionDefs.NullOrEmpty())
                         {
-                            if (questScriptDef.layerWhitelist == null)
+                            foreach (GameConditionDef gameConditionDef in BlacklistGameConditionDefs)
                             {
-                                questScriptDef.layerWhitelist = AlwaysQuestScriptPlanetLayerDefs.ToList();
+                                if (gameConditionDef.layerBlacklist == null)
+                                {
+                                    gameConditionDef.layerBlacklist = new List<PlanetLayerDef>();
+                                }
+                                gameConditionDef.layerBlacklist.AddDistinct(planetLayerDef);
                             }
-                            foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
+                        }
+                    }
+                    //QuestScriptDefs
+                    List<QuestScriptDef> WhitelistQuestScriptDefs = AllQuestScriptDefs.Where((QuestScriptDef qsd) => qsd.canOccurOnAllPlanetLayers || (qsd.layerWhitelist?.Contains(planetLayerDef) ?? false) || (qsd.everAcceptableInSpace && planetLayerDef.isSpace)).ToList();
+                    List<QuestScriptDef> BlacklistQuestScriptDefs = AllQuestScriptDefs.Where((QuestScriptDef qsd) => (qsd.layerBlacklist?.Contains(planetLayerDef) ?? false) || (qsd.everAcceptableInSpace && planetLayerDef.isSpace)).ToList();
+                    if (laoDefModExtension != null)
+                    {
+                        if (laoDefModExtension.BlacklistQuestScriptDef != null)
+                        {
+                            BlacklistQuestScriptDefs.AddRangeUnique(laoDefModExtension.BlacklistQuestScriptDef);
+                        }
+                        if (!BlacklistQuestScriptDefs.NullOrEmpty())
+                        {
+                            WhitelistQuestScriptDefs.RemoveAll((QuestScriptDef bd) => BlacklistQuestScriptDefs.Contains(bd));
+                        }
+                        if (laoDefModExtension.WhitelistQuestScriptDef != null)
+                        {
+                            WhitelistQuestScriptDefs.AddRangeUnique(laoDefModExtension.WhitelistQuestScriptDef);
+                        }
+                        if (!BlacklistQuestScriptDefs.NullOrEmpty())
+                        {
+                            BlacklistQuestScriptDefs.RemoveAll((QuestScriptDef id) => WhitelistQuestScriptDefs.Contains(id));
+                        }
+                    }
+                    if (!WhitelistQuestScriptDefs.NullOrEmpty())
+                    {
+                        foreach (QuestScriptDef questScriptDef in WhitelistQuestScriptDefs)
+                        {
+                            if (!(questScriptDef.canOccurOnAllPlanetLayers || (questScriptDef.everAcceptableInSpace && planetLayerDef.isSpace)))
                             {
+                                if (questScriptDef.layerWhitelist == null)
+                                {
+                                    questScriptDef.layerWhitelist = new List<PlanetLayerDef>();
+                                }
                                 questScriptDef.layerWhitelist.AddDistinct(planetLayerDef);
                             }
                         }
                     }
-                    if (!laoDefModExtension.BlacklistQuestScriptDef.NullOrEmpty())
+                    if (!planetLayerDef.onlyAllowWhitelistedQuests)
                     {
-                        foreach (QuestScriptDef questScriptDef in laoDefModExtension.BlacklistQuestScriptDef)
+                        if (!BlacklistQuestScriptDefs.NullOrEmpty())
                         {
-                            if (questScriptDef.layerBlacklist == null)
+                            foreach (QuestScriptDef questScriptDef in BlacklistQuestScriptDefs)
                             {
-                                questScriptDef.layerBlacklist = AlwaysQuestScriptPlanetLayerDefs.ToList();
-                            }
-                            foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
-                            {
+                                if (questScriptDef.layerBlacklist == null)
+                                {
+                                    questScriptDef.layerBlacklist = new List<PlanetLayerDef>();
+                                }
                                 questScriptDef.layerBlacklist.AddDistinct(planetLayerDef);
                             }
                         }
                     }
-                    if (!laoDefModExtension.WhitelistArrivalFactionDef.NullOrEmpty())
+                    //ArrivalFactionDefs
+                    List<FactionDef> WhitelistArrivalFactionDefs = AllFactionDefs.Where((FactionDef fd) => fd.arrivalLayerWhitelist?.Contains(planetLayerDef) ?? false).ToList();
+                    List<FactionDef> BlacklistArrivalFactionDefs = AllFactionDefs.Where((FactionDef fd) => fd.arrivalLayerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+                    if (laoDefModExtension != null)
                     {
-                        foreach (FactionDef factionDef in laoDefModExtension.WhitelistArrivalFactionDef)
+                        if (laoDefModExtension.BlacklistArrivalFactionDef != null)
+                        {
+                            BlacklistArrivalFactionDefs.AddRangeUnique(laoDefModExtension.BlacklistArrivalFactionDef);
+                        }
+                        if (!BlacklistArrivalFactionDefs.NullOrEmpty())
+                        {
+                            WhitelistArrivalFactionDefs.RemoveAll((FactionDef fd) => BlacklistArrivalFactionDefs.Contains(fd));
+                        }
+                        if (laoDefModExtension.WhitelistArrivalFactionDef != null)
+                        {
+                            WhitelistArrivalFactionDefs.AddRangeUnique(laoDefModExtension.WhitelistArrivalFactionDef);
+                        }
+                        if (!BlacklistArrivalFactionDefs.NullOrEmpty())
+                        {
+                            BlacklistArrivalFactionDefs.RemoveAll((FactionDef fd) => WhitelistArrivalFactionDefs.Contains(fd));
+                        }
+                    }
+                    if (!WhitelistArrivalFactionDefs.NullOrEmpty())
+                    {
+                        foreach (FactionDef factionDef in WhitelistArrivalFactionDefs)
                         {
                             if (factionDef.arrivalLayerWhitelist == null)
                             {
-                                factionDef.arrivalLayerWhitelist = AlwaysArrivalFactionPlanetLayerDefs.ToList();
+                                factionDef.arrivalLayerWhitelist = new List<PlanetLayerDef>();
                             }
-                            foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
+                            factionDef.arrivalLayerWhitelist.AddDistinct(planetLayerDef);
+                        }
+                    }
+                    if (!planetLayerDef.onlyAllowWhitelistedQuests)
+                    {
+                        if (!BlacklistArrivalFactionDefs.NullOrEmpty())
+                        {
+                            foreach (FactionDef factionDef in BlacklistArrivalFactionDefs)
                             {
-                                factionDef.arrivalLayerWhitelist.AddDistinct(planetLayerDef);
+                                if (factionDef.arrivalLayerBlacklist == null)
+                                {
+                                    factionDef.arrivalLayerBlacklist = new List<PlanetLayerDef>();
+                                }
+                                factionDef.arrivalLayerBlacklist.AddDistinct(planetLayerDef);
                             }
                         }
                     }
-                    if (!laoDefModExtension.WhitelistFactionDef.NullOrEmpty())
+                    //FactionDefs
+                    List<FactionDef> WhitelistFactionDefs = AllFactionDefs.Where((FactionDef fd) => fd.layerWhitelist?.Contains(planetLayerDef) ?? false).ToList();
+                    List<FactionDef> BlacklistFactionDefs = AllFactionDefs.Where((FactionDef fd) => fd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+                    if (laoDefModExtension != null)
                     {
-                        foreach (FactionDef factionDef in laoDefModExtension.WhitelistFactionDef)
+                        if (laoDefModExtension.BlacklistFactionDef != null)
+                        {
+                            BlacklistFactionDefs.AddRangeUnique(laoDefModExtension.BlacklistFactionDef);
+                        }
+                        if (!BlacklistFactionDefs.NullOrEmpty())
+                        {
+                            WhitelistFactionDefs.RemoveAll((FactionDef fd) => BlacklistFactionDefs.Contains(fd));
+                        }
+                        if (laoDefModExtension.WhitelistFactionDef != null)
+                        {
+                            WhitelistFactionDefs.AddRangeUnique(laoDefModExtension.WhitelistFactionDef);
+                        }
+                        if (!BlacklistFactionDefs.NullOrEmpty())
+                        {
+                            BlacklistFactionDefs.RemoveAll((FactionDef fd) => WhitelistFactionDefs.Contains(fd));
+                        }
+                    }
+                    if (!WhitelistFactionDefs.NullOrEmpty())
+                    {
+                        foreach (FactionDef factionDef in WhitelistFactionDefs)
                         {
                             if (factionDef.layerWhitelist == null)
                             {
                                 factionDef.layerWhitelist = new List<PlanetLayerDef>();
                             }
-                            foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers())
+                            factionDef.layerWhitelist.AddDistinct(planetLayerDef);
+                        }
+                    }
+                    if (!(laoDefModExtension?.onlyAllowWhitelistedFactions ?? false))
+                    {
+                        if (!BlacklistFactionDefs.NullOrEmpty())
+                        {
+                            foreach (FactionDef factionDef in BlacklistFactionDefs)
                             {
-                                factionDef.layerWhitelist.AddDistinct(planetLayerDef);
+                                if (factionDef.layerBlacklist == null)
+                                {
+                                    factionDef.layerBlacklist = new List<PlanetLayerDef>();
+                                }
+                                factionDef.layerBlacklist.AddDistinct(planetLayerDef);
                             }
                         }
                     }
@@ -630,7 +1008,7 @@ namespace LayeredAtmosphereOrbit
                 gravship.destinationTile = newTile;
                 GravshipRoute route = new GravshipRoute();
                 List<PlanetLayerConnection> path = new List<PlanetLayerConnection>();
-                if (PlanetLayer.TryGetPath(oldTile.Layer, newTile.Layer, path, out _))
+                if (oldTile.Layer != newTile.Layer && PlanetLayer.TryGetPath(oldTile.Layer, newTile.Layer, path, out _))
                 {
                     Vector3 oldTileVerticalTrajectory = Find.WorldGrid.GetTileCenter(oldTile).normalized;
                     for (int i = 0; i < path.Count; i++)

@@ -29,8 +29,15 @@
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isPreventQuestMapIfNotWhitelisted>true</isPreventQuestMapIfNotWhitelisted>
+				<minFactionTechLevel>Industrial</minFactionTechLevel>
+				<WhitelistFactionDef>
+					<li>Mechanoid</li>
+					<li>Insect</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
+				</WhitelistFactionDef>
 				<WhitelistArrivalFactionDef>
 					<li>Mechanoid</li>
+					<li>Insect</li>
 					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
 				</WhitelistArrivalFactionDef>
 				<WhitelistGameConditionDef>
@@ -114,6 +121,13 @@
 		</planetLayerGroupsDirectConnection>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<minFactionTechLevel>Spacer</minFactionTechLevel>
+				<WhitelistFactionDef>
+					<li>Mechanoid</li>
+					<li>TradersGuild</li>
+					<li>Salvagers</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
+				</WhitelistFactionDef>
 				<WhitelistArrivalFactionDef>
 					<li>Mechanoid</li>
 					<li>TradersGuild</li>
@@ -138,14 +152,15 @@
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isPreventQuestMapIfNotWhitelisted>true</isPreventQuestMapIfNotWhitelisted>
-				<WhitelistArrivalFactionDef>
+				<minFactionTechLevel>Spacer</minFactionTechLevel>
+				<WhitelistFactionDef>
 					<li>Ancients</li>
 					<li>AncientsHostile</li>
 					<li>Mechanoid</li>
 					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
 					<li>TradersGuild</li>
 					<li>Salvagers</li>
-				</WhitelistArrivalFactionDef>
+				</WhitelistFactionDef>
 				<WhitelistGameConditionDef>
 					<li>SolarFlare</li>
 					<li>Planetkiller</li>

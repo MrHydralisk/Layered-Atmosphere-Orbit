@@ -60,6 +60,11 @@
 			<li>LAO_MoonCratersMedium</li>
 			<li>LAO_MoonCratersSmall</li>
 		</extraGenSteps>
+		<preventGenSteps>
+			<li>Plants</li>
+			<li>Snow</li>
+			<li>Animals</li>
+		</preventGenSteps>
 	</BiomeDef>
 
 </Defs>
