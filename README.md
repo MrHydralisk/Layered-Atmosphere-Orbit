@@ -41,7 +41,11 @@ Was intended to be part of [Complementary Odyssey](https://steamcommunity.com/sh
 
 ## Mod Compatibility
 
-Should have no compatibility issues with other mods itself. Will work without issues even with mods that adds unrelated new planet layers, but for better integration request additional compatability patch for such mod. This would insert new layer within LAO's planet layer groups. To utilize LAO mod developer only need to add LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension to relatable defs.
+Should have no compatibility issues with other mods itself. Will work without issues even with mods that adds unrelated new planet layers, but for better integration request additional compatability patch for such mod. This would insert new layer within LAO's planet layer groups. To utilize LAO mod developer only need to add LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension to relatable defs. Refer to [b]For Modders[/b] on steam workshop page.
+
+Deeper integration with:
+[Mod Collection](https://steamcommunity.com/workshop/filedetails/?id=3569410532)
+- Sky Islands (waiting for update release)
 
 Supported languages:
 * English,
@@ -53,7 +57,10 @@ Layered Atmosphere and Orbit mod should be safe to add even to existing save. Ho
 
 ## To Do
 
+- Support for moons planet layer.
 - RU TL.
 - Investigate methods to safely remove planet layers from existing save files.
+- Manual selection of what layer to add.
 - More content to new planet layers.
 - Create a new scenario for a tribal start on a floating island.
+- Possible support for underwater planet layer.
