@@ -29,6 +29,7 @@
 				<elevation>20</elevation>
 				<tempOffest>-10</tempOffest>
 				<planetLayerGroup>LAO_Atmosphere</planetLayerGroup>
+				<maxArrivalFactionTechLevel>Industrial</maxArrivalFactionTechLevel>
 			</li>
 		</modExtensions>
 	</PlanetLayerDef>
@@ -48,6 +49,7 @@
 				<elevation>50</elevation>
 				<tempOffest>-20</tempOffest>
 				<planetLayerGroup>LAO_Atmosphere</planetLayerGroup>
+				<maxArrivalFactionTechLevel>Industrial</maxArrivalFactionTechLevel>
 			</li>
 		</modExtensions>
 	</PlanetLayerDef>
@@ -66,6 +68,10 @@
 				<elevation>80</elevation>
 				<tempOffest>-40</tempOffest>
 				<planetLayerGroup>LAO_Atmosphere</planetLayerGroup>
+				<maxArrivalFactionTechLevel>Spacer</maxArrivalFactionTechLevel>
+				<WhitelistArrivalFactionDef>
+					<li>Mechanoid</li>
+				</WhitelistArrivalFactionDef>
 			</li>
 		</modExtensions>
 	</PlanetLayerDef>
@@ -86,6 +92,13 @@
 				<elevation>500</elevation>
 				<tempOffest>-95</tempOffest>
 				<planetLayerGroup>LAO_Orbit</planetLayerGroup>
+				<minArrivalFactionTechLevel>Spacer</minArrivalFactionTechLevel>
+				<WhitelistArrivalFactionDef>
+					<li>Mechanoid</li>
+					<li>TradersGuild</li>
+					<li>Salvagers</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
+				</WhitelistArrivalFactionDef>
 			</li>
 		</modExtensions>
 	</PlanetLayerDef>

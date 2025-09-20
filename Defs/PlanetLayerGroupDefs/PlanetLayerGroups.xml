@@ -29,16 +29,9 @@
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isPreventQuestMapIfNotWhitelisted>true</isPreventQuestMapIfNotWhitelisted>
-				<minFactionTechLevel>Industrial</minFactionTechLevel>
-				<WhitelistFactionDef>
-					<li>Mechanoid</li>
-					<li>Insect</li>
-					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
-				</WhitelistFactionDef>
+				<minArrivalFactionTechLevel>Industrial</minArrivalFactionTechLevel>
 				<WhitelistArrivalFactionDef>
-					<li>Mechanoid</li>
 					<li>Insect</li>
-					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
 				</WhitelistArrivalFactionDef>
 				<WhitelistGameConditionDef>
 					<li>SolarFlare</li>
@@ -121,19 +114,6 @@
 		</planetLayerGroupsDirectConnection>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
-				<minFactionTechLevel>Spacer</minFactionTechLevel>
-				<WhitelistFactionDef>
-					<li>Mechanoid</li>
-					<li>TradersGuild</li>
-					<li>Salvagers</li>
-					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
-				</WhitelistFactionDef>
-				<WhitelistArrivalFactionDef>
-					<li>Mechanoid</li>
-					<li>TradersGuild</li>
-					<li>Salvagers</li>
-					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
-				</WhitelistArrivalFactionDef>
 				<WhitelistIncidentDef>
 					<li>OrbitalDebris</li>
 				</WhitelistIncidentDef>
@@ -153,14 +133,13 @@
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isPreventQuestMapIfNotWhitelisted>true</isPreventQuestMapIfNotWhitelisted>
 				<minFactionTechLevel>Spacer</minFactionTechLevel>
-				<WhitelistFactionDef>
-					<li>Ancients</li>
-					<li>AncientsHostile</li>
-					<li>Mechanoid</li>
+				<BlacklistFactionDef>
 					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
-					<li>TradersGuild</li>
-					<li>Salvagers</li>
-				</WhitelistFactionDef>
+				</BlacklistFactionDef>
+				<minArrivalFactionTechLevel>Spacer</minArrivalFactionTechLevel>
+				<BlacklistArrivalFactionDef>
+					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
+				</BlacklistArrivalFactionDef>
 				<WhitelistGameConditionDef>
 					<li>SolarFlare</li>
 					<li>Planetkiller</li>

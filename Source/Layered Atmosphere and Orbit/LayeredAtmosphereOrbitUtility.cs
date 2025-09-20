@@ -298,5 +298,20 @@ namespace LayeredAtmosphereOrbit
             }
             return 0;
         }
+
+
+
+        public static bool TestFactionDefOnLayerDef(this PlanetLayerDef layer, FactionDef f)
+        {
+            if (!f.layerBlacklist.NullOrEmpty() && f.layerBlacklist.Contains(layer))
+            {
+                return false;
+            }
+            if (!f.layerWhitelist.NullOrEmpty())
+            {
+                return f.layerWhitelist.Contains(layer);
+            }
+            return true;
+        }
     }
 }

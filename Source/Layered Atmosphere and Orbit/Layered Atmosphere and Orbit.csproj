@@ -90,7 +90,9 @@
     <Publicize Include="Assembly-CSharp:RimWorld.PlanetLayerDef.cachedTabs" />
     <Publicize Include="Assembly-CSharp:RimWorld.Planet.TileFinder.TryFillFindTile" />
     <Publicize Include="Assembly-CSharp:RimWorld.Planet.Gravship.initialTile" />
-    <Publicize Include="Assembly-CSharp" MemberPattern="^RimWorld\.(Planet\.TileTemperaturesComp|Planet\.PlanetLayer).*" />
+    <Publicize Include="Assembly-CSharp" MemberPattern="^RimWorld\.(Planet\.TileTemperaturesComp).*" />
+	
+    <Publicize Include="Assembly-CSharp:RimWorld.FactionGenerator.CanExistOnLayer" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

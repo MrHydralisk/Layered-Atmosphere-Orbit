@@ -104,6 +104,43 @@ namespace LayeredAtmosphereOrbit
             if (Prefs.DevMode)
             {
                 options.GapLine();
+                //if (options.ButtonText("FactionDefs arrival Per PlanetLayer"))
+                //{
+                //    List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
+                //    List<FactionDef> AllFactionDefs = DefDatabase<FactionDef>.AllDefs.ToList();
+                //    Log.Message($"Available arrival FactionDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName}\n{string.Join("\n", AllFactionDefs.Select((fd) => $"      {fd.defName} {FactionCanBeGroupSource(pl, fd)} {fd.techLevel}"))}"))}");
+                //    bool FactionCanBeGroupSource(PlanetLayer layer, FactionDef f)
+                //    {
+                //        if (!f.arrivalLayerWhitelist.NullOrEmpty() && !f.arrivalLayerWhitelist.Contains(layer.Def))
+                //        {
+                //            return false;
+                //        }
+                //        if (!f.arrivalLayerBlacklist.NullOrEmpty() && f.arrivalLayerBlacklist.Contains(layer.Def))
+                //        {
+                //            return false;
+                //        }
+                //        if (layer.Def.onlyAllowWhitelistedArrivals && (f.arrivalLayerWhitelist.NullOrEmpty() || !f.arrivalLayerWhitelist.Contains(layer.Def)))
+                //        {
+                //            return false;
+                //        }
+                //        return true;
+                //    }
+                //}
+                if (options.ButtonText("FactionDefs Per PlanetLayer"))
+                {
+                    List<FactionDef> AllFactionDefs = DefDatabase<FactionDef>.AllDefs.ToList();
+                    if (Find.WorldGrid != null)
+                    {
+                        List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
+                        Log.Message($"Available FactionDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName}\n{string.Join("\n", AllFactionDefs.Select((fd) => $"      {fd.defName} {FactionGenerator.CanExistOnLayer(pl, fd)} {fd.techLevel}"))}"))}");
+                    }
+                    else
+                    {
+                        List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
+                        Log.Message($"Available FactionDef:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", AllFactionDefs.Select((fd) => $"      {fd.defName} {pl.TestFactionDefOnLayerDef(fd)} {fd.techLevel}"))}"))}");
+                    }
+                }
+                options.GapLine();
                 options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.isOpenDebugFloatingIslandMapGen".Translate().RawText, ref Settings.isOpenDebugFloatingIslandMapGen);
                 if (Settings.isOpenDebugFloatingIslandMapGen)
                 {

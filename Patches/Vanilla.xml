@@ -74,6 +74,7 @@
 					<li>LAO_Stratosphere</li>
 					<li>LAO_Mesosphere</li>
 					<li>LAO_HighOrbit</li>
+					<li>LAO_Surface_Luna</li>
 				</value>
 			</li>
 			<li Class="PatchOperationAdd">
@@ -99,6 +100,7 @@
 					<li>LAO_Troposphere</li>
 					<li>LAO_Stratosphere</li>
 					<li>LAO_Mesosphere</li>
+					<li>LAO_Surface_Luna</li>
 				</value>
 			</li>
 		</operations>
