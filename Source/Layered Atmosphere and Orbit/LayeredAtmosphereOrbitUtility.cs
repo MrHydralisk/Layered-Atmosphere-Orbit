@@ -303,6 +303,23 @@ namespace LayeredAtmosphereOrbit
 
 
 
+        public static bool TestIncidentDefOnLayerDef(this PlanetLayerDef layer, IncidentDef def)
+        {
+            if (!def.layerWhitelist.NullOrEmpty() && !def.layerWhitelist.Contains(layer))
+            {
+                return false;
+            }
+            if (!def.layerBlacklist.NullOrEmpty() && def.layerBlacklist.Contains(layer))
+            {
+                return false;
+            }
+            if (!def.canOccurOnAllPlanetLayers && layer.onlyAllowWhitelistedIncidents && (def.layerWhitelist.NullOrEmpty() || !def.layerWhitelist.Contains(layer)))
+            {
+                return false;
+            }
+            return true;
+        }
+
         public static bool TestBiomeDefOnLayerDef(this PlanetLayerDef layer, BiomeDef biome)
         {
             if (!biome.layerWhitelist.NullOrEmpty() && !biome.layerWhitelist.Contains(layer))

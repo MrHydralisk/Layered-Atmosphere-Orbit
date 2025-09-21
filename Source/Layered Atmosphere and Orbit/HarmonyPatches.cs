@@ -123,7 +123,91 @@ namespace LayeredAtmosphereOrbit
 
             Dictionary<PlanetLayerDef, (LayeredAtmosphereOrbitDefModExtension, LayeredAtmosphereOrbitDefModExtension)> PlanetLayerDefMods = AllPlanetLayerDefs.ToDictionary((PlanetLayerDef pld) => pld, (PlanetLayerDef pld) => (pld.GetModExtension<LayeredAtmosphereOrbitDefModExtension>(), pld.LayerGroup()?.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()));
 
-            Log.Message($"Allow BiomeDef A:\n{string.Join("\n", AllBiomeDefs.Select((bd) => $"   {bd.defName}\n{string.Join("\n", bd.layerWhitelist?.Select((pld) => $"      +{pld.defName}") ?? new List<string>() { "---" })}\n\\---/\n{string.Join("\n", bd.layerBlacklist?.Select((pld) => $"      -{pld.defName}") ?? new List<string>() { "---" })}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestBiomeDefOnLayerDef(bd)} {pld.onlyAllowWhitelistedBiomes}"))}"))}");
+            //Log.Message($"Allow IncidentDef A:\n{string.Join("\n", AllIncidentDefs.Select((id) => $"   {id.defName} {id.canOccurOnAllPlanetLayers}\n{string.Join("\n", id.layerWhitelist?.Select((pld) => $"      +{pld.defName}") ?? new List<string>() { "---" })}\n\\---/\n{string.Join("\n", id.layerBlacklist?.Select((pld) => $"      -{pld.defName}") ?? new List<string>() { "---" })}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestIncidentDefOnLayerDef(id)} {pld.onlyAllowWhitelistedIncidents}"))}"))}");
+            foreach (IncidentDef incidentDef in AllIncidentDefs)
+            {
+                List<PlanetLayerDef> AllowInIncidentDef = new List<PlanetLayerDef>();
+                List<PlanetLayerDef> ForbidInIncidentDef = new List<PlanetLayerDef>();
+                foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+                {
+                    if (incidentDef.layerWhitelist.NullOrEmpty())
+                    {
+                        if (incidentDef.canOccurOnAllPlanetLayers)
+                        {
+                            AllowInIncidentDef.AddUnique(planetLayerDef);
+                            continue;
+                        }
+                        if (planetLayerDef.onlyAllowWhitelistedIncidents)
+                        {
+                            ForbidInIncidentDef.AddUnique(planetLayerDef);
+                        }
+                        else
+                        {
+                            AllowInIncidentDef.AddUnique(planetLayerDef);
+                        }
+                    }
+                    else
+                    {
+                        if (incidentDef.layerWhitelist.Contains(planetLayerDef))
+                        {
+                            AllowInIncidentDef.AddUnique(planetLayerDef);
+                        }
+                        else
+                        {
+                            ForbidInIncidentDef.AddUnique(planetLayerDef);
+                        }
+                    }
+                }
+                //Log.Message($"|||1 {factionDef.defName}:\n{string.Join("\n", AllowInIncidentDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInIncidentDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                if (incidentDef.layerBlacklist.NullOrEmpty())
+                {
+
+                }
+                else
+                {
+                    ForbidInIncidentDef.AddRangeUnique(incidentDef.layerBlacklist);
+                }
+                //Log.Message($"|||2 {factionDef.defName}:\n{string.Join("\n", AllowInIncidentDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInIncidentDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+                {
+                    bool isAdditionallyWhitelist = false;
+                    bool isAdditionallyBlacklist = false;
+                    LayeredAtmosphereOrbitDefModExtension LayerGroupDefModExtension = PlanetLayerDefMods[planetLayerDef].Item2;
+                    if (LayerGroupDefModExtension != null)
+                    {
+                        isAdditionallyWhitelist = LayerGroupDefModExtension.WhitelistIncidentDef?.Contains(incidentDef) ?? false;
+                        isAdditionallyBlacklist = LayerGroupDefModExtension.BlacklistIncidentDef?.Contains(incidentDef) ?? false;
+                    }
+                    LayeredAtmosphereOrbitDefModExtension LayerDefModExtension = PlanetLayerDefMods[planetLayerDef].Item1;
+                    if (LayerDefModExtension != null)
+                    {
+                        isAdditionallyWhitelist = isAdditionallyWhitelist || (LayerDefModExtension.WhitelistIncidentDef?.Contains(incidentDef) ?? false);
+                        isAdditionallyBlacklist = isAdditionallyBlacklist || (LayerDefModExtension.BlacklistIncidentDef?.Contains(incidentDef) ?? false);
+                    }
+                    if (isAdditionallyWhitelist)
+                    {
+                        AllowInIncidentDef.AddDistinct(planetLayerDef);
+                        int index = ForbidInIncidentDef.IndexOf(planetLayerDef);
+                        if (index > -1)
+                        {
+                            ForbidInIncidentDef.RemoveAt(index);
+                        }
+                    }
+                    if (isAdditionallyBlacklist)
+                    {
+                        ForbidInIncidentDef.AddDistinct(planetLayerDef);
+                        int index = AllowInIncidentDef.IndexOf(planetLayerDef);
+                        if (index > -1)
+                        {
+                            AllowInIncidentDef.RemoveAt(index);
+                        }
+                    }
+                }
+                incidentDef.layerWhitelist = AllowInIncidentDef;
+                incidentDef.layerBlacklist = ForbidInIncidentDef;
+            }
+            //Log.Message($"Allow IncidentDef B:\n{string.Join("\n", AllIncidentDefs.Select((id) => $"   {id.defName} {id.canOccurOnAllPlanetLayers}\n{string.Join("\n", id.layerWhitelist?.Select((pld) => $"      +{pld.defName}") ?? new List<string>() { "---" })}\n\\---/\n{string.Join("\n", id.layerBlacklist?.Select((pld) => $"      -{pld.defName}") ?? new List<string>() { "---" })}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestIncidentDefOnLayerDef(id)} {pld.onlyAllowWhitelistedIncidents}"))}"))}");
+            //Log.Message($"Allow BiomeDef A:\n{string.Join("\n", AllBiomeDefs.Select((bd) => $"   {bd.defName}\n{string.Join("\n", bd.layerWhitelist?.Select((pld) => $"      +{pld.defName}") ?? new List<string>() { "---" })}\n\\---/\n{string.Join("\n", bd.layerBlacklist?.Select((pld) => $"      -{pld.defName}") ?? new List<string>() { "---" })}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestBiomeDefOnLayerDef(bd)} {pld.onlyAllowWhitelistedBiomes}"))}"))}");
             foreach (BiomeDef biomeDef in AllBiomeDefs)
             {
                 List<PlanetLayerDef> AllowInBiomeDef = new List<PlanetLayerDef>();
@@ -200,9 +284,8 @@ namespace LayeredAtmosphereOrbit
                 }
                 biomeDef.layerWhitelist = AllowInBiomeDef;
                 biomeDef.layerBlacklist = ForbidInBiomeDef;
-                
             }
-            Log.Message($"Allow BiomeDef B:\n{string.Join("\n", AllBiomeDefs.Select((bd) => $"   {bd.defName}\n{string.Join("\n", bd.layerWhitelist?.Select((pld) => $"      +{pld.defName}") ?? new List<string>() { "---" })}\n\\---/\n{string.Join("\n", bd.layerBlacklist?.Select((pld) => $"      -{pld.defName}") ?? new List<string>() { "---" })}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestBiomeDefOnLayerDef(bd)} {pld.onlyAllowWhitelistedBiomes}"))}"))}");
+            //Log.Message($"Allow BiomeDef B:\n{string.Join("\n", AllBiomeDefs.Select((bd) => $"   {bd.defName}\n{string.Join("\n", bd.layerWhitelist?.Select((pld) => $"      +{pld.defName}") ?? new List<string>() { "---" })}\n\\---/\n{string.Join("\n", bd.layerBlacklist?.Select((pld) => $"      -{pld.defName}") ?? new List<string>() { "---" })}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestBiomeDefOnLayerDef(bd)} {pld.onlyAllowWhitelistedBiomes}"))}"))}");
             //Log.Message($"Allow GameConditionDef A:\n{string.Join("\n", AllGameConditionDefs.Select((gcd) => $"   {gcd.defName} {gcd.canAffectAllPlanetLayers}\n{string.Join("\n", gcd.layerWhitelist?.Select((pld) => $"      +{pld.defName}") ?? new List<string>() { "---" })}\n\\---/\n{string.Join("\n", gcd.layerBlacklist?.Select((pld) => $"      -{pld.defName}") ?? new List<string>() { "---" })}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestGameConditionDefOnLayerDef(gcd)} {pld.onlyAllowWhitelistedGameConditions}"))}"))}");
             foreach (GameConditionDef gameConditionDef in AllGameConditionDefs)
             {
@@ -285,7 +368,6 @@ namespace LayeredAtmosphereOrbit
                 }
                 gameConditionDef.layerWhitelist = AllowInGameConditionDef;
                 gameConditionDef.layerBlacklist = ForbidInGameConditionDef;
-                
             }
             //Log.Message($"Allow GameConditionDef B:\n{string.Join("\n", AllGameConditionDefs.Select((gcd) => $"   {gcd.defName} {gcd.canAffectAllPlanetLayers}\n{string.Join("\n", gcd.layerWhitelist?.Select((pld) => $"      +{pld.defName}") ?? new List<string>() { "---" })}\n\\---/\n{string.Join("\n", gcd.layerBlacklist?.Select((pld) => $"      -{pld.defName}") ?? new List<string>() { "---" })}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestGameConditionDefOnLayerDef(gcd)} {pld.onlyAllowWhitelistedGameConditions}"))}"))}");
             //Log.Message($"Allow QuestScriptDef A:\n{string.Join("\n", AllQuestScriptDefs.Select((qsd) => $"   {qsd.defName} {qsd.everAcceptableInSpace} {qsd.neverPossibleInSpace}\n{string.Join("\n", qsd.layerWhitelist?.Select((pld) => $"      +{pld.defName}") ?? new List<string>() { "---" })}\n\\---/\n{string.Join("\n", qsd.layerBlacklist?.Select((pld) => $"      -{pld.defName}") ?? new List<string>() { "---" })}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestQuestScriptDefOnLayerDef(qsd)}"))}"))}");
@@ -365,7 +447,6 @@ namespace LayeredAtmosphereOrbit
                 }
                 questScriptDef.layerWhitelist = AllowInQuestScriptDef;
                 questScriptDef.layerBlacklist = ForbidInQuestScriptDef;
-                
             }
             //Log.Message($"Allow QuestScriptDef B:\n{string.Join("\n", AllQuestScriptDefs.Select((qsd) => $"   {qsd.defName} {qsd.everAcceptableInSpace} {qsd.neverPossibleInSpace}\n{string.Join("\n", qsd.layerWhitelist?.Select((pld) => $"      +{pld.defName}") ?? new List<string>() { "---" })}\n\\---/\n{string.Join("\n", qsd.layerBlacklist?.Select((pld) => $"      -{pld.defName}") ?? new List<string>() { "---" })}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestQuestScriptDefOnLayerDef(qsd)}"))}"))}");
             //Log.Message($"Allow arrival FactionDef A:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName}\n{string.Join("\n", fd.arrivalLayerWhitelist.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", fd.arrivalLayerBlacklist.Select((pld) => $"      -{pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestArrivalFactionDefOnLayerDef(fd)}"))}"))}");

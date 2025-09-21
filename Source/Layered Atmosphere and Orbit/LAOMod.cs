@@ -104,18 +104,32 @@ namespace LayeredAtmosphereOrbit
             if (Prefs.DevMode)
             {
                 options.GapLine();
+                if (options.ButtonText("IncidentDef Per PlanetLayer"))
+                {
+                    List<IncidentDef> AllIncidentDefs = DefDatabase<IncidentDef>.AllDefs.ToList();
+                    if (Find.WorldGrid != null)
+                    {
+                        List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
+                        Log.Message($"Available BiomeDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName} {pl.Def.onlyAllowWhitelistedIncidents}\n{string.Join("\n", AllIncidentDefs.Select((id) => $"      {id.defName} {pl.Def.TestIncidentDefOnLayerDef(id)} {id.canOccurOnAllPlanetLayers}"))}"))}");
+                    }
+                    else
+                    {
+                        List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
+                        Log.Message($"Available BiomeDef:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName} {pl.onlyAllowWhitelistedIncidents}\n{string.Join("\n", AllIncidentDefs.Select((id) => $"      {id.defName} {pl.TestIncidentDefOnLayerDef(id)} {id.canOccurOnAllPlanetLayers}"))}"))}");
+                    }
+                }
                 if (options.ButtonText("BiomeDef Per PlanetLayer"))
                 {
                     List<BiomeDef> AllBiomeDefs = DefDatabase<BiomeDef>.AllDefs.ToList();
                     if (Find.WorldGrid != null)
                     {
                         List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
-                        Log.Message($"Available BiomeDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName} {pl.Def.onlyAllowWhitelistedBiomes}\n{string.Join("\n", AllBiomeDefs.Select((bd) => $"      {bd.defName} {pl.Def.TestBiomeDefOnLayerDef(bd)}"))}"))}");
+                        Log.Message($"Available BiomeDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName} {pl.Def.onlyAllowWhitelistedBiomes}\n{string.Join("\n", AllBiomeDefs.Select((bd) => $"      {bd.defName} {pl.Def.TestBiomeDefOnLayerDef(bd)} {pl.Def.onlyAllowWhitelistedBiomes}"))}"))}");
                     }
                     else
                     {
                         List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
-                        Log.Message($"Available BiomeDef:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName} {pl.onlyAllowWhitelistedBiomes}\n{string.Join("\n", AllBiomeDefs.Select((bd) => $"      {bd.defName} {pl.TestBiomeDefOnLayerDef(bd)}"))}"))}");
+                        Log.Message($"Available BiomeDef:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName} {pl.onlyAllowWhitelistedBiomes}\n{string.Join("\n", AllBiomeDefs.Select((bd) => $"      {bd.defName} {pl.TestBiomeDefOnLayerDef(bd)} {pl.onlyAllowWhitelistedBiomes}"))}"))}");
                     }
                 }
                 if (options.ButtonText("GameConditionDef Per PlanetLayer"))

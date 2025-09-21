@@ -59,6 +59,22 @@
 					<SolarFlare>2.3</SolarFlare>
 					<MeteoriteImpact>4</MeteoriteImpact>
 				</IncidentChanceMultipliers>
+				<WhitelistIncidentDef>
+					<li>Ambush</li>
+					<li>CaravanMeeting</li>
+					<li>CaravanDemand</li>
+					<li>WandererJoin</li>
+					<li>RansomDemand</li>
+					<li>VisitorGroup</li>
+					<li>TravelerGroup</li>
+					<li>RaidFriendly</li>
+					<li>GameEndedWanderersJoin</li>
+					<li>DefoliatorShipPartCrash</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">WandererJoinAbasia</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">Disease_Abasia</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">Disease_BloodRot</li>
+					<li>GiveQuest_MechanoidSignal</li>
+				</WhitelistIncidentDef>
 			</li>
 		</modExtensions>
 	</PlanetLayerDef>
