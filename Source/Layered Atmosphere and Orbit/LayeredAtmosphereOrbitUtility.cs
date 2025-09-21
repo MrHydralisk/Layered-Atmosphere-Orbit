@@ -11,6 +11,7 @@ namespace LayeredAtmosphereOrbit
         public static List<ScenPart_PlanetLayer> planetLayersLAO;
         public static Dictionary<PlanetLayerGroupDef, List<PlanetLayerDef>> planetLayerGroups;
         public static Dictionary<PlanetDef, List<PlanetLayerDef>> planets;
+        public static Dictionary<Map, float> mapVacuum = new Dictionary<Map, float>();
 
         public static void ResetLayerData()
         {
@@ -299,7 +300,7 @@ namespace LayeredAtmosphereOrbit
             return 0;
         }
 
-        public static float Vacuum(this PlanetLayerDef planetLayer)
+        public static float Vacuum(this PlanetLayerDef planetLayer, BiomeDef biomeDef = null)
         {
             float vacuum = 0;
             LayeredAtmosphereOrbitDefModExtension laoLayerDefModExtension = planetLayer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
@@ -311,6 +312,11 @@ namespace LayeredAtmosphereOrbit
             if (laoGroupDefModExtension != null && laoGroupDefModExtension.vacuum > -1)
             {
                 vacuum = laoGroupDefModExtension.vacuum;
+            }
+            LayeredAtmosphereOrbitDefModExtension laoBiomeDefModExtension = biomeDef?.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+            if (laoBiomeDefModExtension != null && laoBiomeDefModExtension.vacuum > -1)
+            {
+                vacuum = laoBiomeDefModExtension.vacuum;
             }
             return vacuum;
         }

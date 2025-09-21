@@ -35,6 +35,8 @@ namespace LayeredAtmosphereOrbit
             val.Patch(AccessTools.Method(typeof(WorldGrid), "GetGizmos"), postfix: new HarmonyMethod(patchType, "WG_GetGizmos_Postfix"));
             val.Patch(AccessTools.Method(typeof(StorytellerComp), "IncidentChanceFinal"), transpiler: new HarmonyMethod(patchType, "SC_IncidentChanceFinal_Transpiler"));
             val.Patch(AccessTools.Method(typeof(PawnApparelGenerator), "NeedVacuumResistance"), transpiler: new HarmonyMethod(patchType, "PAG_NeedVacuumResistance_Transpiler"));
+            //val.Patch(AccessTools.Method(typeof(TemperatureVacuumSaveLoad), "DoExposeWork"), transpiler: new HarmonyMethod(patchType, "TVSL_DoExposeWork_Transpiler"));
+            //val.Patch(AccessTools.Property(typeof(Room), "Vacuum").GetGetMethod(), transpiler: new HarmonyMethod(patchType, "Room_Vacuum_Transpiler"));
             if (LAOMod.Settings.ShowLayerInGroup)
             {
                 val.Patch(AccessTools.Method(typeof(ExpandableWorldObjectsUtility), "TransitionPct"), postfix: new HarmonyMethod(patchType, "EWOU_TransitionPct_Postfix"));
@@ -863,9 +865,57 @@ namespace LayeredAtmosphereOrbit
 
         public static bool NeedVacuumResistance_PlanetLayer(PawnGenerationRequest request)
         {
-            Log.Message($"NeedVacuumResistance_PlanetLayer {request.Tile.LayerDef.Vacuum()}");
-            return request.Tile.LayerDef.Vacuum() >= 0.5f;
+            return request.Tile.LayerDef.Vacuum(request.Tile.Tile?.PrimaryBiome) >= 0.5f;
         }
+
+        //public static IEnumerable<CodeInstruction> TVSL_DoExposeWork_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
+        //{
+        //    List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+        //    for (int i = 0; i < codes.Count; i++)
+        //    {
+        //        if (codes[i].opcode == OpCodes.Call && (codes[i].operand?.ToString().Contains("VacuumFloatToByte") ?? false))
+        //        {
+        //            List<CodeInstruction> instructionsToInsert = new List<CodeInstruction>();
+        //            instructionsToInsert.Add(new CodeInstruction(OpCodes.Ldarg_0));
+        //            instructionsToInsert.Add(new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(TemperatureVacuumSaveLoad), "map")));
+        //            instructionsToInsert.Add(new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HarmonyPatches), "Vacuum_DoExposeWork_PlanetLayer")));
+        //            codes.InsertRange(i, instructionsToInsert);
+        //            codes.RemoveAt(i - 1);
+        //            break;
+        //        }
+        //    }
+        //    return codes.AsEnumerable();
+        //}
+
+        //public static float Vacuum_DoExposeWork_PlanetLayer(Map map)
+        //{
+        //    float vacuum = 1;
+        //    if (!LayeredAtmosphereOrbitUtility.mapVacuum.TryGetValue(map, out vacuum))
+        //    {
+        //        vacuum = map.Tile.LayerDef.Vacuum(map.Biome);
+        //        LayeredAtmosphereOrbitUtility.mapVacuum.Add(map, vacuum);
+        //    }
+        //    return vacuum;
+        //}
+
+        //public static IEnumerable<CodeInstruction> Room_Vacuum_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
+        //{
+        //    List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+        //    for (int i = 0; i < codes.Count; i++)
+        //    {
+        //        if (codes[i].opcode == OpCodes.Stfld && (codes[i].operand?.ToString().Contains("vacuum") ?? false))
+        //        {
+        //            List<CodeInstruction> instructionsToInsert = new List<CodeInstruction>();
+        //            instructionsToInsert.Add(new CodeInstruction(OpCodes.Ldarg_0));
+        //            instructionsToInsert.Add(new CodeInstruction(OpCodes.Call, AccessTools.Property(typeof(Room), "Map").GetGetMethod()));
+        //            instructionsToInsert.Add(new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HarmonyPatches), "Vacuum_DoExposeWork_PlanetLayer")));
+        //            codes.InsertRange(i - 2, instructionsToInsert);
+        //            codes.RemoveAt(i - 3);
+        //            break;
+        //        }
+        //    }
+        //    return codes.AsEnumerable();
+        //}
 
         public static void EWOU_TransitionPct_Postfix(ref float __result, WorldObject wo)
         {
