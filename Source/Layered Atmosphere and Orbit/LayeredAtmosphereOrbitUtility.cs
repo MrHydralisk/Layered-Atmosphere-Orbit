@@ -3,6 +3,7 @@ using RimWorld.Planet;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using Verse;
 
 namespace LayeredAtmosphereOrbit
@@ -302,6 +303,27 @@ namespace LayeredAtmosphereOrbit
 
 
 
+        public static bool TestQuestScriptDefOnLayerDef(this PlanetLayerDef layer, QuestScriptDef quest)
+        {
+            if (!quest.layerWhitelist.NullOrEmpty() && !quest.layerWhitelist.Contains(layer))
+            {
+                return false;
+            }
+            if (!quest.layerBlacklist.NullOrEmpty() && quest.layerBlacklist.Contains(layer))
+            {
+                return false;
+            }
+            if (!quest.canOccurOnAllPlanetLayers && layer.onlyAllowWhitelistedIncidents && (quest.layerWhitelist.NullOrEmpty() || !quest.layerWhitelist.Contains(layer)))
+            {
+                return false;
+            }
+            if (!quest.everAcceptableInSpace && layer.isSpace)
+            {
+                return false;
+            }
+            return !layer.onlyAllowWhitelistedQuests;
+        }
+
         public static bool TestArrivalFactionDefOnLayerDef(this PlanetLayerDef layer, FactionDef f)
         {
             if (!f.arrivalLayerWhitelist.NullOrEmpty() && !f.arrivalLayerWhitelist.Contains(layer))
@@ -318,6 +340,7 @@ namespace LayeredAtmosphereOrbit
             }
             return true;
         }
+
         public static bool TestFactionDefOnLayerDef(this PlanetLayerDef layer, FactionDef f)
         {
             if (!f.layerBlacklist.NullOrEmpty() && f.layerBlacklist.Contains(layer))

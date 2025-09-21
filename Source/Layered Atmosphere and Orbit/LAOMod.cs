@@ -104,6 +104,20 @@ namespace LayeredAtmosphereOrbit
             if (Prefs.DevMode)
             {
                 options.GapLine();
+                if (options.ButtonText("QuestScriptDef Per PlanetLayer"))
+                {
+                    List<QuestScriptDef> AllQuestScriptDefs = DefDatabase<QuestScriptDef>.AllDefs.ToList();
+                    if (Find.WorldGrid != null)
+                    {
+                        List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
+                        Log.Message($"Available arrival FactionDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName}\n{string.Join("\n", AllQuestScriptDefs.Select((qsd) => $"      {qsd.defName} {pl.Def.TestQuestScriptDefOnLayerDef(qsd)} {qsd.everAcceptableInSpace} {qsd.neverPossibleInSpace}"))}"))}");
+                    }
+                    else
+                    {
+                        List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
+                        Log.Message($"Available arrival FactionDef:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", AllQuestScriptDefs.Select((qsd) => $"      {qsd.defName} {pl.TestQuestScriptDefOnLayerDef(qsd)} {qsd.everAcceptableInSpace} {qsd.neverPossibleInSpace}"))}"))}");
+                    }
+                }
                 if (options.ButtonText("FactionDefs arrival Per PlanetLayer"))
                 {
                     List<FactionDef> AllFactionDefs = DefDatabase<FactionDef>.AllDefs.ToList();

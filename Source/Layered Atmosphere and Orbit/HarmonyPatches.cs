@@ -122,162 +122,241 @@ namespace LayeredAtmosphereOrbit
             List<FactionDef> AllFactionDefs = DefDatabase<FactionDef>.AllDefs.ToList();
 
             Dictionary<PlanetLayerDef, (LayeredAtmosphereOrbitDefModExtension, LayeredAtmosphereOrbitDefModExtension)> PlanetLayerDefMods = AllPlanetLayerDefs.ToDictionary((PlanetLayerDef pld) => pld, (PlanetLayerDef pld) => (pld.GetModExtension<LayeredAtmosphereOrbitDefModExtension>(), pld.LayerGroup()?.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()));
-            Dictionary<PlanetLayerDef, (List<FactionDef>, List<FactionDef>)> PlanetLayerFactionDefFs = AllPlanetLayerDefs.ToDictionary((PlanetLayerDef pld) => pld, (PlanetLayerDef pld) => (new List<FactionDef>(), new List<FactionDef>()));
 
-            //Log.Message($"Allow arrival FactionDef A:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName}\n{string.Join("\n", fd.arrivalLayerWhitelist.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", fd.arrivalLayerBlacklist.Select((pld) => $"      -{pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestArrivalFactionDefOnLayerDef(fd)}"))}"))}");
-            Log.Message($"Allow FactionDef A:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName}\n{string.Join("\n", fd.layerWhitelist.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", fd.layerBlacklist.Select((pld) => $"      -{pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestFactionDefOnLayerDef(fd)}"))}"))}");
-            foreach (FactionDef factionDef in AllFactionDefs)
+            Log.Message($"Allow QuestScriptDef A:\n{string.Join("\n", AllQuestScriptDefs.Select((qsd) => $"   {qsd.defName} {qsd.everAcceptableInSpace} {qsd.neverPossibleInSpace}\n{string.Join("\n", qsd.layerWhitelist?.Select((pld) => $"      +{pld.defName}") ?? new List<string>() { "---" })}\n\\---/\n{string.Join("\n", qsd.layerBlacklist?.Select((pld) => $"      -{pld.defName}") ?? new List<string>() { "---" })}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestQuestScriptDefOnLayerDef(qsd)}"))}"))}");
+            foreach (QuestScriptDef questScriptDef in AllQuestScriptDefs)
             {
-                //List<PlanetLayerDef> AllowInArrivalFactionDefs = new List<PlanetLayerDef>();
-                //List<PlanetLayerDef> ForbidInArrivalFactionDefs = new List<PlanetLayerDef>();
-                //foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
-                //{
-                //    if (factionDef.arrivalLayerWhitelist.NullOrEmpty())
-                //    {
-                //        if (planetLayerDef.onlyAllowWhitelistedArrivals)
-                //        {
-                //            ForbidInArrivalFactionDefs.AddUnique(planetLayerDef);
-                //        }
-                //        else
-                //        {
-                //            AllowInArrivalFactionDefs.AddUnique(planetLayerDef);
-                //        }
-                //    }
-                //    else
-                //    {
-                //        if (factionDef.arrivalLayerWhitelist.Contains(planetLayerDef))
-                //        {
-                //            AllowInArrivalFactionDefs.AddUnique(planetLayerDef);
-                //        }
-                //        else
-                //        {
-                //            ForbidInArrivalFactionDefs.AddUnique(planetLayerDef);
-                //        }
-                //    }
-                //}
-                ////Log.Message($"|||1 {factionDef.defName}:\n{string.Join("\n", AllowInArrivalFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInArrivalFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
-                //if (factionDef.arrivalLayerBlacklist.NullOrEmpty())
-                //{
-
-                //}
-                //else
-                //{
-                //    ForbidInArrivalFactionDefs.AddRangeUnique(factionDef.arrivalLayerBlacklist);
-                //}
-                ////Log.Message($"|||2 {factionDef.defName}:\n{string.Join("\n", AllowInArrivalFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInArrivalFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
-                //foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
-                //{
-                //    TechLevel techLevelMin = TechLevel.Undefined;
-                //    TechLevel techLevelMax = TechLevel.Undefined;
-                //    bool isAdditionallyWhitelist = false;
-                //    bool isAdditionallyBlacklist = false;
-                //    LayeredAtmosphereOrbitDefModExtension LayerGroupDefModExtension = PlanetLayerDefMods[planetLayerDef].Item2;
-                //    if (LayerGroupDefModExtension != null)
-                //    {
-                //        isAdditionallyWhitelist = LayerGroupDefModExtension.WhitelistArrivalFactionDef?.Contains(factionDef) ?? false;
-                //        isAdditionallyBlacklist = LayerGroupDefModExtension.BlacklistArrivalFactionDef?.Contains(factionDef) ?? false;
-                //        if (LayerGroupDefModExtension.minArrivalFactionTechLevel != TechLevel.Undefined)
-                //        {
-                //            techLevelMin = LayerGroupDefModExtension.minArrivalFactionTechLevel;
-                //        }
-                //        if (LayerGroupDefModExtension.maxArrivalFactionTechLevel != TechLevel.Undefined)
-                //        {
-                //            techLevelMax = LayerGroupDefModExtension.maxArrivalFactionTechLevel;
-                //        }
-                //    }
-                //    LayeredAtmosphereOrbitDefModExtension LayerDefModExtension = PlanetLayerDefMods[planetLayerDef].Item1;
-                //    if (LayerDefModExtension != null)
-                //    {
-                //        isAdditionallyWhitelist = isAdditionallyWhitelist || (LayerDefModExtension.WhitelistArrivalFactionDef?.Contains(factionDef) ?? false);
-                //        isAdditionallyBlacklist = isAdditionallyBlacklist || (LayerDefModExtension.BlacklistArrivalFactionDef?.Contains(factionDef) ?? false);
-                //        if (LayerDefModExtension.minArrivalFactionTechLevel != TechLevel.Undefined)
-                //        {
-                //            techLevelMin = LayerDefModExtension.minArrivalFactionTechLevel;
-                //        }
-                //        if (LayerDefModExtension.maxArrivalFactionTechLevel != TechLevel.Undefined)
-                //        {
-                //            techLevelMax = LayerDefModExtension.maxArrivalFactionTechLevel;
-                //        }
-                //    }
-                //    if (techLevelMin != TechLevel.Undefined)
-                //    {
-                //        if (factionDef.techLevel >= techLevelMin)
-                //        {
-                //            AllowInArrivalFactionDefs.AddDistinct(planetLayerDef);
-                //            int index = ForbidInArrivalFactionDefs.IndexOf(planetLayerDef);
-                //            if (index > -1)
-                //            {
-                //                ForbidInArrivalFactionDefs.RemoveAt(index);
-                //            }
-                //        }
-                //        else
-                //        {
-                //            ForbidInArrivalFactionDefs.AddDistinct(planetLayerDef);
-                //            int index = AllowInArrivalFactionDefs.IndexOf(planetLayerDef);
-                //            if (index > -1)
-                //            {
-                //                AllowInArrivalFactionDefs.RemoveAt(index);
-                //            }
-                //        }
-                //    }
-                //    if (techLevelMax != TechLevel.Undefined)
-                //    {
-                //        if (factionDef.techLevel <= techLevelMax)
-                //        {
-                //            AllowInArrivalFactionDefs.AddDistinct(planetLayerDef);
-                //            int index = ForbidInArrivalFactionDefs.IndexOf(planetLayerDef);
-                //            if (index > -1)
-                //            {
-                //                ForbidInArrivalFactionDefs.RemoveAt(index);
-                //            }
-                //        }
-                //        else
-                //        {
-                //            ForbidInArrivalFactionDefs.AddDistinct(planetLayerDef);
-                //            int index = AllowInArrivalFactionDefs.IndexOf(planetLayerDef);
-                //            if (index > -1)
-                //            {
-                //                AllowInArrivalFactionDefs.RemoveAt(index);
-                //            }
-                //        }
-                //    }
-                //    if (isAdditionallyWhitelist)
-                //    {
-                //        AllowInArrivalFactionDefs.AddDistinct(planetLayerDef);
-                //        int index = ForbidInArrivalFactionDefs.IndexOf(planetLayerDef);
-                //        if (index > -1)
-                //        {
-                //            ForbidInArrivalFactionDefs.RemoveAt(index);
-                //        }
-                //    }
-                //    if (isAdditionallyBlacklist)
-                //    {
-                //        ForbidInArrivalFactionDefs.AddDistinct(planetLayerDef);
-                //        int index = AllowInArrivalFactionDefs.IndexOf(planetLayerDef);
-                //        if (index > -1)
-                //        {
-                //            AllowInArrivalFactionDefs.RemoveAt(index);
-                //        }
-                //    }
-                //}
-                //factionDef.arrivalLayerWhitelist = AllowInArrivalFactionDefs;
-                //factionDef.arrivalLayerBlacklist = ForbidInArrivalFactionDefs;
-                List<PlanetLayerDef> AllowInFactionDefs = new List<PlanetLayerDef>();
-                List<PlanetLayerDef> ForbidInFactionDefs = new List<PlanetLayerDef>();
-                Log.Message($"|||1 {factionDef.defName}:\n{string.Join("\n", AllowInFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                List<PlanetLayerDef> AllowInQuestScriptDef = new List<PlanetLayerDef>();
+                List<PlanetLayerDef> ForbidInQuestScriptDef = new List<PlanetLayerDef>();
                 foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
                 {
-                    Log.Message($"|||A {planetLayerDef.defName}");
+                    if (questScriptDef.layerWhitelist.NullOrEmpty())
+                    {
+                        if (planetLayerDef.onlyAllowWhitelistedQuests)
+                        {
+                            ForbidInQuestScriptDef.AddUnique(planetLayerDef);
+                        }
+                        else
+                        {
+                            AllowInQuestScriptDef.AddUnique(planetLayerDef);
+                        }
+                    }
+                    else
+                    {
+                        if (questScriptDef.layerWhitelist.Contains(planetLayerDef))
+                        {
+                            AllowInQuestScriptDef.AddUnique(planetLayerDef);
+                        }
+                        else
+                        {
+                            ForbidInQuestScriptDef.AddUnique(planetLayerDef);
+                        }
+                    }
+                }
+                //Log.Message($"|||1 {factionDef.defName}:\n{string.Join("\n", AllowInQuestScriptDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInQuestScriptDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                if (questScriptDef.layerBlacklist.NullOrEmpty())
+                {
+
+                }
+                else
+                {
+                    ForbidInQuestScriptDef.AddRangeUnique(questScriptDef.layerBlacklist);
+                }
+                //Log.Message($"|||2 {factionDef.defName}:\n{string.Join("\n", AllowInQuestScriptDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInQuestScriptDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+                {
+                    bool isAdditionallyWhitelist = false;
+                    bool isAdditionallyBlacklist = false;
+                    LayeredAtmosphereOrbitDefModExtension LayerGroupDefModExtension = PlanetLayerDefMods[planetLayerDef].Item2;
+                    if (LayerGroupDefModExtension != null)
+                    {
+                        isAdditionallyWhitelist = LayerGroupDefModExtension.WhitelistQuestScriptDef?.Contains(questScriptDef) ?? false;
+                        isAdditionallyBlacklist = LayerGroupDefModExtension.BlacklistQuestScriptDef?.Contains(questScriptDef) ?? false;
+                    }
+                    LayeredAtmosphereOrbitDefModExtension LayerDefModExtension = PlanetLayerDefMods[planetLayerDef].Item1;
+                    if (LayerDefModExtension != null)
+                    {
+                        isAdditionallyWhitelist = isAdditionallyWhitelist || (LayerDefModExtension.WhitelistQuestScriptDef?.Contains(questScriptDef) ?? false);
+                        isAdditionallyBlacklist = isAdditionallyBlacklist || (LayerDefModExtension.BlacklistQuestScriptDef?.Contains(questScriptDef) ?? false);
+                    }
+                    if (isAdditionallyWhitelist)
+                    {
+                        AllowInQuestScriptDef.AddDistinct(planetLayerDef);
+                        int index = ForbidInQuestScriptDef.IndexOf(planetLayerDef);
+                        if (index > -1)
+                        {
+                            ForbidInQuestScriptDef.RemoveAt(index);
+                        }
+                    }
+                    if (isAdditionallyBlacklist)
+                    {
+                        ForbidInQuestScriptDef.AddDistinct(planetLayerDef);
+                        int index = AllowInQuestScriptDef.IndexOf(planetLayerDef);
+                        if (index > -1)
+                        {
+                            AllowInQuestScriptDef.RemoveAt(index);
+                        }
+                    }
+                }
+                questScriptDef.layerWhitelist = AllowInQuestScriptDef;
+                questScriptDef.layerBlacklist = ForbidInQuestScriptDef;
+                
+            }
+            Log.Message($"Allow QuestScriptDef B:\n{string.Join("\n", AllQuestScriptDefs.Select((qsd) => $"   {qsd.defName} {qsd.everAcceptableInSpace} {qsd.neverPossibleInSpace}\n{string.Join("\n", qsd.layerWhitelist?.Select((pld) => $"      +{pld.defName}") ?? new List<string>() { "---" })}\n\\---/\n{string.Join("\n", qsd.layerBlacklist?.Select((pld) => $"      -{pld.defName}") ?? new List<string>() { "---" })}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestQuestScriptDefOnLayerDef(qsd)}"))}"))}");
+            //Log.Message($"Allow arrival FactionDef A:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName}\n{string.Join("\n", fd.arrivalLayerWhitelist.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", fd.arrivalLayerBlacklist.Select((pld) => $"      -{pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestArrivalFactionDefOnLayerDef(fd)}"))}"))}");
+            //Log.Message($"Allow FactionDef A:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName}\n{string.Join("\n", fd.layerWhitelist.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", fd.layerBlacklist.Select((pld) => $"      -{pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestFactionDefOnLayerDef(fd)}"))}"))}");
+            foreach (FactionDef factionDef in AllFactionDefs)
+            {
+                List<PlanetLayerDef> AllowInArrivalFactionDefs = new List<PlanetLayerDef>();
+                List<PlanetLayerDef> ForbidInArrivalFactionDefs = new List<PlanetLayerDef>();
+                foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+                {
+                    if (factionDef.arrivalLayerWhitelist.NullOrEmpty())
+                    {
+                        if (planetLayerDef.onlyAllowWhitelistedArrivals)
+                        {
+                            ForbidInArrivalFactionDefs.AddUnique(planetLayerDef);
+                        }
+                        else
+                        {
+                            AllowInArrivalFactionDefs.AddUnique(planetLayerDef);
+                        }
+                    }
+                    else
+                    {
+                        if (factionDef.arrivalLayerWhitelist.Contains(planetLayerDef))
+                        {
+                            AllowInArrivalFactionDefs.AddUnique(planetLayerDef);
+                        }
+                        else
+                        {
+                            ForbidInArrivalFactionDefs.AddUnique(planetLayerDef);
+                        }
+                    }
+                }
+                //Log.Message($"|||1 {factionDef.defName}:\n{string.Join("\n", AllowInArrivalFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInArrivalFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                if (factionDef.arrivalLayerBlacklist.NullOrEmpty())
+                {
+
+                }
+                else
+                {
+                    ForbidInArrivalFactionDefs.AddRangeUnique(factionDef.arrivalLayerBlacklist);
+                }
+                //Log.Message($"|||2 {factionDef.defName}:\n{string.Join("\n", AllowInArrivalFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInArrivalFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+                {
+                    TechLevel techLevelMin = TechLevel.Undefined;
+                    TechLevel techLevelMax = TechLevel.Undefined;
+                    bool isAdditionallyWhitelist = false;
+                    bool isAdditionallyBlacklist = false;
+                    LayeredAtmosphereOrbitDefModExtension LayerGroupDefModExtension = PlanetLayerDefMods[planetLayerDef].Item2;
+                    if (LayerGroupDefModExtension != null)
+                    {
+                        isAdditionallyWhitelist = LayerGroupDefModExtension.WhitelistArrivalFactionDef?.Contains(factionDef) ?? false;
+                        isAdditionallyBlacklist = LayerGroupDefModExtension.BlacklistArrivalFactionDef?.Contains(factionDef) ?? false;
+                        if (LayerGroupDefModExtension.minArrivalFactionTechLevel != TechLevel.Undefined)
+                        {
+                            techLevelMin = LayerGroupDefModExtension.minArrivalFactionTechLevel;
+                        }
+                        if (LayerGroupDefModExtension.maxArrivalFactionTechLevel != TechLevel.Undefined)
+                        {
+                            techLevelMax = LayerGroupDefModExtension.maxArrivalFactionTechLevel;
+                        }
+                    }
+                    LayeredAtmosphereOrbitDefModExtension LayerDefModExtension = PlanetLayerDefMods[planetLayerDef].Item1;
+                    if (LayerDefModExtension != null)
+                    {
+                        isAdditionallyWhitelist = isAdditionallyWhitelist || (LayerDefModExtension.WhitelistArrivalFactionDef?.Contains(factionDef) ?? false);
+                        isAdditionallyBlacklist = isAdditionallyBlacklist || (LayerDefModExtension.BlacklistArrivalFactionDef?.Contains(factionDef) ?? false);
+                        if (LayerDefModExtension.minArrivalFactionTechLevel != TechLevel.Undefined)
+                        {
+                            techLevelMin = LayerDefModExtension.minArrivalFactionTechLevel;
+                        }
+                        if (LayerDefModExtension.maxArrivalFactionTechLevel != TechLevel.Undefined)
+                        {
+                            techLevelMax = LayerDefModExtension.maxArrivalFactionTechLevel;
+                        }
+                    }
+                    if (techLevelMin != TechLevel.Undefined)
+                    {
+                        if (factionDef.techLevel >= techLevelMin)
+                        {
+                            AllowInArrivalFactionDefs.AddDistinct(planetLayerDef);
+                            int index = ForbidInArrivalFactionDefs.IndexOf(planetLayerDef);
+                            if (index > -1)
+                            {
+                                ForbidInArrivalFactionDefs.RemoveAt(index);
+                            }
+                        }
+                        else
+                        {
+                            ForbidInArrivalFactionDefs.AddDistinct(planetLayerDef);
+                            int index = AllowInArrivalFactionDefs.IndexOf(planetLayerDef);
+                            if (index > -1)
+                            {
+                                AllowInArrivalFactionDefs.RemoveAt(index);
+                            }
+                        }
+                    }
+                    if (techLevelMax != TechLevel.Undefined)
+                    {
+                        if (factionDef.techLevel <= techLevelMax)
+                        {
+                            AllowInArrivalFactionDefs.AddDistinct(planetLayerDef);
+                            int index = ForbidInArrivalFactionDefs.IndexOf(planetLayerDef);
+                            if (index > -1)
+                            {
+                                ForbidInArrivalFactionDefs.RemoveAt(index);
+                            }
+                        }
+                        else
+                        {
+                            ForbidInArrivalFactionDefs.AddDistinct(planetLayerDef);
+                            int index = AllowInArrivalFactionDefs.IndexOf(planetLayerDef);
+                            if (index > -1)
+                            {
+                                AllowInArrivalFactionDefs.RemoveAt(index);
+                            }
+                        }
+                    }
+                    if (isAdditionallyWhitelist)
+                    {
+                        AllowInArrivalFactionDefs.AddDistinct(planetLayerDef);
+                        int index = ForbidInArrivalFactionDefs.IndexOf(planetLayerDef);
+                        if (index > -1)
+                        {
+                            ForbidInArrivalFactionDefs.RemoveAt(index);
+                        }
+                    }
+                    if (isAdditionallyBlacklist)
+                    {
+                        ForbidInArrivalFactionDefs.AddDistinct(planetLayerDef);
+                        int index = AllowInArrivalFactionDefs.IndexOf(planetLayerDef);
+                        if (index > -1)
+                        {
+                            AllowInArrivalFactionDefs.RemoveAt(index);
+                        }
+                    }
+                }
+                factionDef.arrivalLayerWhitelist = AllowInArrivalFactionDefs;
+                factionDef.arrivalLayerBlacklist = ForbidInArrivalFactionDefs;
+                List<PlanetLayerDef> AllowInFactionDefs = new List<PlanetLayerDef>();
+                List<PlanetLayerDef> ForbidInFactionDefs = new List<PlanetLayerDef>();
+                //Log.Message($"|||1 {factionDef.defName}:\n{string.Join("\n", AllowInFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+                {
+                    //Log.Message($"|||A {planetLayerDef.defName}");
                     if (factionDef.layerWhitelist.NullOrEmpty())
                     {
                         if ((PlanetLayerDefMods[planetLayerDef].Item1?.onlyAllowWhitelistedFactions ?? false) || (PlanetLayerDefMods[planetLayerDef].Item2?.onlyAllowWhitelistedFactions ?? false))
                         {
-                            Log.Message($"|||B");
+                            //Log.Message($"|||B");
                             ForbidInFactionDefs.AddUnique(planetLayerDef);
                         }
                         else
                         {
-                            Log.Message($"|||C");
+                            //Log.Message($"|||C");
                             AllowInFactionDefs.AddUnique(planetLayerDef);
                         }
                     }
@@ -285,18 +364,18 @@ namespace LayeredAtmosphereOrbit
                     {
                         if (factionDef.layerWhitelist.Contains(planetLayerDef))
                         {
-                            Log.Message($"|||D");
+                            //Log.Message($"|||D");
                             AllowInFactionDefs.AddUnique(planetLayerDef);
                         }
                         else
                         {
-                            Log.Message($"|||E");
+                            //Log.Message($"|||E");
                             ForbidInFactionDefs.AddUnique(planetLayerDef);
                         }
                     }
-                    Log.Message($"|||F {planetLayerDef.defName}");
+                    //Log.Message($"|||F {planetLayerDef.defName}");
                 }
-                Log.Message($"|||2 {factionDef.defName}:\n{string.Join("\n", AllowInFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                //Log.Message($"|||2 {factionDef.defName}:\n{string.Join("\n", AllowInFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
                 if (factionDef.layerBlacklist.NullOrEmpty())
                 {
 
@@ -305,7 +384,7 @@ namespace LayeredAtmosphereOrbit
                 {
                     ForbidInFactionDefs.AddRangeUnique(factionDef.layerBlacklist);
                 }
-                Log.Message($"|||3 {factionDef.defName}:\n{string.Join("\n", AllowInFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                //Log.Message($"|||3 {factionDef.defName}:\n{string.Join("\n", AllowInFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
                 foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
                 {
                     TechLevel techLevelMin = TechLevel.Undefined;
@@ -408,7 +487,7 @@ namespace LayeredAtmosphereOrbit
                 factionDef.layerBlacklist = ForbidInFactionDefs;
             }
             //Log.Message($"Allow arrival FactionDef B:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName} {fd.techLevel}\n{string.Join("\n", fd.arrivalLayerWhitelist.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", fd.arrivalLayerBlacklist.Select((pld) => $"      -{pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestArrivalFactionDefOnLayerDef(fd)}"))}"))}");
-            Log.Message($"Allow FactionDef B:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName} {fd.techLevel}\n{string.Join("\n", fd.layerWhitelist.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", fd.layerBlacklist.Select((pld) => $"      -{pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestFactionDefOnLayerDef(fd)}"))}"))}");
+            //Log.Message($"Allow FactionDef B:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName} {fd.techLevel}\n{string.Join("\n", fd.layerWhitelist.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", fd.layerBlacklist.Select((pld) => $"      -{pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestFactionDefOnLayerDef(fd)}"))}"))}");
             return;
 
             //foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
