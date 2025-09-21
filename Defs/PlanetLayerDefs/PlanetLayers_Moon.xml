@@ -21,7 +21,7 @@
 		<defaultBiome>LAO_Luna</defaultBiome>
 		<backgroundBiome>LAO_Luna</backgroundBiome>
 		<worldGenSteps>
-			<li>Terrain</li>
+			<li>LAO_TerrainLuna</li>
 			<!-- <li>Mutators</li> -->
 			<!-- <li MayRequire="Ludeon.RimWorld.Odyssey">Landmarks</li> -->
 			<!-- <li>AncientSites</li> -->
