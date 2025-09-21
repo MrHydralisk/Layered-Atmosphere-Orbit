@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
-using Verse.Noise;
 
 namespace LayeredAtmosphereOrbit
 {
@@ -121,46 +120,183 @@ namespace LayeredAtmosphereOrbit
             List<GameConditionDef> AllGameConditionDefs = DefDatabase<GameConditionDef>.AllDefs.ToList();
             List<QuestScriptDef> AllQuestScriptDefs = DefDatabase<QuestScriptDef>.AllDefs.ToList();
             List<FactionDef> AllFactionDefs = DefDatabase<FactionDef>.AllDefs.ToList();
-            Dictionary<PlanetLayerDef, (List<FactionDef>,List<FactionDef>, bool)> PlanetLayerFactionDefs = new Dictionary<PlanetLayerDef, (List<FactionDef>, List<FactionDef>, bool)>();
-            Dictionary<PlanetLayerDef, (List<FactionDef>,List<FactionDef>)> PlanetLayerArrivalFactionDefs = new Dictionary<PlanetLayerDef, (List<FactionDef>, List<FactionDef>)>();
-            
+
             Dictionary<PlanetLayerDef, (LayeredAtmosphereOrbitDefModExtension, LayeredAtmosphereOrbitDefModExtension)> PlanetLayerDefMods = AllPlanetLayerDefs.ToDictionary((PlanetLayerDef pld) => pld, (PlanetLayerDef pld) => (pld.GetModExtension<LayeredAtmosphereOrbitDefModExtension>(), pld.LayerGroup()?.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()));
             Dictionary<PlanetLayerDef, (List<FactionDef>, List<FactionDef>)> PlanetLayerFactionDefFs = AllPlanetLayerDefs.ToDictionary((PlanetLayerDef pld) => pld, (PlanetLayerDef pld) => (new List<FactionDef>(), new List<FactionDef>()));
 
-            int from = 0;
-            int amount = 7;
-            Log.Message($"Allow FactionDef A:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName}\n{string.Join("\n", fd.layerWhitelist.Select((pld) => $"      {pld.defName}"))}\n\\---/\n{string.Join("\n", fd.layerBlacklist.Select((pld) => $"      {pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Skip(from).Take(amount).Select((pld) => $"      {pld.defName} {pld.TestFactionDefOnLayerDef(fd)}"))}"))}");
+            //Log.Message($"Allow arrival FactionDef A:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName}\n{string.Join("\n", fd.arrivalLayerWhitelist.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", fd.arrivalLayerBlacklist.Select((pld) => $"      -{pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestArrivalFactionDefOnLayerDef(fd)}"))}"))}");
+            Log.Message($"Allow FactionDef A:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName}\n{string.Join("\n", fd.layerWhitelist.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", fd.layerBlacklist.Select((pld) => $"      -{pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestFactionDefOnLayerDef(fd)}"))}"))}");
             foreach (FactionDef factionDef in AllFactionDefs)
             {
+                //List<PlanetLayerDef> AllowInArrivalFactionDefs = new List<PlanetLayerDef>();
+                //List<PlanetLayerDef> ForbidInArrivalFactionDefs = new List<PlanetLayerDef>();
+                //foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+                //{
+                //    if (factionDef.arrivalLayerWhitelist.NullOrEmpty())
+                //    {
+                //        if (planetLayerDef.onlyAllowWhitelistedArrivals)
+                //        {
+                //            ForbidInArrivalFactionDefs.AddUnique(planetLayerDef);
+                //        }
+                //        else
+                //        {
+                //            AllowInArrivalFactionDefs.AddUnique(planetLayerDef);
+                //        }
+                //    }
+                //    else
+                //    {
+                //        if (factionDef.arrivalLayerWhitelist.Contains(planetLayerDef))
+                //        {
+                //            AllowInArrivalFactionDefs.AddUnique(planetLayerDef);
+                //        }
+                //        else
+                //        {
+                //            ForbidInArrivalFactionDefs.AddUnique(planetLayerDef);
+                //        }
+                //    }
+                //}
+                ////Log.Message($"|||1 {factionDef.defName}:\n{string.Join("\n", AllowInArrivalFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInArrivalFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                //if (factionDef.arrivalLayerBlacklist.NullOrEmpty())
+                //{
+
+                //}
+                //else
+                //{
+                //    ForbidInArrivalFactionDefs.AddRangeUnique(factionDef.arrivalLayerBlacklist);
+                //}
+                ////Log.Message($"|||2 {factionDef.defName}:\n{string.Join("\n", AllowInArrivalFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInArrivalFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                //foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+                //{
+                //    TechLevel techLevelMin = TechLevel.Undefined;
+                //    TechLevel techLevelMax = TechLevel.Undefined;
+                //    bool isAdditionallyWhitelist = false;
+                //    bool isAdditionallyBlacklist = false;
+                //    LayeredAtmosphereOrbitDefModExtension LayerGroupDefModExtension = PlanetLayerDefMods[planetLayerDef].Item2;
+                //    if (LayerGroupDefModExtension != null)
+                //    {
+                //        isAdditionallyWhitelist = LayerGroupDefModExtension.WhitelistArrivalFactionDef?.Contains(factionDef) ?? false;
+                //        isAdditionallyBlacklist = LayerGroupDefModExtension.BlacklistArrivalFactionDef?.Contains(factionDef) ?? false;
+                //        if (LayerGroupDefModExtension.minArrivalFactionTechLevel != TechLevel.Undefined)
+                //        {
+                //            techLevelMin = LayerGroupDefModExtension.minArrivalFactionTechLevel;
+                //        }
+                //        if (LayerGroupDefModExtension.maxArrivalFactionTechLevel != TechLevel.Undefined)
+                //        {
+                //            techLevelMax = LayerGroupDefModExtension.maxArrivalFactionTechLevel;
+                //        }
+                //    }
+                //    LayeredAtmosphereOrbitDefModExtension LayerDefModExtension = PlanetLayerDefMods[planetLayerDef].Item1;
+                //    if (LayerDefModExtension != null)
+                //    {
+                //        isAdditionallyWhitelist = isAdditionallyWhitelist || (LayerDefModExtension.WhitelistArrivalFactionDef?.Contains(factionDef) ?? false);
+                //        isAdditionallyBlacklist = isAdditionallyBlacklist || (LayerDefModExtension.BlacklistArrivalFactionDef?.Contains(factionDef) ?? false);
+                //        if (LayerDefModExtension.minArrivalFactionTechLevel != TechLevel.Undefined)
+                //        {
+                //            techLevelMin = LayerDefModExtension.minArrivalFactionTechLevel;
+                //        }
+                //        if (LayerDefModExtension.maxArrivalFactionTechLevel != TechLevel.Undefined)
+                //        {
+                //            techLevelMax = LayerDefModExtension.maxArrivalFactionTechLevel;
+                //        }
+                //    }
+                //    if (techLevelMin != TechLevel.Undefined)
+                //    {
+                //        if (factionDef.techLevel >= techLevelMin)
+                //        {
+                //            AllowInArrivalFactionDefs.AddDistinct(planetLayerDef);
+                //            int index = ForbidInArrivalFactionDefs.IndexOf(planetLayerDef);
+                //            if (index > -1)
+                //            {
+                //                ForbidInArrivalFactionDefs.RemoveAt(index);
+                //            }
+                //        }
+                //        else
+                //        {
+                //            ForbidInArrivalFactionDefs.AddDistinct(planetLayerDef);
+                //            int index = AllowInArrivalFactionDefs.IndexOf(planetLayerDef);
+                //            if (index > -1)
+                //            {
+                //                AllowInArrivalFactionDefs.RemoveAt(index);
+                //            }
+                //        }
+                //    }
+                //    if (techLevelMax != TechLevel.Undefined)
+                //    {
+                //        if (factionDef.techLevel <= techLevelMax)
+                //        {
+                //            AllowInArrivalFactionDefs.AddDistinct(planetLayerDef);
+                //            int index = ForbidInArrivalFactionDefs.IndexOf(planetLayerDef);
+                //            if (index > -1)
+                //            {
+                //                ForbidInArrivalFactionDefs.RemoveAt(index);
+                //            }
+                //        }
+                //        else
+                //        {
+                //            ForbidInArrivalFactionDefs.AddDistinct(planetLayerDef);
+                //            int index = AllowInArrivalFactionDefs.IndexOf(planetLayerDef);
+                //            if (index > -1)
+                //            {
+                //                AllowInArrivalFactionDefs.RemoveAt(index);
+                //            }
+                //        }
+                //    }
+                //    if (isAdditionallyWhitelist)
+                //    {
+                //        AllowInArrivalFactionDefs.AddDistinct(planetLayerDef);
+                //        int index = ForbidInArrivalFactionDefs.IndexOf(planetLayerDef);
+                //        if (index > -1)
+                //        {
+                //            ForbidInArrivalFactionDefs.RemoveAt(index);
+                //        }
+                //    }
+                //    if (isAdditionallyBlacklist)
+                //    {
+                //        ForbidInArrivalFactionDefs.AddDistinct(planetLayerDef);
+                //        int index = AllowInArrivalFactionDefs.IndexOf(planetLayerDef);
+                //        if (index > -1)
+                //        {
+                //            AllowInArrivalFactionDefs.RemoveAt(index);
+                //        }
+                //    }
+                //}
+                //factionDef.arrivalLayerWhitelist = AllowInArrivalFactionDefs;
+                //factionDef.arrivalLayerBlacklist = ForbidInArrivalFactionDefs;
                 List<PlanetLayerDef> AllowInFactionDefs = new List<PlanetLayerDef>();
                 List<PlanetLayerDef> ForbidInFactionDefs = new List<PlanetLayerDef>();
-                if (factionDef.layerWhitelist.NullOrEmpty())
+                Log.Message($"|||1 {factionDef.defName}:\n{string.Join("\n", AllowInFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
                 {
-                    foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs.Skip(from).Take(amount))
+                    Log.Message($"|||A {planetLayerDef.defName}");
+                    if (factionDef.layerWhitelist.NullOrEmpty())
                     {
                         if ((PlanetLayerDefMods[planetLayerDef].Item1?.onlyAllowWhitelistedFactions ?? false) || (PlanetLayerDefMods[planetLayerDef].Item2?.onlyAllowWhitelistedFactions ?? false))
                         {
+                            Log.Message($"|||B");
                             ForbidInFactionDefs.AddUnique(planetLayerDef);
                         }
+                        else
+                        {
+                            Log.Message($"|||C");
+                            AllowInFactionDefs.AddUnique(planetLayerDef);
+                        }
                     }
-                }
-                else
-                {
-                    foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs.Skip(from).Take(amount))
+                    else
                     {
                         if (factionDef.layerWhitelist.Contains(planetLayerDef))
                         {
+                            Log.Message($"|||D");
                             AllowInFactionDefs.AddUnique(planetLayerDef);
                         }
                         else
                         {
-                            if ((PlanetLayerDefMods[planetLayerDef].Item1?.onlyAllowWhitelistedFactions ?? false) || (PlanetLayerDefMods[planetLayerDef].Item2?.onlyAllowWhitelistedFactions ?? false))
-                            {
-                                ForbidInFactionDefs.AddUnique(planetLayerDef);
-                            }
+                            Log.Message($"|||E");
+                            ForbidInFactionDefs.AddUnique(planetLayerDef);
                         }
                     }
+                    Log.Message($"|||F {planetLayerDef.defName}");
                 }
+                Log.Message($"|||2 {factionDef.defName}:\n{string.Join("\n", AllowInFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
                 if (factionDef.layerBlacklist.NullOrEmpty())
                 {
 
@@ -169,7 +305,8 @@ namespace LayeredAtmosphereOrbit
                 {
                     ForbidInFactionDefs.AddRangeUnique(factionDef.layerBlacklist);
                 }
-                foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs.Skip(from).Take(amount))
+                Log.Message($"|||3 {factionDef.defName}:\n{string.Join("\n", AllowInFactionDefs.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", ForbidInFactionDefs.Select((pld) => $"      -{pld.defName}"))}\n");
+                foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
                 {
                     TechLevel techLevelMin = TechLevel.Undefined;
                     TechLevel techLevelMax = TechLevel.Undefined;
@@ -182,11 +319,11 @@ namespace LayeredAtmosphereOrbit
                         onlyAllowWhitelistedFactions = LayerGroupDefModExtension.onlyAllowWhitelistedFactions;
                         isAdditionallyWhitelist = LayerGroupDefModExtension.WhitelistFactionDef?.Contains(factionDef) ?? false;
                         isAdditionallyBlacklist = LayerGroupDefModExtension.BlacklistFactionDef?.Contains(factionDef) ?? false;
-                        if (LayerGroupDefModExtension.minFactionTechLevel!= TechLevel.Undefined)
+                        if (LayerGroupDefModExtension.minFactionTechLevel != TechLevel.Undefined)
                         {
                             techLevelMin = LayerGroupDefModExtension.minFactionTechLevel;
                         }
-                        if (LayerGroupDefModExtension.maxFactionTechLevel!= TechLevel.Undefined)
+                        if (LayerGroupDefModExtension.maxFactionTechLevel != TechLevel.Undefined)
                         {
                             techLevelMax = LayerGroupDefModExtension.maxFactionTechLevel;
                         }
@@ -197,104 +334,18 @@ namespace LayeredAtmosphereOrbit
                         onlyAllowWhitelistedFactions = onlyAllowWhitelistedFactions || LayerDefModExtension.onlyAllowWhitelistedFactions;
                         isAdditionallyWhitelist = isAdditionallyWhitelist || (LayerDefModExtension.WhitelistFactionDef?.Contains(factionDef) ?? false);
                         isAdditionallyBlacklist = isAdditionallyBlacklist || (LayerDefModExtension.BlacklistFactionDef?.Contains(factionDef) ?? false);
-                        if (LayerDefModExtension.minFactionTechLevel!= TechLevel.Undefined)
+                        if (LayerDefModExtension.minFactionTechLevel != TechLevel.Undefined)
                         {
                             techLevelMin = LayerDefModExtension.minFactionTechLevel;
                         }
-                        if (LayerDefModExtension.maxFactionTechLevel!= TechLevel.Undefined)
+                        if (LayerDefModExtension.maxFactionTechLevel != TechLevel.Undefined)
                         {
                             techLevelMax = LayerDefModExtension.maxFactionTechLevel;
                         }
                     }
                     if (techLevelMin != TechLevel.Undefined)
                     {
-                        if (onlyAllowWhitelistedFactions)
-                        {
-                            if (factionDef.techLevel >= techLevelMin)
-                            {
-                                AllowInFactionDefs.AddDistinct(planetLayerDef);
-                            }
-                            else
-                            {
-                                int index = AllowInFactionDefs.IndexOf(planetLayerDef);
-                                if (index > -1)
-                                {
-                                    AllowInFactionDefs.RemoveAt(index);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (factionDef.techLevel >= techLevelMin)
-                            {
-                                if (AllowInFactionDefs.Empty())
-                                {
-
-                                }
-                                else
-                                {
-                                    AllowInFactionDefs.AddDistinct(planetLayerDef);
-                                }
-                            }
-                            else
-                            {
-                                if (AllowInFactionDefs.Empty())
-                                {
-                                    ForbidInFactionDefs.AddDistinct(planetLayerDef);
-                                }
-                                else
-                                {
-                                    ForbidInFactionDefs.AddDistinct(planetLayerDef);
-                                }
-                            }
-                        }
-                    }
-                    if (techLevelMax != TechLevel.Undefined)
-                    {
-                        if (onlyAllowWhitelistedFactions)
-                        {
-                            if (factionDef.techLevel <= techLevelMax)
-                            {
-                                AllowInFactionDefs.AddDistinct(planetLayerDef);
-                            }
-                            else 
-                            {
-                                int index = AllowInFactionDefs.IndexOf(planetLayerDef);
-                                if (index > -1)
-                                {
-                                    AllowInFactionDefs.RemoveAt(index);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (factionDef.techLevel <= techLevelMax)
-                            {
-                                if (AllowInFactionDefs.Empty())
-                                {
-
-                                }
-                                else
-                                {
-                                    AllowInFactionDefs.AddDistinct(planetLayerDef);
-                                }
-                            }
-                            else
-                            {
-                                if (AllowInFactionDefs.Empty())
-                                {
-                                    ForbidInFactionDefs.AddDistinct(planetLayerDef);
-                                }
-                                else
-                                {
-                                    ForbidInFactionDefs.AddDistinct(planetLayerDef);
-                                }
-                            }
-                        }
-                    }
-                    if (isAdditionallyWhitelist)
-                    {
-                        if (onlyAllowWhitelistedFactions)
+                        if (factionDef.techLevel >= techLevelMin)
                         {
                             AllowInFactionDefs.AddDistinct(planetLayerDef);
                             int index = ForbidInFactionDefs.IndexOf(planetLayerDef);
@@ -305,794 +356,784 @@ namespace LayeredAtmosphereOrbit
                         }
                         else
                         {
-                            if (AllowInFactionDefs.Empty())
-                            {
-                                int index = ForbidInFactionDefs.IndexOf(planetLayerDef);
-                                if (index > -1)
-                                {
-                                    ForbidInFactionDefs.RemoveAt(index);
-                                }
-                            }
-                            else
-                            {
-                                AllowInFactionDefs.AddDistinct(planetLayerDef);
-                                int index = ForbidInFactionDefs.IndexOf(planetLayerDef);
-                                if (index > -1)
-                                {
-                                    ForbidInFactionDefs.RemoveAt(index);
-                                }
-                            }
-                        }
-                    }
-                    if (isAdditionallyBlacklist)
-                    {
-                        if (onlyAllowWhitelistedFactions)
-                        {
+                            ForbidInFactionDefs.AddDistinct(planetLayerDef);
                             int index = AllowInFactionDefs.IndexOf(planetLayerDef);
                             if (index > -1)
                             {
                                 AllowInFactionDefs.RemoveAt(index);
                             }
                         }
+                    }
+                    if (techLevelMax != TechLevel.Undefined)
+                    {
+                        if (factionDef.techLevel <= techLevelMax)
+                        {
+                            AllowInFactionDefs.AddDistinct(planetLayerDef);
+                            int index = ForbidInFactionDefs.IndexOf(planetLayerDef);
+                            if (index > -1)
+                            {
+                                ForbidInFactionDefs.RemoveAt(index);
+                            }
+                        }
                         else
                         {
-                            if (AllowInFactionDefs.Empty())
+                            ForbidInFactionDefs.AddDistinct(planetLayerDef);
+                            int index = AllowInFactionDefs.IndexOf(planetLayerDef);
+                            if (index > -1)
                             {
-                                ForbidInFactionDefs.AddDistinct(planetLayerDef);
-                                int index = AllowInFactionDefs.IndexOf(planetLayerDef);
-                                if (index > -1)
-                                {
-                                    AllowInFactionDefs.RemoveAt(index);
-                                }
+                                AllowInFactionDefs.RemoveAt(index);
                             }
-                            else
-                            {
-                                ForbidInFactionDefs.AddDistinct(planetLayerDef);
-                                int index = AllowInFactionDefs.IndexOf(planetLayerDef);
-                                if (index > -1)
-                                {
-                                    AllowInFactionDefs.RemoveAt(index);
-                                }
-                            }
+                        }
+                    }
+                    if (isAdditionallyWhitelist)
+                    {
+                        AllowInFactionDefs.AddDistinct(planetLayerDef);
+                        int index = ForbidInFactionDefs.IndexOf(planetLayerDef);
+                        if (index > -1)
+                        {
+                            ForbidInFactionDefs.RemoveAt(index);
+                        }
+                    }
+                    if (isAdditionallyBlacklist)
+                    {
+                        ForbidInFactionDefs.AddDistinct(planetLayerDef);
+                        int index = AllowInFactionDefs.IndexOf(planetLayerDef);
+                        if (index > -1)
+                        {
+                            AllowInFactionDefs.RemoveAt(index);
                         }
                     }
                 }
                 factionDef.layerWhitelist = AllowInFactionDefs;
                 factionDef.layerBlacklist = ForbidInFactionDefs;
-                //foreach (PlanetLayerDef planetLayerDef in AllowFactionDefs)
-                //{
-                //    PlanetLayerFactionDefFs[planetLayerDef].Item1.Add(factionDef);
-                //}
-                //foreach (PlanetLayerDef planetLayerDef in ForbidFactionDefs)
-                //{
-                //    PlanetLayerFactionDefFs[planetLayerDef].Item2.Add(factionDef);
-                //}
             }
-            Log.Message($"Allow FactionDef B:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName} {fd.techLevel}\n{string.Join("\n", fd.layerWhitelist.Select((pld) => $"      {pld.defName}"))}\n\\---/\n{string.Join("\n", fd.layerBlacklist.Select((pld) => $"      {pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Skip(from).Take(amount).Select((pld) => $"      {pld.defName} {pld.TestFactionDefOnLayerDef(fd)}"))}"))}");
+            //Log.Message($"Allow arrival FactionDef B:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName} {fd.techLevel}\n{string.Join("\n", fd.arrivalLayerWhitelist.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", fd.arrivalLayerBlacklist.Select((pld) => $"      -{pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestArrivalFactionDefOnLayerDef(fd)}"))}"))}");
+            Log.Message($"Allow FactionDef B:\n{string.Join("\n", AllFactionDefs.Select((fd) => $"   {fd.defName} {fd.techLevel}\n{string.Join("\n", fd.layerWhitelist.Select((pld) => $"      +{pld.defName}"))}\n\\---/\n{string.Join("\n", fd.layerBlacklist.Select((pld) => $"      -{pld.defName}"))}\n/---\\\n{string.Join("\n", AllPlanetLayerDefs.Select((pld) => $"      {pld.defName} {pld.TestFactionDefOnLayerDef(fd)}"))}"))}");
             return;
-            foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs.Skip(from).Take(amount))
-            {
-                //PlanetLayerArrivalFactionDefs.Add(planetLayerDef, (
-                //    AllFactionDefs.Where((FactionDef fd) => fd.arrivalLayerWhitelist.NullOrEmpty() ? true : fd.arrivalLayerWhitelist.Contains(planetLayerDef)).ToList(),
-                //    AllFactionDefs.Where((FactionDef fd) => fd.arrivalLayerBlacklist.NullOrEmpty() ? false : fd.arrivalLayerBlacklist.Contains(planetLayerDef)).ToList()));
+
+            //foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+            //{
+            //    //PlanetLayerArrivalFactionDefs.Add(planetLayerDef, (
+            //    //    AllFactionDefs.Where((FactionDef fd) => fd.arrivalLayerWhitelist.NullOrEmpty() ? true : fd.arrivalLayerWhitelist.Contains(planetLayerDef)).ToList(),
+            //    //    AllFactionDefs.Where((FactionDef fd) => fd.arrivalLayerBlacklist.NullOrEmpty() ? false : fd.arrivalLayerBlacklist.Contains(planetLayerDef)).ToList()));
 
 
 
-                PlanetLayerFactionDefs.Add(planetLayerDef, (
-                    AllFactionDefs.Where((FactionDef fd) => fd.layerWhitelist.NullOrEmpty() ? true : fd.layerWhitelist.Contains(planetLayerDef)).ToList(),
-                    AllFactionDefs.Where((FactionDef fd) => fd.layerBlacklist.NullOrEmpty() ? false : fd.layerBlacklist.Contains(planetLayerDef)).ToList(), 
-                    false));
-            }
-            Log.Message($"Available FactionDef S:\n{string.Join("\n", AllPlanetLayerDefs.Skip(from).Take(amount).Select((pl) => $"   {pl.defName}\n{string.Join("\n", AllFactionDefs.Select((FactionDef fd) => $"      {fd.defName}\n      +{(fd.layerWhitelist.NullOrEmpty() ? true : fd.layerWhitelist.Contains(pl))} = {fd.layerWhitelist.NullOrEmpty()} ? true : {fd.layerWhitelist.Contains(pl)}\n      -{(fd.layerBlacklist.NullOrEmpty() ? false : fd.layerBlacklist.Contains(pl))} = {fd.layerBlacklist.NullOrEmpty()} ? false : {fd.layerBlacklist.Contains(pl)}"))}"))}");
-            //Log.Message($"Available arrival FactionDef A:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", PlanetLayerArrivalFactionDefs[pl].Item1.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", PlanetLayerArrivalFactionDefs[pl].Item2.Select((fd) => $"      {fd.defName}"))}"))}");
-            Log.Message($"Available FactionDef A:\n{string.Join("\n", AllPlanetLayerDefs.Skip(from).Take(amount).Select((pl) => $"   {pl.defName}\n{string.Join("\n", PlanetLayerFactionDefs[pl].Item1.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", PlanetLayerFactionDefs[pl].Item2.Select((fd) => $"      {fd.defName}"))}"))}");
-            List<PlanetLayerGroupDef> AllPlanetLayerGroupDefs = DefDatabase<PlanetLayerGroupDef>.AllDefs.ToList();
-            foreach (PlanetLayerGroupDef planetLayerGroupDef in AllPlanetLayerGroupDefs)
-            {
-                LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerGroupDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
-                foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers().Where(p => AllPlanetLayerDefs.Skip(from).Take(amount).Contains(p)))
-                {
-                    ////IncidentDefs
-                    //List<IncidentDef> WhitelistIncidentDefs = AllIncidentDefs.Where((IncidentDef id) => id.canOccurOnAllPlanetLayers || (id.layerWhitelist?.Contains(planetLayerDef) ?? false)).ToList();
-                    //List<IncidentDef> BlacklistIncidentDefs = AllIncidentDefs.Where((IncidentDef id) => id.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
-                    //if (laoDefModExtension != null)
-                    //{
-                    //    if (laoDefModExtension.BlacklistIncidentDef != null)
-                    //    {
-                    //        BlacklistIncidentDefs.AddRangeUnique(laoDefModExtension.BlacklistIncidentDef);
-                    //    }
-                    //    if (!BlacklistIncidentDefs.NullOrEmpty())
-                    //    {
-                    //        WhitelistIncidentDefs.RemoveAll((IncidentDef id) => BlacklistIncidentDefs.Contains(id));
-                    //    }
-                    //    if (laoDefModExtension.WhitelistIncidentDef != null)
-                    //    {
-                    //        WhitelistIncidentDefs.AddRangeUnique(laoDefModExtension.WhitelistIncidentDef);
-                    //    }
-                    //    if (!BlacklistIncidentDefs.NullOrEmpty())
-                    //    {
-                    //        BlacklistIncidentDefs.RemoveAll((IncidentDef id) => WhitelistIncidentDefs.Contains(id));
-                    //    }
-                    //}
-                    //if (!WhitelistIncidentDefs.NullOrEmpty())
-                    //{
-                    //    foreach (IncidentDef incidentDef in WhitelistIncidentDefs)
-                    //    {
-                    //        //Log.Message($"{planetLayerDef.defName} WhitelistIncidentDefs {incidentDef.defName} {incidentDef.canOccurOnAllPlanetLayers}");
-                    //        if (!incidentDef.canOccurOnAllPlanetLayers)
-                    //        {
-                    //            if (incidentDef.layerWhitelist == null)
-                    //            {
-                    //                incidentDef.layerWhitelist = new List<PlanetLayerDef>();
-                    //            }
-                    //            incidentDef.layerWhitelist.AddDistinct(planetLayerDef);
-                    //        }
-                    //    }
-                    //}
-                    //if (!planetLayerDef.onlyAllowWhitelistedIncidents)
-                    //{
-                    //    if (!BlacklistIncidentDefs.NullOrEmpty())
-                    //    {
-                    //        foreach (IncidentDef incidentDef in BlacklistIncidentDefs)
-                    //        {
-                    //            //Log.Message($"{planetLayerDef.defName} BlacklistIncidentDefs {incidentDef.defName}");
-                    //            if (incidentDef.layerBlacklist == null)
-                    //            {
-                    //                incidentDef.layerBlacklist = new List<PlanetLayerDef>();
-                    //            }
-                    //            incidentDef.layerBlacklist.AddDistinct(planetLayerDef);
-                    //        }
-                    //    }
-                    //}
-                    ////BiomeDefs
-                    //List<BiomeDef> WhitelistBiomeDefs = AllBiomeDefs.Where((BiomeDef bd) => bd.layerWhitelist?.Contains(planetLayerDef) ?? false).ToList();
-                    //List<BiomeDef> BlacklistBiomeDefs = AllBiomeDefs.Where((BiomeDef bd) => bd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
-                    //if (laoDefModExtension != null)
-                    //{
-                    //    if (laoDefModExtension.BlacklistBiomeDef != null)
-                    //    {
-                    //        BlacklistBiomeDefs.AddRangeUnique(laoDefModExtension.BlacklistBiomeDef);
-                    //    }
-                    //    if (!BlacklistBiomeDefs.NullOrEmpty())
-                    //    {
-                    //        WhitelistBiomeDefs.RemoveAll((BiomeDef bd) => BlacklistBiomeDefs.Contains(bd));
-                    //    }
-                    //    if (laoDefModExtension.WhitelistBiomeDef != null)
-                    //    {
-                    //        WhitelistBiomeDefs.AddRangeUnique(laoDefModExtension.WhitelistBiomeDef);
-                    //    }
-                    //    if (!BlacklistBiomeDefs.NullOrEmpty())
-                    //    {
-                    //        BlacklistBiomeDefs.RemoveAll((BiomeDef id) => WhitelistBiomeDefs.Contains(id));
-                    //    }
-                    //}
-                    //if (!WhitelistBiomeDefs.NullOrEmpty())
-                    //{
-                    //    foreach (BiomeDef biomeDef in WhitelistBiomeDefs)
-                    //    {
-                    //        //Log.Message($"{planetLayerDef.defName} WhitelistBiomeDefs {biomeDef.defName}");
-                    //        if (biomeDef.layerWhitelist == null)
-                    //        {
-                    //            biomeDef.layerWhitelist = new List<PlanetLayerDef>();
-                    //        }
-                    //        biomeDef.layerWhitelist.AddDistinct(planetLayerDef);
-                    //    }
-                    //}
-                    //if (!planetLayerDef.onlyAllowWhitelistedBiomes)
-                    //{
-                    //    if (!BlacklistBiomeDefs.NullOrEmpty())
-                    //    {
-                    //        foreach (BiomeDef biomeDef in BlacklistBiomeDefs)
-                    //        {
-                    //            //Log.Message($"{planetLayerDef.defName} BlacklistBiomeDefs {biomeDef.defName}");
-                    //            if (biomeDef.layerBlacklist == null)
-                    //            {
-                    //                biomeDef.layerBlacklist = new List<PlanetLayerDef>();
-                    //            }
-                    //            biomeDef.layerBlacklist.AddDistinct(planetLayerDef);
-                    //        }
-                    //    }
-                    //}
-                    ////GameConditionDefs
-                    //List<GameConditionDef> WhitelistGameConditionDefs = AllGameConditionDefs.Where((GameConditionDef bd) => bd.canAffectAllPlanetLayers || (bd.layerWhitelist?.Contains(planetLayerDef) ?? false)).ToList();
-                    //List<GameConditionDef> BlacklistGameConditionDefs = AllGameConditionDefs.Where((GameConditionDef bd) => bd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
-                    //if (laoDefModExtension != null)
-                    //{
-                    //    if (laoDefModExtension.BlacklistGameConditionDef != null)
-                    //    {
-                    //        BlacklistGameConditionDefs.AddRangeUnique(laoDefModExtension.BlacklistGameConditionDef);
-                    //    }
-                    //    if (!BlacklistGameConditionDefs.NullOrEmpty())
-                    //    {
-                    //        WhitelistGameConditionDefs.RemoveAll((GameConditionDef bd) => BlacklistGameConditionDefs.Contains(bd));
-                    //    }
-                    //    if (laoDefModExtension.WhitelistGameConditionDef != null)
-                    //    {
-                    //        WhitelistGameConditionDefs.AddRangeUnique(laoDefModExtension.WhitelistGameConditionDef);
-                    //    }
-                    //    if (!BlacklistGameConditionDefs.NullOrEmpty())
-                    //    {
-                    //        BlacklistGameConditionDefs.RemoveAll((GameConditionDef id) => WhitelistGameConditionDefs.Contains(id));
-                    //    }
-                    //}
-                    //if (!WhitelistGameConditionDefs.NullOrEmpty())
-                    //{
-                    //    foreach (GameConditionDef gameConditionDef in WhitelistGameConditionDefs)
-                    //    {
-                    //        //Log.Message($"{planetLayerDef.defName} WhitelistGameConditionDefs {gameConditionDef.defName} {gameConditionDef.canAffectAllPlanetLayers}");
-                    //        if (!gameConditionDef.canAffectAllPlanetLayers)
-                    //        {
-                    //            if (gameConditionDef.layerWhitelist == null)
-                    //            {
-                    //                gameConditionDef.layerWhitelist = new List<PlanetLayerDef>();
-                    //            }
-                    //            gameConditionDef.layerWhitelist.AddDistinct(planetLayerDef);
-                    //        }
-                    //    }
-                    //}
-                    //if (!planetLayerDef.onlyAllowWhitelistedGameConditions)
-                    //{
-                    //    if (!BlacklistGameConditionDefs.NullOrEmpty())
-                    //    {
-                    //        foreach (GameConditionDef gameConditionDef in BlacklistGameConditionDefs)
-                    //        {
-                    //            //Log.Message($"{planetLayerDef.defName} BlacklistGameConditionDefs {gameConditionDef.defName}");
-                    //            if (gameConditionDef.layerBlacklist == null)
-                    //            {
-                    //                gameConditionDef.layerBlacklist = new List<PlanetLayerDef>();
-                    //            }
-                    //            gameConditionDef.layerBlacklist.AddDistinct(planetLayerDef);
-                    //        }
-                    //    }
-                    //}
-                    ////QuestScriptDefs
-                    //List<QuestScriptDef> WhitelistQuestScriptDefs = AllQuestScriptDefs.Where((QuestScriptDef qsd) => qsd.canOccurOnAllPlanetLayers || (qsd.layerWhitelist?.Contains(planetLayerDef) ?? false) || (qsd.everAcceptableInSpace && planetLayerDef.isSpace)).ToList();
-                    //List<QuestScriptDef> BlacklistQuestScriptDefs = AllQuestScriptDefs.Where((QuestScriptDef qsd) => (qsd.layerBlacklist?.Contains(planetLayerDef) ?? false) || (qsd.everAcceptableInSpace && planetLayerDef.isSpace)).ToList();
-                    //if (laoDefModExtension != null)
-                    //{
-                    //    if (laoDefModExtension.BlacklistQuestScriptDef != null)
-                    //    {
-                    //        BlacklistQuestScriptDefs.AddRangeUnique(laoDefModExtension.BlacklistQuestScriptDef);
-                    //    }
-                    //    if (!BlacklistQuestScriptDefs.NullOrEmpty())
-                    //    {
-                    //        WhitelistQuestScriptDefs.RemoveAll((QuestScriptDef bd) => BlacklistQuestScriptDefs.Contains(bd));
-                    //    }
-                    //    if (laoDefModExtension.WhitelistQuestScriptDef != null)
-                    //    {
-                    //        WhitelistQuestScriptDefs.AddRangeUnique(laoDefModExtension.WhitelistQuestScriptDef);
-                    //    }
-                    //    if (!BlacklistQuestScriptDefs.NullOrEmpty())
-                    //    {
-                    //        BlacklistQuestScriptDefs.RemoveAll((QuestScriptDef id) => WhitelistQuestScriptDefs.Contains(id));
-                    //    }
-                    //}
-                    //if (!WhitelistQuestScriptDefs.NullOrEmpty())
-                    //{
-                    //    foreach (QuestScriptDef questScriptDef in WhitelistQuestScriptDefs)
-                    //    {
-                    //        //Log.Message($"{planetLayerDef.defName} WhitelistQuestScriptDefs {questScriptDef.defName} {questScriptDef.canOccurOnAllPlanetLayers} || {questScriptDef.everAcceptableInSpace} && {planetLayerDef.isSpace}");
-                    //        if (!(questScriptDef.canOccurOnAllPlanetLayers || (questScriptDef.everAcceptableInSpace && planetLayerDef.isSpace)))
-                    //        {
-                    //            if (questScriptDef.layerWhitelist == null)
-                    //            {
-                    //                questScriptDef.layerWhitelist = new List<PlanetLayerDef>();
-                    //            }
-                    //            questScriptDef.layerWhitelist.AddDistinct(planetLayerDef);
-                    //        }
-                    //    }
-                    //}
-                    //if (!planetLayerDef.onlyAllowWhitelistedQuests)
-                    //{
-                    //    if (!BlacklistQuestScriptDefs.NullOrEmpty())
-                    //    {
-                    //        foreach (QuestScriptDef questScriptDef in BlacklistQuestScriptDefs)
-                    //        {
-                    //            //Log.Message($"{planetLayerDef.defName} BlacklistQuestScriptDefs {questScriptDef.defName}");
-                    //            if (questScriptDef.layerBlacklist == null)
-                    //            {
-                    //                questScriptDef.layerBlacklist = new List<PlanetLayerDef>();
-                    //            }
-                    //            questScriptDef.layerBlacklist.AddDistinct(planetLayerDef);
-                    //        }
-                    //    }
-                    //}
-                    ////ArrivalFactionDefs
-                    //List<FactionDef> WhitelistArrivalFactionDefs = PlanetLayerArrivalFactionDefs[planetLayerDef].Item1;
-                    //List<FactionDef> BlacklistArrivalFactionDefs = PlanetLayerArrivalFactionDefs[planetLayerDef].Item2;
-                    //if (laoDefModExtension != null)
-                    //{
-                    //    IEnumerable<FactionDef> WithinFactionDefs = AllFactionDefs.ToList();
-                    //    IEnumerable<FactionDef> BellowFactionDefs = AllFactionDefs.ToList();
-                    //    IEnumerable<FactionDef> AboveFactionDefs = AllFactionDefs.ToList();
-                    //    if (laoDefModExtension.minArrivalFactionTechLevel != TechLevel.Undefined)
-                    //    {
-                    //        WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel >= laoDefModExtension.minArrivalFactionTechLevel);
-                    //        BellowFactionDefs = BellowFactionDefs.Where((FactionDef fd) => fd.techLevel < laoDefModExtension.minArrivalFactionTechLevel);
-                    //    }
-                    //    if (laoDefModExtension.maxArrivalFactionTechLevel != TechLevel.Undefined)
-                    //    {
-                    //        WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel <= laoDefModExtension.maxArrivalFactionTechLevel);
-                    //        AboveFactionDefs = AboveFactionDefs.Where((FactionDef fd) => fd.techLevel > laoDefModExtension.maxArrivalFactionTechLevel);
-                    //    }
-                    //    if (WithinFactionDefs != null)
-                    //    {
-                    //        WhitelistArrivalFactionDefs.AddRangeUnique(WithinFactionDefs);
-                    //    }
-                    //    if (BellowFactionDefs != null)
-                    //    {
-                    //        BlacklistArrivalFactionDefs.AddRangeUnique(BellowFactionDefs);
-                    //    }
-                    //    if (AboveFactionDefs != null)
-                    //    {
-                    //        BlacklistArrivalFactionDefs.AddRangeUnique(AboveFactionDefs);
-                    //    }
-                    //    if (laoDefModExtension.BlacklistArrivalFactionDef != null)
-                    //    {
-                    //        BlacklistArrivalFactionDefs.AddRangeUnique(laoDefModExtension.BlacklistArrivalFactionDef);
-                    //    }
-                    //    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
-                    //    {
-                    //        WhitelistArrivalFactionDefs.RemoveAll((FactionDef fd) => BlacklistArrivalFactionDefs.Contains(fd));
-                    //    }
-                    //    if (laoDefModExtension.WhitelistArrivalFactionDef != null)
-                    //    {
-                    //        WhitelistArrivalFactionDefs.AddRangeUnique(laoDefModExtension.WhitelistArrivalFactionDef);
-                    //    }
-                    //    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
-                    //    {
-                    //        BlacklistArrivalFactionDefs.RemoveAll((FactionDef fd) => WhitelistArrivalFactionDefs.Contains(fd));
-                    //    }
-                    //}
-                    //PlanetLayerArrivalFactionDefs[planetLayerDef] = (WhitelistArrivalFactionDefs, BlacklistArrivalFactionDefs);
-                    //FactionDefs
-                    List<FactionDef> WhitelistFactionDefs = PlanetLayerFactionDefs[planetLayerDef].Item1;
-                    List<FactionDef> BlacklistFactionDefs = PlanetLayerFactionDefs[planetLayerDef].Item2;
-                    Log.Message($"Available FactionDef B0:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                    if (laoDefModExtension != null)
-                    {
-                        IEnumerable<FactionDef> WithinFactionDefs = AllFactionDefs.ToList();
-                        IEnumerable<FactionDef> BellowFactionDefs = AllFactionDefs.ToList();
-                        IEnumerable<FactionDef> AboveFactionDefs = AllFactionDefs.ToList();
-                        bool isTechLevelLimit = false;
-                        if (laoDefModExtension.minFactionTechLevel != TechLevel.Undefined)
-                        {
-                            WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel >= laoDefModExtension.minFactionTechLevel);
-                            BellowFactionDefs = BellowFactionDefs.Where((FactionDef fd) => fd.techLevel < laoDefModExtension.minFactionTechLevel);
-                            isTechLevelLimit = true;
-                        }
-                        if (laoDefModExtension.maxFactionTechLevel != TechLevel.Undefined)
-                        {
-                            WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel <= laoDefModExtension.maxFactionTechLevel);
-                            AboveFactionDefs = AboveFactionDefs.Where((FactionDef fd) => fd.techLevel > laoDefModExtension.maxFactionTechLevel);
-                            isTechLevelLimit = true;
-                        }
-                        Log.Message($"Available FactionDef B1 ({laoDefModExtension.minFactionTechLevel} {laoDefModExtension.maxFactionTechLevel}) {isTechLevelLimit}:\n   {planetLayerDef.defName}:\n{string.Join("\n", WithinFactionDefs.Select((fd) => $"++++++{fd.defName}"))}\n/---\\\n{string.Join("\n", BellowFactionDefs.Select((fd) => $"******{fd.defName}"))}\n|---|\n{string.Join("\n", AboveFactionDefs.Select((fd) => $"------{fd.defName}"))}\n\\---/\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                        if (isTechLevelLimit)
-                        {
-                            if (WithinFactionDefs != null)
-                            {
-                                WhitelistFactionDefs.AddRangeUnique(WithinFactionDefs);
-                            }
-                            if (BellowFactionDefs != null)
-                            {
-                                BlacklistFactionDefs.AddRangeUnique(BellowFactionDefs);
-                            }
-                            if (AboveFactionDefs != null)
-                            {
-                                BlacklistFactionDefs.AddRangeUnique(AboveFactionDefs);
-                            }
-                        }
-                        Log.Message($"Available FactionDef B2:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                        if (laoDefModExtension.BlacklistFactionDef != null)
-                        {
-                            Log.Message($"Available FactionDef B2+:\n   {planetLayerDef.defName}\n{string.Join("\n", laoDefModExtension.BlacklistFactionDef.Select((fd) => $"------{fd.defName}"))}");
-                            BlacklistFactionDefs.AddRangeUnique(laoDefModExtension.BlacklistFactionDef);
-                        }
-                        Log.Message($"Available FactionDef B3:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                        if (!BlacklistFactionDefs.NullOrEmpty())
-                        {
-                            WhitelistFactionDefs.RemoveAll((FactionDef fd) => BlacklistFactionDefs.Contains(fd));
-                        }
-                        Log.Message($"Available FactionDef B4:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                        if (laoDefModExtension.WhitelistFactionDef != null)
-                        {
-                            Log.Message($"Available FactionDef B4+:\n   {planetLayerDef.defName}\n{string.Join("\n", laoDefModExtension.WhitelistFactionDef.Select((fd) => $"++++++{fd.defName}"))}");
-                            WhitelistFactionDefs.AddRangeUnique(laoDefModExtension.WhitelistFactionDef);
-                        }
-                        Log.Message($"Available FactionDef B5:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                        if (!BlacklistFactionDefs.NullOrEmpty())
-                        {
-                            BlacklistFactionDefs.RemoveAll((FactionDef fd) => WhitelistFactionDefs.Contains(fd));
-                        }
-                        Log.Message($"Available FactionDef B6:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                    }
-                    PlanetLayerFactionDefs[planetLayerDef] = (WhitelistFactionDefs, BlacklistFactionDefs, PlanetLayerFactionDefs[planetLayerDef].Item3 || (laoDefModExtension?.onlyAllowWhitelistedFactions ?? false));
-                }
-            }
-            //Log.Message($"Available arrival FactionDef B:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", PlanetLayerArrivalFactionDefs[pl].Item1.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", PlanetLayerArrivalFactionDefs[pl].Item2.Select((fd) => $"      {fd.defName}"))}"))}");
-            Log.Message($"Available FactionDef B:\n{string.Join("\n", AllPlanetLayerDefs.Skip(from).Take(amount).Select((pl) => $"   {pl.defName}\n{string.Join("\n", PlanetLayerFactionDefs[pl].Item1.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", PlanetLayerFactionDefs[pl].Item2.Select((fd) => $"      {fd.defName}"))}"))}");
-            foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs.Skip(from).Take(amount))
-            {
-                LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
-                ////IncidentDefs
-                //List<IncidentDef> WhitelistIncidentDefs = AllIncidentDefs.Where((IncidentDef id) => id.canOccurOnAllPlanetLayers || (id.layerWhitelist?.Contains(planetLayerDef) ?? false)).ToList();
-                //List<IncidentDef> BlacklistIncidentDefs = AllIncidentDefs.Where((IncidentDef id) => id.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
-                //if (laoDefModExtension != null)
-                //{
-                //    if (laoDefModExtension.BlacklistIncidentDef != null)
-                //    {
-                //        BlacklistIncidentDefs.AddRangeUnique(laoDefModExtension.BlacklistIncidentDef);
-                //    }
-                //    if (!BlacklistIncidentDefs.NullOrEmpty())
-                //    {
-                //        WhitelistIncidentDefs.RemoveAll((IncidentDef id) => BlacklistIncidentDefs.Contains(id));
-                //    }
-                //    if (laoDefModExtension.WhitelistIncidentDef != null)
-                //    {
-                //        WhitelistIncidentDefs.AddRangeUnique(laoDefModExtension.WhitelistIncidentDef);
-                //    }
-                //    if (!BlacklistIncidentDefs.NullOrEmpty())
-                //    {
-                //        BlacklistIncidentDefs.RemoveAll((IncidentDef id) => WhitelistIncidentDefs.Contains(id));
-                //    }
-                //}
-                //if (!WhitelistIncidentDefs.NullOrEmpty())
-                //{
-                //    foreach (IncidentDef incidentDef in WhitelistIncidentDefs)
-                //    {
-                //        //Log.Message($"{planetLayerDef.defName} WhitelistIncidentDefs {incidentDef.defName} {incidentDef.canOccurOnAllPlanetLayers}");
-                //        if (!incidentDef.canOccurOnAllPlanetLayers)
-                //        {
-                //            if (incidentDef.layerWhitelist == null)
-                //            {
-                //                incidentDef.layerWhitelist = new List<PlanetLayerDef>();
-                //            }
-                //            incidentDef.layerWhitelist.AddDistinct(planetLayerDef);
-                //        }
-                //    }
-                //}
-                //if (!planetLayerDef.onlyAllowWhitelistedIncidents)
-                //{
-                //    if (!BlacklistIncidentDefs.NullOrEmpty())
-                //    {
-                //        foreach (IncidentDef incidentDef in BlacklistIncidentDefs)
-                //        {
-                //            //Log.Message($"{planetLayerDef.defName} BlacklistIncidentDefs {incidentDef.defName}");
-                //            if (incidentDef.layerBlacklist == null)
-                //            {
-                //                incidentDef.layerBlacklist = new List<PlanetLayerDef>();
-                //            }
-                //            incidentDef.layerBlacklist.AddDistinct(planetLayerDef);
-                //        }
-                //    }
-                //}
-                ////BiomeDefs
-                //List<BiomeDef> WhitelistBiomeDefs = AllBiomeDefs.Where((BiomeDef bd) => bd.layerWhitelist?.Contains(planetLayerDef) ?? false).ToList();
-                //List<BiomeDef> BlacklistBiomeDefs = AllBiomeDefs.Where((BiomeDef bd) => bd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
-                //if (laoDefModExtension != null)
-                //{
-                //    if (laoDefModExtension.BlacklistBiomeDef != null)
-                //    {
-                //        BlacklistBiomeDefs.AddRangeUnique(laoDefModExtension.BlacklistBiomeDef);
-                //    }
-                //    if (!BlacklistBiomeDefs.NullOrEmpty())
-                //    {
-                //        WhitelistBiomeDefs.RemoveAll((BiomeDef bd) => BlacklistBiomeDefs.Contains(bd));
-                //    }
-                //    if (laoDefModExtension.WhitelistBiomeDef != null)
-                //    {
-                //        WhitelistBiomeDefs.AddRangeUnique(laoDefModExtension.WhitelistBiomeDef);
-                //    }
-                //    if (!BlacklistBiomeDefs.NullOrEmpty())
-                //    {
-                //        BlacklistBiomeDefs.RemoveAll((BiomeDef id) => WhitelistBiomeDefs.Contains(id));
-                //    }
-                //}
-                //if (!WhitelistBiomeDefs.NullOrEmpty())
-                //{
-                //    foreach (BiomeDef biomeDef in WhitelistBiomeDefs)
-                //    {
-                //        //Log.Message($"{planetLayerDef.defName} WhitelistBiomeDefs {biomeDef.defName}");
-                //        if (biomeDef.layerWhitelist == null)
-                //        {
-                //            biomeDef.layerWhitelist = new List<PlanetLayerDef>();
-                //        }
-                //        biomeDef.layerWhitelist.AddDistinct(planetLayerDef);
-                //    }
-                //}
-                //if (!planetLayerDef.onlyAllowWhitelistedBiomes)
-                //{
-                //    if (!BlacklistBiomeDefs.NullOrEmpty())
-                //    {
-                //        foreach (BiomeDef biomeDef in BlacklistBiomeDefs)
-                //        {
-                //            //Log.Message($"{planetLayerDef.defName} BlacklistBiomeDefs {biomeDef.defName}");
-                //            if (biomeDef.layerBlacklist == null)
-                //            {
-                //                biomeDef.layerBlacklist = new List<PlanetLayerDef>();
-                //            }
-                //            biomeDef.layerBlacklist.AddDistinct(planetLayerDef);
-                //        }
-                //    }
-                //}
-                ////GameConditionDefs
-                //List<GameConditionDef> WhitelistGameConditionDefs = AllGameConditionDefs.Where((GameConditionDef bd) => bd.canAffectAllPlanetLayers || (bd.layerWhitelist?.Contains(planetLayerDef) ?? false)).ToList();
-                //List<GameConditionDef> BlacklistGameConditionDefs = AllGameConditionDefs.Where((GameConditionDef bd) => bd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
-                //if (laoDefModExtension != null)
-                //{
-                //    if (laoDefModExtension.BlacklistGameConditionDef != null)
-                //    {
-                //        BlacklistGameConditionDefs.AddRangeUnique(laoDefModExtension.BlacklistGameConditionDef);
-                //    }
-                //    if (!BlacklistGameConditionDefs.NullOrEmpty())
-                //    {
-                //        WhitelistGameConditionDefs.RemoveAll((GameConditionDef bd) => BlacklistGameConditionDefs.Contains(bd));
-                //    }
-                //    if (laoDefModExtension.WhitelistGameConditionDef != null)
-                //    {
-                //        WhitelistGameConditionDefs.AddRangeUnique(laoDefModExtension.WhitelistGameConditionDef);
-                //    }
-                //    if (!BlacklistGameConditionDefs.NullOrEmpty())
-                //    {
-                //        BlacklistGameConditionDefs.RemoveAll((GameConditionDef id) => WhitelistGameConditionDefs.Contains(id));
-                //    }
-                //}
-                //if (!WhitelistGameConditionDefs.NullOrEmpty())
-                //{
-                //    foreach (GameConditionDef gameConditionDef in WhitelistGameConditionDefs)
-                //    {
-                //        //Log.Message($"{planetLayerDef.defName} WhitelistGameConditionDefs {gameConditionDef.defName} {gameConditionDef.canAffectAllPlanetLayers}");
-                //        if (!gameConditionDef.canAffectAllPlanetLayers)
-                //        {
-                //            if (gameConditionDef.layerWhitelist == null)
-                //            {
-                //                gameConditionDef.layerWhitelist = new List<PlanetLayerDef>();
-                //            }
-                //            gameConditionDef.layerWhitelist.AddDistinct(planetLayerDef);
-                //        }
-                //    }
-                //}
-                //if (!planetLayerDef.onlyAllowWhitelistedGameConditions)
-                //{
-                //    if (!BlacklistGameConditionDefs.NullOrEmpty())
-                //    {
-                //        foreach (GameConditionDef gameConditionDef in BlacklistGameConditionDefs)
-                //        {
-                //            //Log.Message($"{planetLayerDef.defName} BlacklistGameConditionDefs {gameConditionDef.defName}");
-                //            if (gameConditionDef.layerBlacklist == null)
-                //            {
-                //                gameConditionDef.layerBlacklist = new List<PlanetLayerDef>();
-                //            }
-                //            gameConditionDef.layerBlacklist.AddDistinct(planetLayerDef);
-                //        }
-                //    }
-                //}
-                ////QuestScriptDefs
-                //List<QuestScriptDef> WhitelistQuestScriptDefs = AllQuestScriptDefs.Where((QuestScriptDef qsd) => qsd.canOccurOnAllPlanetLayers || (qsd.layerWhitelist?.Contains(planetLayerDef) ?? false) || (qsd.everAcceptableInSpace && planetLayerDef.isSpace)).ToList();
-                //List<QuestScriptDef> BlacklistQuestScriptDefs = AllQuestScriptDefs.Where((QuestScriptDef qsd) => (qsd.layerBlacklist?.Contains(planetLayerDef) ?? false) || (qsd.everAcceptableInSpace && planetLayerDef.isSpace)).ToList();
-                //if (laoDefModExtension != null)
-                //{
-                //    if (laoDefModExtension.BlacklistQuestScriptDef != null)
-                //    {
-                //        BlacklistQuestScriptDefs.AddRangeUnique(laoDefModExtension.BlacklistQuestScriptDef);
-                //    }
-                //    if (!BlacklistQuestScriptDefs.NullOrEmpty())
-                //    {
-                //        WhitelistQuestScriptDefs.RemoveAll((QuestScriptDef bd) => BlacklistQuestScriptDefs.Contains(bd));
-                //    }
-                //    if (laoDefModExtension.WhitelistQuestScriptDef != null)
-                //    {
-                //        WhitelistQuestScriptDefs.AddRangeUnique(laoDefModExtension.WhitelistQuestScriptDef);
-                //    }
-                //    if (!BlacklistQuestScriptDefs.NullOrEmpty())
-                //    {
-                //        BlacklistQuestScriptDefs.RemoveAll((QuestScriptDef id) => WhitelistQuestScriptDefs.Contains(id));
-                //    }
-                //}
-                //if (!WhitelistQuestScriptDefs.NullOrEmpty())
-                //{
-                //    foreach (QuestScriptDef questScriptDef in WhitelistQuestScriptDefs)
-                //    {
-                //        //Log.Message($"{planetLayerDef.defName} WhitelistQuestScriptDefs {questScriptDef.defName} {questScriptDef.canOccurOnAllPlanetLayers} || {questScriptDef.everAcceptableInSpace} && {planetLayerDef.isSpace}");
-                //        if (!(questScriptDef.canOccurOnAllPlanetLayers || (questScriptDef.everAcceptableInSpace && planetLayerDef.isSpace)))
-                //        {
-                //            if (questScriptDef.layerWhitelist == null)
-                //            {
-                //                questScriptDef.layerWhitelist = new List<PlanetLayerDef>();
-                //            }
-                //            questScriptDef.layerWhitelist.AddDistinct(planetLayerDef);
-                //        }
-                //    }
-                //}
-                //if (!planetLayerDef.onlyAllowWhitelistedQuests)
-                //{
-                //    if (!BlacklistQuestScriptDefs.NullOrEmpty())
-                //    {
-                //        foreach (QuestScriptDef questScriptDef in BlacklistQuestScriptDefs)
-                //        {
-                //            //Log.Message($"{planetLayerDef.defName} BlacklistQuestScriptDefs {questScriptDef.defName}");
-                //            if (questScriptDef.layerBlacklist == null)
-                //            {
-                //                questScriptDef.layerBlacklist = new List<PlanetLayerDef>();
-                //            }
-                //            questScriptDef.layerBlacklist.AddDistinct(planetLayerDef);
-                //        }
-                //    }
-                //}
-                ////ArrivalFactionDefs
-                //List<FactionDef> WhitelistArrivalFactionDefs = PlanetLayerArrivalFactionDefs[planetLayerDef].Item1;
-                //List<FactionDef> BlacklistArrivalFactionDefs = PlanetLayerArrivalFactionDefs[planetLayerDef].Item2;
-                //if (laoDefModExtension != null)
-                //{
-                //    IEnumerable<FactionDef> WithinFactionDefs = AllFactionDefs.ToList();
-                //    IEnumerable<FactionDef> BellowFactionDefs = AllFactionDefs.ToList();
-                //    IEnumerable<FactionDef> AboveFactionDefs = AllFactionDefs.ToList();
-                //    if (laoDefModExtension.minArrivalFactionTechLevel != TechLevel.Undefined)
-                //    {
-                //        WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel >= laoDefModExtension.minArrivalFactionTechLevel);
-                //        BellowFactionDefs = BellowFactionDefs.Where((FactionDef fd) => fd.techLevel < laoDefModExtension.minArrivalFactionTechLevel);
-                //    }
-                //    if (laoDefModExtension.maxArrivalFactionTechLevel != TechLevel.Undefined)
-                //    {
-                //        WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel <= laoDefModExtension.maxArrivalFactionTechLevel);
-                //        AboveFactionDefs = AboveFactionDefs.Where((FactionDef fd) => fd.techLevel > laoDefModExtension.maxArrivalFactionTechLevel);
-                //    }
-                //    if (WithinFactionDefs != null)
-                //    {
-                //        WhitelistArrivalFactionDefs.AddRangeUnique(WithinFactionDefs);
-                //    }
-                //    if (BellowFactionDefs != null)
-                //    {
-                //        BlacklistArrivalFactionDefs.AddRangeUnique(BellowFactionDefs);
-                //    }
-                //    if (AboveFactionDefs != null)
-                //    {
-                //        BlacklistArrivalFactionDefs.AddRangeUnique(AboveFactionDefs);
-                //    }
-                //    if (laoDefModExtension.BlacklistArrivalFactionDef != null)
-                //    {
-                //        BlacklistArrivalFactionDefs.AddRangeUnique(laoDefModExtension.BlacklistArrivalFactionDef);
-                //    }
-                //    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
-                //    {
-                //        WhitelistArrivalFactionDefs.RemoveAll((FactionDef fd) => BlacklistArrivalFactionDefs.Contains(fd));
-                //    }
-                //    if (laoDefModExtension.WhitelistArrivalFactionDef != null)
-                //    {
-                //        WhitelistArrivalFactionDefs.AddRangeUnique(laoDefModExtension.WhitelistArrivalFactionDef);
-                //    }
-                //    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
-                //    {
-                //        BlacklistArrivalFactionDefs.RemoveAll((FactionDef fd) => WhitelistArrivalFactionDefs.Contains(fd));
-                //    }
-                //}
-                //PlanetLayerArrivalFactionDefs[planetLayerDef] = (WhitelistArrivalFactionDefs, BlacklistArrivalFactionDefs);
-                //FactionDefs
-                List<FactionDef> WhitelistFactionDefs = PlanetLayerFactionDefs[planetLayerDef].Item1;
-                List<FactionDef> BlacklistFactionDefs = PlanetLayerFactionDefs[planetLayerDef].Item2;
-                Log.Message($"Available FactionDef C0:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                if (laoDefModExtension != null)
-                {
-                    IEnumerable<FactionDef> WithinFactionDefs = AllFactionDefs.ToList();
-                    IEnumerable<FactionDef> BellowFactionDefs = AllFactionDefs.ToList();
-                    IEnumerable<FactionDef> AboveFactionDefs = AllFactionDefs.ToList();
-                    bool isTechLevelLimit = false;
-                    if (laoDefModExtension.minFactionTechLevel != TechLevel.Undefined)
-                    {
-                        WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel >= laoDefModExtension.minFactionTechLevel);
-                        BellowFactionDefs = BellowFactionDefs.Where((FactionDef fd) => fd.techLevel < laoDefModExtension.minFactionTechLevel);
-                        isTechLevelLimit = true;
-                    }
-                    if (laoDefModExtension.maxFactionTechLevel != TechLevel.Undefined)
-                    {
-                        WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel <= laoDefModExtension.maxFactionTechLevel);
-                        AboveFactionDefs = AboveFactionDefs.Where((FactionDef fd) => fd.techLevel > laoDefModExtension.maxFactionTechLevel);
-                        isTechLevelLimit = true;
-                    }
-                    Log.Message($"Available FactionDef C1 ({laoDefModExtension.minFactionTechLevel} {laoDefModExtension.maxFactionTechLevel}) {isTechLevelLimit}:\n   {planetLayerDef.defName}:\n{string.Join("\n", WithinFactionDefs.Select((fd) => $"++++++{fd.defName}"))}\n/---\\\n{string.Join("\n", BellowFactionDefs.Select((fd) => $"******{fd.defName}"))}\n|---|\n{string.Join("\n", AboveFactionDefs.Select((fd) => $"------{fd.defName}"))}\n\\---/\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                    if (isTechLevelLimit)
-                    {
-                        if (WithinFactionDefs != null)
-                        {
-                            WhitelistFactionDefs.AddRangeUnique(WithinFactionDefs);
-                        }
-                        if (BellowFactionDefs != null)
-                        {
-                            BlacklistFactionDefs.AddRangeUnique(BellowFactionDefs);
-                        }
-                        if (AboveFactionDefs != null)
-                        {
-                            BlacklistFactionDefs.AddRangeUnique(AboveFactionDefs);
-                        }
-                    }
-                    Log.Message($"Available FactionDef C2:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                    if (laoDefModExtension.BlacklistFactionDef != null)
-                    {
-                        Log.Message($"Available FactionDef C2+:\n   {planetLayerDef.defName}\n{string.Join("\n", laoDefModExtension.BlacklistFactionDef.Select((fd) => $"------{fd.defName}"))}");
-                        BlacklistFactionDefs.AddRangeUnique(laoDefModExtension.BlacklistFactionDef);
-                    }
-                    Log.Message($"Available FactionDef C3:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                    if (!BlacklistFactionDefs.NullOrEmpty())
-                    {
-                        WhitelistFactionDefs.RemoveAll((FactionDef fd) => BlacklistFactionDefs.Contains(fd));
-                    }
-                    Log.Message($"Available FactionDef C4:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                    if (laoDefModExtension.WhitelistFactionDef != null)
-                    {
-                        Log.Message($"Available FactionDef C4+:\n   {planetLayerDef.defName}\n{string.Join("\n", laoDefModExtension.WhitelistFactionDef.Select((fd) => $"++++++{fd.defName}"))}");
-                        WhitelistFactionDefs.AddRangeUnique(laoDefModExtension.WhitelistFactionDef);
-                    }
-                    Log.Message($"Available FactionDef C5:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                    if (!BlacklistFactionDefs.NullOrEmpty())
-                    {
-                        BlacklistFactionDefs.RemoveAll((FactionDef fd) => WhitelistFactionDefs.Contains(fd));
-                    }
-                    Log.Message($"Available FactionDef C6:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
-                }
-                PlanetLayerFactionDefs[planetLayerDef] = (WhitelistFactionDefs, BlacklistFactionDefs, PlanetLayerFactionDefs[planetLayerDef].Item3 || (laoDefModExtension?.onlyAllowWhitelistedFactions ?? false));
-            }
-            //Log.Message($"Available arrival FactionDef C:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", PlanetLayerArrivalFactionDefs[pl].Item1.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", PlanetLayerArrivalFactionDefs[pl].Item2.Select((fd) => $"      {fd.defName}"))}"))}");
-            Log.Message($"Available FactionDef C:\n{string.Join("\n", AllPlanetLayerDefs.Skip(from).Take(amount).Select((pl) => $"   {pl.defName}\n{string.Join("\n", PlanetLayerFactionDefs[pl].Item1.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", PlanetLayerFactionDefs[pl].Item2.Select((fd) => $"      {fd.defName}"))}"))}");
-            foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs.Skip(from).Take(amount))
-            {
-                //(List<FactionDef> WhitelistArrivalFactionDefs, List<FactionDef> BlacklistArrivalFactionDefs) = PlanetLayerArrivalFactionDefs[planetLayerDef];
-                //if (!WhitelistArrivalFactionDefs.NullOrEmpty())
-                //{
-                //    foreach (FactionDef factionDef in WhitelistArrivalFactionDefs)
-                //    {
-                //        Log.Message($"{planetLayerDef.defName} WhitelistArrivalFactionDefs {factionDef.defName} {factionDef.arrivalLayerWhitelist.Contains(planetLayerDef)}");
-                //        if (factionDef.arrivalLayerWhitelist == null)
-                //        {
-                //            factionDef.arrivalLayerWhitelist = new List<PlanetLayerDef>();
-                //        }
-                //        factionDef.arrivalLayerWhitelist.AddDistinct(planetLayerDef);
-                //    }
-                //}
-                //if (!planetLayerDef.onlyAllowWhitelistedArrivalModes)
-                //{
-                //    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
-                //    {
-                //        foreach (FactionDef factionDef in BlacklistArrivalFactionDefs)
-                //        {
-                //            Log.Message($"{planetLayerDef.defName} BlacklistArrivalFactionDefs {factionDef.defName} {factionDef.arrivalLayerBlacklist.Contains(planetLayerDef)}");
-                //            if (factionDef.arrivalLayerBlacklist == null)
-                //            {
-                //                factionDef.arrivalLayerBlacklist = new List<PlanetLayerDef>();
-                //            }
-                //            factionDef.arrivalLayerBlacklist.AddDistinct(planetLayerDef);
-                //        }
-                //    }
-                //}
-                (List<FactionDef> WhitelistFactionDefs, List<FactionDef> BlacklistFactionDefs, bool onlyAllowWhitelistedFactions) = PlanetLayerFactionDefs[planetLayerDef];
-                if (!WhitelistFactionDefs.NullOrEmpty())
-                {
-                    foreach (FactionDef factionDef in WhitelistFactionDefs)
-                    {
-                        Log.Message($"{planetLayerDef.defName} WhitelistFactionDefs {factionDef.defName} {factionDef.layerWhitelist.Contains(planetLayerDef)}");
-                        if (factionDef.layerWhitelist == null)
-                        {
-                            factionDef.layerWhitelist = new List<PlanetLayerDef>();
-                        }
-                        factionDef.layerWhitelist.AddDistinct(planetLayerDef);
-                    }
-                }
-                if (!(onlyAllowWhitelistedFactions))
-                {
-                    if (!BlacklistFactionDefs.NullOrEmpty())
-                    {
-                        foreach (FactionDef factionDef in BlacklistFactionDefs)
-                        {
-                            Log.Message($"{planetLayerDef.defName} BlacklistFactionDefs {factionDef.defName} {factionDef.layerBlacklist.Contains(planetLayerDef)}");
-                            if (factionDef.layerBlacklist == null)
-                            {
-                                factionDef.layerBlacklist = new List<PlanetLayerDef>();
-                            }
-                            factionDef.layerBlacklist.AddDistinct(planetLayerDef);
-                        }
-                    }
-                }
-            }
+            //    PlanetLayerFactionDefs.Add(planetLayerDef, (
+            //        AllFactionDefs.Where((FactionDef fd) => fd.layerWhitelist.NullOrEmpty() ? true : fd.layerWhitelist.Contains(planetLayerDef)).ToList(),
+            //        AllFactionDefs.Where((FactionDef fd) => fd.layerBlacklist.NullOrEmpty() ? false : fd.layerBlacklist.Contains(planetLayerDef)).ToList(), 
+            //        false));
+            //}
+            //Log.Message($"Available FactionDef S:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", AllFactionDefs.Select((FactionDef fd) => $"      {fd.defName}\n      +{(fd.layerWhitelist.NullOrEmpty() ? true : fd.layerWhitelist.Contains(pl))} = {fd.layerWhitelist.NullOrEmpty()} ? true : {fd.layerWhitelist.Contains(pl)}\n      -{(fd.layerBlacklist.NullOrEmpty() ? false : fd.layerBlacklist.Contains(pl))} = {fd.layerBlacklist.NullOrEmpty()} ? false : {fd.layerBlacklist.Contains(pl)}"))}"))}");
+            ////Log.Message($"Available arrival FactionDef A:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", PlanetLayerArrivalFactionDefs[pl].Item1.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", PlanetLayerArrivalFactionDefs[pl].Item2.Select((fd) => $"      {fd.defName}"))}"))}");
+            //Log.Message($"Available FactionDef A:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", PlanetLayerFactionDefs[pl].Item1.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", PlanetLayerFactionDefs[pl].Item2.Select((fd) => $"      {fd.defName}"))}"))}");
+            //List<PlanetLayerGroupDef> AllPlanetLayerGroupDefs = DefDatabase<PlanetLayerGroupDef>.AllDefs.ToList();
+            //foreach (PlanetLayerGroupDef planetLayerGroupDef in AllPlanetLayerGroupDefs)
+            //{
+            //    LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerGroupDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+            //    foreach (PlanetLayerDef planetLayerDef in planetLayerGroupDef.ContainedLayers().Where(p => AllPlanetLayerDefs.Contains(p)))
+            //    {
+            //        ////IncidentDefs
+            //        //List<IncidentDef> WhitelistIncidentDefs = AllIncidentDefs.Where((IncidentDef id) => id.canOccurOnAllPlanetLayers || (id.layerWhitelist?.Contains(planetLayerDef) ?? false)).ToList();
+            //        //List<IncidentDef> BlacklistIncidentDefs = AllIncidentDefs.Where((IncidentDef id) => id.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+            //        //if (laoDefModExtension != null)
+            //        //{
+            //        //    if (laoDefModExtension.BlacklistIncidentDef != null)
+            //        //    {
+            //        //        BlacklistIncidentDefs.AddRangeUnique(laoDefModExtension.BlacklistIncidentDef);
+            //        //    }
+            //        //    if (!BlacklistIncidentDefs.NullOrEmpty())
+            //        //    {
+            //        //        WhitelistIncidentDefs.RemoveAll((IncidentDef id) => BlacklistIncidentDefs.Contains(id));
+            //        //    }
+            //        //    if (laoDefModExtension.WhitelistIncidentDef != null)
+            //        //    {
+            //        //        WhitelistIncidentDefs.AddRangeUnique(laoDefModExtension.WhitelistIncidentDef);
+            //        //    }
+            //        //    if (!BlacklistIncidentDefs.NullOrEmpty())
+            //        //    {
+            //        //        BlacklistIncidentDefs.RemoveAll((IncidentDef id) => WhitelistIncidentDefs.Contains(id));
+            //        //    }
+            //        //}
+            //        //if (!WhitelistIncidentDefs.NullOrEmpty())
+            //        //{
+            //        //    foreach (IncidentDef incidentDef in WhitelistIncidentDefs)
+            //        //    {
+            //        //        //Log.Message($"{planetLayerDef.defName} WhitelistIncidentDefs {incidentDef.defName} {incidentDef.canOccurOnAllPlanetLayers}");
+            //        //        if (!incidentDef.canOccurOnAllPlanetLayers)
+            //        //        {
+            //        //            if (incidentDef.layerWhitelist == null)
+            //        //            {
+            //        //                incidentDef.layerWhitelist = new List<PlanetLayerDef>();
+            //        //            }
+            //        //            incidentDef.layerWhitelist.AddDistinct(planetLayerDef);
+            //        //        }
+            //        //    }
+            //        //}
+            //        //if (!planetLayerDef.onlyAllowWhitelistedIncidents)
+            //        //{
+            //        //    if (!BlacklistIncidentDefs.NullOrEmpty())
+            //        //    {
+            //        //        foreach (IncidentDef incidentDef in BlacklistIncidentDefs)
+            //        //        {
+            //        //            //Log.Message($"{planetLayerDef.defName} BlacklistIncidentDefs {incidentDef.defName}");
+            //        //            if (incidentDef.layerBlacklist == null)
+            //        //            {
+            //        //                incidentDef.layerBlacklist = new List<PlanetLayerDef>();
+            //        //            }
+            //        //            incidentDef.layerBlacklist.AddDistinct(planetLayerDef);
+            //        //        }
+            //        //    }
+            //        //}
+            //        ////BiomeDefs
+            //        //List<BiomeDef> WhitelistBiomeDefs = AllBiomeDefs.Where((BiomeDef bd) => bd.layerWhitelist?.Contains(planetLayerDef) ?? false).ToList();
+            //        //List<BiomeDef> BlacklistBiomeDefs = AllBiomeDefs.Where((BiomeDef bd) => bd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+            //        //if (laoDefModExtension != null)
+            //        //{
+            //        //    if (laoDefModExtension.BlacklistBiomeDef != null)
+            //        //    {
+            //        //        BlacklistBiomeDefs.AddRangeUnique(laoDefModExtension.BlacklistBiomeDef);
+            //        //    }
+            //        //    if (!BlacklistBiomeDefs.NullOrEmpty())
+            //        //    {
+            //        //        WhitelistBiomeDefs.RemoveAll((BiomeDef bd) => BlacklistBiomeDefs.Contains(bd));
+            //        //    }
+            //        //    if (laoDefModExtension.WhitelistBiomeDef != null)
+            //        //    {
+            //        //        WhitelistBiomeDefs.AddRangeUnique(laoDefModExtension.WhitelistBiomeDef);
+            //        //    }
+            //        //    if (!BlacklistBiomeDefs.NullOrEmpty())
+            //        //    {
+            //        //        BlacklistBiomeDefs.RemoveAll((BiomeDef id) => WhitelistBiomeDefs.Contains(id));
+            //        //    }
+            //        //}
+            //        //if (!WhitelistBiomeDefs.NullOrEmpty())
+            //        //{
+            //        //    foreach (BiomeDef biomeDef in WhitelistBiomeDefs)
+            //        //    {
+            //        //        //Log.Message($"{planetLayerDef.defName} WhitelistBiomeDefs {biomeDef.defName}");
+            //        //        if (biomeDef.layerWhitelist == null)
+            //        //        {
+            //        //            biomeDef.layerWhitelist = new List<PlanetLayerDef>();
+            //        //        }
+            //        //        biomeDef.layerWhitelist.AddDistinct(planetLayerDef);
+            //        //    }
+            //        //}
+            //        //if (!planetLayerDef.onlyAllowWhitelistedBiomes)
+            //        //{
+            //        //    if (!BlacklistBiomeDefs.NullOrEmpty())
+            //        //    {
+            //        //        foreach (BiomeDef biomeDef in BlacklistBiomeDefs)
+            //        //        {
+            //        //            //Log.Message($"{planetLayerDef.defName} BlacklistBiomeDefs {biomeDef.defName}");
+            //        //            if (biomeDef.layerBlacklist == null)
+            //        //            {
+            //        //                biomeDef.layerBlacklist = new List<PlanetLayerDef>();
+            //        //            }
+            //        //            biomeDef.layerBlacklist.AddDistinct(planetLayerDef);
+            //        //        }
+            //        //    }
+            //        //}
+            //        ////GameConditionDefs
+            //        //List<GameConditionDef> WhitelistGameConditionDefs = AllGameConditionDefs.Where((GameConditionDef bd) => bd.canAffectAllPlanetLayers || (bd.layerWhitelist?.Contains(planetLayerDef) ?? false)).ToList();
+            //        //List<GameConditionDef> BlacklistGameConditionDefs = AllGameConditionDefs.Where((GameConditionDef bd) => bd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+            //        //if (laoDefModExtension != null)
+            //        //{
+            //        //    if (laoDefModExtension.BlacklistGameConditionDef != null)
+            //        //    {
+            //        //        BlacklistGameConditionDefs.AddRangeUnique(laoDefModExtension.BlacklistGameConditionDef);
+            //        //    }
+            //        //    if (!BlacklistGameConditionDefs.NullOrEmpty())
+            //        //    {
+            //        //        WhitelistGameConditionDefs.RemoveAll((GameConditionDef bd) => BlacklistGameConditionDefs.Contains(bd));
+            //        //    }
+            //        //    if (laoDefModExtension.WhitelistGameConditionDef != null)
+            //        //    {
+            //        //        WhitelistGameConditionDefs.AddRangeUnique(laoDefModExtension.WhitelistGameConditionDef);
+            //        //    }
+            //        //    if (!BlacklistGameConditionDefs.NullOrEmpty())
+            //        //    {
+            //        //        BlacklistGameConditionDefs.RemoveAll((GameConditionDef id) => WhitelistGameConditionDefs.Contains(id));
+            //        //    }
+            //        //}
+            //        //if (!WhitelistGameConditionDefs.NullOrEmpty())
+            //        //{
+            //        //    foreach (GameConditionDef gameConditionDef in WhitelistGameConditionDefs)
+            //        //    {
+            //        //        //Log.Message($"{planetLayerDef.defName} WhitelistGameConditionDefs {gameConditionDef.defName} {gameConditionDef.canAffectAllPlanetLayers}");
+            //        //        if (!gameConditionDef.canAffectAllPlanetLayers)
+            //        //        {
+            //        //            if (gameConditionDef.layerWhitelist == null)
+            //        //            {
+            //        //                gameConditionDef.layerWhitelist = new List<PlanetLayerDef>();
+            //        //            }
+            //        //            gameConditionDef.layerWhitelist.AddDistinct(planetLayerDef);
+            //        //        }
+            //        //    }
+            //        //}
+            //        //if (!planetLayerDef.onlyAllowWhitelistedGameConditions)
+            //        //{
+            //        //    if (!BlacklistGameConditionDefs.NullOrEmpty())
+            //        //    {
+            //        //        foreach (GameConditionDef gameConditionDef in BlacklistGameConditionDefs)
+            //        //        {
+            //        //            //Log.Message($"{planetLayerDef.defName} BlacklistGameConditionDefs {gameConditionDef.defName}");
+            //        //            if (gameConditionDef.layerBlacklist == null)
+            //        //            {
+            //        //                gameConditionDef.layerBlacklist = new List<PlanetLayerDef>();
+            //        //            }
+            //        //            gameConditionDef.layerBlacklist.AddDistinct(planetLayerDef);
+            //        //        }
+            //        //    }
+            //        //}
+            //        ////QuestScriptDefs
+            //        //List<QuestScriptDef> WhitelistQuestScriptDefs = AllQuestScriptDefs.Where((QuestScriptDef qsd) => qsd.canOccurOnAllPlanetLayers || (qsd.layerWhitelist?.Contains(planetLayerDef) ?? false) || (qsd.everAcceptableInSpace && planetLayerDef.isSpace)).ToList();
+            //        //List<QuestScriptDef> BlacklistQuestScriptDefs = AllQuestScriptDefs.Where((QuestScriptDef qsd) => (qsd.layerBlacklist?.Contains(planetLayerDef) ?? false) || (qsd.everAcceptableInSpace && planetLayerDef.isSpace)).ToList();
+            //        //if (laoDefModExtension != null)
+            //        //{
+            //        //    if (laoDefModExtension.BlacklistQuestScriptDef != null)
+            //        //    {
+            //        //        BlacklistQuestScriptDefs.AddRangeUnique(laoDefModExtension.BlacklistQuestScriptDef);
+            //        //    }
+            //        //    if (!BlacklistQuestScriptDefs.NullOrEmpty())
+            //        //    {
+            //        //        WhitelistQuestScriptDefs.RemoveAll((QuestScriptDef bd) => BlacklistQuestScriptDefs.Contains(bd));
+            //        //    }
+            //        //    if (laoDefModExtension.WhitelistQuestScriptDef != null)
+            //        //    {
+            //        //        WhitelistQuestScriptDefs.AddRangeUnique(laoDefModExtension.WhitelistQuestScriptDef);
+            //        //    }
+            //        //    if (!BlacklistQuestScriptDefs.NullOrEmpty())
+            //        //    {
+            //        //        BlacklistQuestScriptDefs.RemoveAll((QuestScriptDef id) => WhitelistQuestScriptDefs.Contains(id));
+            //        //    }
+            //        //}
+            //        //if (!WhitelistQuestScriptDefs.NullOrEmpty())
+            //        //{
+            //        //    foreach (QuestScriptDef questScriptDef in WhitelistQuestScriptDefs)
+            //        //    {
+            //        //        //Log.Message($"{planetLayerDef.defName} WhitelistQuestScriptDefs {questScriptDef.defName} {questScriptDef.canOccurOnAllPlanetLayers} || {questScriptDef.everAcceptableInSpace} && {planetLayerDef.isSpace}");
+            //        //        if (!(questScriptDef.canOccurOnAllPlanetLayers || (questScriptDef.everAcceptableInSpace && planetLayerDef.isSpace)))
+            //        //        {
+            //        //            if (questScriptDef.layerWhitelist == null)
+            //        //            {
+            //        //                questScriptDef.layerWhitelist = new List<PlanetLayerDef>();
+            //        //            }
+            //        //            questScriptDef.layerWhitelist.AddDistinct(planetLayerDef);
+            //        //        }
+            //        //    }
+            //        //}
+            //        //if (!planetLayerDef.onlyAllowWhitelistedQuests)
+            //        //{
+            //        //    if (!BlacklistQuestScriptDefs.NullOrEmpty())
+            //        //    {
+            //        //        foreach (QuestScriptDef questScriptDef in BlacklistQuestScriptDefs)
+            //        //        {
+            //        //            //Log.Message($"{planetLayerDef.defName} BlacklistQuestScriptDefs {questScriptDef.defName}");
+            //        //            if (questScriptDef.layerBlacklist == null)
+            //        //            {
+            //        //                questScriptDef.layerBlacklist = new List<PlanetLayerDef>();
+            //        //            }
+            //        //            questScriptDef.layerBlacklist.AddDistinct(planetLayerDef);
+            //        //        }
+            //        //    }
+            //        //}
+            //        ////ArrivalFactionDefs
+            //        //List<FactionDef> WhitelistArrivalFactionDefs = PlanetLayerArrivalFactionDefs[planetLayerDef].Item1;
+            //        //List<FactionDef> BlacklistArrivalFactionDefs = PlanetLayerArrivalFactionDefs[planetLayerDef].Item2;
+            //        //if (laoDefModExtension != null)
+            //        //{
+            //        //    IEnumerable<FactionDef> WithinFactionDefs = AllFactionDefs.ToList();
+            //        //    IEnumerable<FactionDef> BellowFactionDefs = AllFactionDefs.ToList();
+            //        //    IEnumerable<FactionDef> AboveFactionDefs = AllFactionDefs.ToList();
+            //        //    if (laoDefModExtension.minArrivalFactionTechLevel != TechLevel.Undefined)
+            //        //    {
+            //        //        WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel >= laoDefModExtension.minArrivalFactionTechLevel);
+            //        //        BellowFactionDefs = BellowFactionDefs.Where((FactionDef fd) => fd.techLevel < laoDefModExtension.minArrivalFactionTechLevel);
+            //        //    }
+            //        //    if (laoDefModExtension.maxArrivalFactionTechLevel != TechLevel.Undefined)
+            //        //    {
+            //        //        WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel <= laoDefModExtension.maxArrivalFactionTechLevel);
+            //        //        AboveFactionDefs = AboveFactionDefs.Where((FactionDef fd) => fd.techLevel > laoDefModExtension.maxArrivalFactionTechLevel);
+            //        //    }
+            //        //    if (WithinFactionDefs != null)
+            //        //    {
+            //        //        WhitelistArrivalFactionDefs.AddRangeUnique(WithinFactionDefs);
+            //        //    }
+            //        //    if (BellowFactionDefs != null)
+            //        //    {
+            //        //        BlacklistArrivalFactionDefs.AddRangeUnique(BellowFactionDefs);
+            //        //    }
+            //        //    if (AboveFactionDefs != null)
+            //        //    {
+            //        //        BlacklistArrivalFactionDefs.AddRangeUnique(AboveFactionDefs);
+            //        //    }
+            //        //    if (laoDefModExtension.BlacklistArrivalFactionDef != null)
+            //        //    {
+            //        //        BlacklistArrivalFactionDefs.AddRangeUnique(laoDefModExtension.BlacklistArrivalFactionDef);
+            //        //    }
+            //        //    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
+            //        //    {
+            //        //        WhitelistArrivalFactionDefs.RemoveAll((FactionDef fd) => BlacklistArrivalFactionDefs.Contains(fd));
+            //        //    }
+            //        //    if (laoDefModExtension.WhitelistArrivalFactionDef != null)
+            //        //    {
+            //        //        WhitelistArrivalFactionDefs.AddRangeUnique(laoDefModExtension.WhitelistArrivalFactionDef);
+            //        //    }
+            //        //    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
+            //        //    {
+            //        //        BlacklistArrivalFactionDefs.RemoveAll((FactionDef fd) => WhitelistArrivalFactionDefs.Contains(fd));
+            //        //    }
+            //        //}
+            //        //PlanetLayerArrivalFactionDefs[planetLayerDef] = (WhitelistArrivalFactionDefs, BlacklistArrivalFactionDefs);
+            //        //FactionDefs
+            //        List<FactionDef> WhitelistFactionDefs = PlanetLayerFactionDefs[planetLayerDef].Item1;
+            //        List<FactionDef> BlacklistFactionDefs = PlanetLayerFactionDefs[planetLayerDef].Item2;
+            //        Log.Message($"Available FactionDef B0:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //        if (laoDefModExtension != null)
+            //        {
+            //            IEnumerable<FactionDef> WithinFactionDefs = AllFactionDefs.ToList();
+            //            IEnumerable<FactionDef> BellowFactionDefs = AllFactionDefs.ToList();
+            //            IEnumerable<FactionDef> AboveFactionDefs = AllFactionDefs.ToList();
+            //            bool isTechLevelLimit = false;
+            //            if (laoDefModExtension.minFactionTechLevel != TechLevel.Undefined)
+            //            {
+            //                WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel >= laoDefModExtension.minFactionTechLevel);
+            //                BellowFactionDefs = BellowFactionDefs.Where((FactionDef fd) => fd.techLevel < laoDefModExtension.minFactionTechLevel);
+            //                isTechLevelLimit = true;
+            //            }
+            //            if (laoDefModExtension.maxFactionTechLevel != TechLevel.Undefined)
+            //            {
+            //                WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel <= laoDefModExtension.maxFactionTechLevel);
+            //                AboveFactionDefs = AboveFactionDefs.Where((FactionDef fd) => fd.techLevel > laoDefModExtension.maxFactionTechLevel);
+            //                isTechLevelLimit = true;
+            //            }
+            //            Log.Message($"Available FactionDef B1 ({laoDefModExtension.minFactionTechLevel} {laoDefModExtension.maxFactionTechLevel}) {isTechLevelLimit}:\n   {planetLayerDef.defName}:\n{string.Join("\n", WithinFactionDefs.Select((fd) => $"++++++{fd.defName}"))}\n/---\\\n{string.Join("\n", BellowFactionDefs.Select((fd) => $"******{fd.defName}"))}\n|---|\n{string.Join("\n", AboveFactionDefs.Select((fd) => $"------{fd.defName}"))}\n\\---/\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //            if (isTechLevelLimit)
+            //            {
+            //                if (WithinFactionDefs != null)
+            //                {
+            //                    WhitelistFactionDefs.AddRangeUnique(WithinFactionDefs);
+            //                }
+            //                if (BellowFactionDefs != null)
+            //                {
+            //                    BlacklistFactionDefs.AddRangeUnique(BellowFactionDefs);
+            //                }
+            //                if (AboveFactionDefs != null)
+            //                {
+            //                    BlacklistFactionDefs.AddRangeUnique(AboveFactionDefs);
+            //                }
+            //            }
+            //            Log.Message($"Available FactionDef B2:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //            if (laoDefModExtension.BlacklistFactionDef != null)
+            //            {
+            //                Log.Message($"Available FactionDef B2+:\n   {planetLayerDef.defName}\n{string.Join("\n", laoDefModExtension.BlacklistFactionDef.Select((fd) => $"------{fd.defName}"))}");
+            //                BlacklistFactionDefs.AddRangeUnique(laoDefModExtension.BlacklistFactionDef);
+            //            }
+            //            Log.Message($"Available FactionDef B3:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //            if (!BlacklistFactionDefs.NullOrEmpty())
+            //            {
+            //                WhitelistFactionDefs.RemoveAll((FactionDef fd) => BlacklistFactionDefs.Contains(fd));
+            //            }
+            //            Log.Message($"Available FactionDef B4:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //            if (laoDefModExtension.WhitelistFactionDef != null)
+            //            {
+            //                Log.Message($"Available FactionDef B4+:\n   {planetLayerDef.defName}\n{string.Join("\n", laoDefModExtension.WhitelistFactionDef.Select((fd) => $"++++++{fd.defName}"))}");
+            //                WhitelistFactionDefs.AddRangeUnique(laoDefModExtension.WhitelistFactionDef);
+            //            }
+            //            Log.Message($"Available FactionDef B5:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //            if (!BlacklistFactionDefs.NullOrEmpty())
+            //            {
+            //                BlacklistFactionDefs.RemoveAll((FactionDef fd) => WhitelistFactionDefs.Contains(fd));
+            //            }
+            //            Log.Message($"Available FactionDef B6:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //        }
+            //        PlanetLayerFactionDefs[planetLayerDef] = (WhitelistFactionDefs, BlacklistFactionDefs, PlanetLayerFactionDefs[planetLayerDef].Item3 || (laoDefModExtension?.onlyAllowWhitelistedFactions ?? false));
+            //    }
+            //}
+            ////Log.Message($"Available arrival FactionDef B:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", PlanetLayerArrivalFactionDefs[pl].Item1.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", PlanetLayerArrivalFactionDefs[pl].Item2.Select((fd) => $"      {fd.defName}"))}"))}");
+            //Log.Message($"Available FactionDef B:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", PlanetLayerFactionDefs[pl].Item1.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", PlanetLayerFactionDefs[pl].Item2.Select((fd) => $"      {fd.defName}"))}"))}");
+            //foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+            //{
+            //    LayeredAtmosphereOrbitDefModExtension laoDefModExtension = planetLayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+            //    ////IncidentDefs
+            //    //List<IncidentDef> WhitelistIncidentDefs = AllIncidentDefs.Where((IncidentDef id) => id.canOccurOnAllPlanetLayers || (id.layerWhitelist?.Contains(planetLayerDef) ?? false)).ToList();
+            //    //List<IncidentDef> BlacklistIncidentDefs = AllIncidentDefs.Where((IncidentDef id) => id.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+            //    //if (laoDefModExtension != null)
+            //    //{
+            //    //    if (laoDefModExtension.BlacklistIncidentDef != null)
+            //    //    {
+            //    //        BlacklistIncidentDefs.AddRangeUnique(laoDefModExtension.BlacklistIncidentDef);
+            //    //    }
+            //    //    if (!BlacklistIncidentDefs.NullOrEmpty())
+            //    //    {
+            //    //        WhitelistIncidentDefs.RemoveAll((IncidentDef id) => BlacklistIncidentDefs.Contains(id));
+            //    //    }
+            //    //    if (laoDefModExtension.WhitelistIncidentDef != null)
+            //    //    {
+            //    //        WhitelistIncidentDefs.AddRangeUnique(laoDefModExtension.WhitelistIncidentDef);
+            //    //    }
+            //    //    if (!BlacklistIncidentDefs.NullOrEmpty())
+            //    //    {
+            //    //        BlacklistIncidentDefs.RemoveAll((IncidentDef id) => WhitelistIncidentDefs.Contains(id));
+            //    //    }
+            //    //}
+            //    //if (!WhitelistIncidentDefs.NullOrEmpty())
+            //    //{
+            //    //    foreach (IncidentDef incidentDef in WhitelistIncidentDefs)
+            //    //    {
+            //    //        //Log.Message($"{planetLayerDef.defName} WhitelistIncidentDefs {incidentDef.defName} {incidentDef.canOccurOnAllPlanetLayers}");
+            //    //        if (!incidentDef.canOccurOnAllPlanetLayers)
+            //    //        {
+            //    //            if (incidentDef.layerWhitelist == null)
+            //    //            {
+            //    //                incidentDef.layerWhitelist = new List<PlanetLayerDef>();
+            //    //            }
+            //    //            incidentDef.layerWhitelist.AddDistinct(planetLayerDef);
+            //    //        }
+            //    //    }
+            //    //}
+            //    //if (!planetLayerDef.onlyAllowWhitelistedIncidents)
+            //    //{
+            //    //    if (!BlacklistIncidentDefs.NullOrEmpty())
+            //    //    {
+            //    //        foreach (IncidentDef incidentDef in BlacklistIncidentDefs)
+            //    //        {
+            //    //            //Log.Message($"{planetLayerDef.defName} BlacklistIncidentDefs {incidentDef.defName}");
+            //    //            if (incidentDef.layerBlacklist == null)
+            //    //            {
+            //    //                incidentDef.layerBlacklist = new List<PlanetLayerDef>();
+            //    //            }
+            //    //            incidentDef.layerBlacklist.AddDistinct(planetLayerDef);
+            //    //        }
+            //    //    }
+            //    //}
+            //    ////BiomeDefs
+            //    //List<BiomeDef> WhitelistBiomeDefs = AllBiomeDefs.Where((BiomeDef bd) => bd.layerWhitelist?.Contains(planetLayerDef) ?? false).ToList();
+            //    //List<BiomeDef> BlacklistBiomeDefs = AllBiomeDefs.Where((BiomeDef bd) => bd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+            //    //if (laoDefModExtension != null)
+            //    //{
+            //    //    if (laoDefModExtension.BlacklistBiomeDef != null)
+            //    //    {
+            //    //        BlacklistBiomeDefs.AddRangeUnique(laoDefModExtension.BlacklistBiomeDef);
+            //    //    }
+            //    //    if (!BlacklistBiomeDefs.NullOrEmpty())
+            //    //    {
+            //    //        WhitelistBiomeDefs.RemoveAll((BiomeDef bd) => BlacklistBiomeDefs.Contains(bd));
+            //    //    }
+            //    //    if (laoDefModExtension.WhitelistBiomeDef != null)
+            //    //    {
+            //    //        WhitelistBiomeDefs.AddRangeUnique(laoDefModExtension.WhitelistBiomeDef);
+            //    //    }
+            //    //    if (!BlacklistBiomeDefs.NullOrEmpty())
+            //    //    {
+            //    //        BlacklistBiomeDefs.RemoveAll((BiomeDef id) => WhitelistBiomeDefs.Contains(id));
+            //    //    }
+            //    //}
+            //    //if (!WhitelistBiomeDefs.NullOrEmpty())
+            //    //{
+            //    //    foreach (BiomeDef biomeDef in WhitelistBiomeDefs)
+            //    //    {
+            //    //        //Log.Message($"{planetLayerDef.defName} WhitelistBiomeDefs {biomeDef.defName}");
+            //    //        if (biomeDef.layerWhitelist == null)
+            //    //        {
+            //    //            biomeDef.layerWhitelist = new List<PlanetLayerDef>();
+            //    //        }
+            //    //        biomeDef.layerWhitelist.AddDistinct(planetLayerDef);
+            //    //    }
+            //    //}
+            //    //if (!planetLayerDef.onlyAllowWhitelistedBiomes)
+            //    //{
+            //    //    if (!BlacklistBiomeDefs.NullOrEmpty())
+            //    //    {
+            //    //        foreach (BiomeDef biomeDef in BlacklistBiomeDefs)
+            //    //        {
+            //    //            //Log.Message($"{planetLayerDef.defName} BlacklistBiomeDefs {biomeDef.defName}");
+            //    //            if (biomeDef.layerBlacklist == null)
+            //    //            {
+            //    //                biomeDef.layerBlacklist = new List<PlanetLayerDef>();
+            //    //            }
+            //    //            biomeDef.layerBlacklist.AddDistinct(planetLayerDef);
+            //    //        }
+            //    //    }
+            //    //}
+            //    ////GameConditionDefs
+            //    //List<GameConditionDef> WhitelistGameConditionDefs = AllGameConditionDefs.Where((GameConditionDef bd) => bd.canAffectAllPlanetLayers || (bd.layerWhitelist?.Contains(planetLayerDef) ?? false)).ToList();
+            //    //List<GameConditionDef> BlacklistGameConditionDefs = AllGameConditionDefs.Where((GameConditionDef bd) => bd.layerBlacklist?.Contains(planetLayerDef) ?? false).ToList();
+            //    //if (laoDefModExtension != null)
+            //    //{
+            //    //    if (laoDefModExtension.BlacklistGameConditionDef != null)
+            //    //    {
+            //    //        BlacklistGameConditionDefs.AddRangeUnique(laoDefModExtension.BlacklistGameConditionDef);
+            //    //    }
+            //    //    if (!BlacklistGameConditionDefs.NullOrEmpty())
+            //    //    {
+            //    //        WhitelistGameConditionDefs.RemoveAll((GameConditionDef bd) => BlacklistGameConditionDefs.Contains(bd));
+            //    //    }
+            //    //    if (laoDefModExtension.WhitelistGameConditionDef != null)
+            //    //    {
+            //    //        WhitelistGameConditionDefs.AddRangeUnique(laoDefModExtension.WhitelistGameConditionDef);
+            //    //    }
+            //    //    if (!BlacklistGameConditionDefs.NullOrEmpty())
+            //    //    {
+            //    //        BlacklistGameConditionDefs.RemoveAll((GameConditionDef id) => WhitelistGameConditionDefs.Contains(id));
+            //    //    }
+            //    //}
+            //    //if (!WhitelistGameConditionDefs.NullOrEmpty())
+            //    //{
+            //    //    foreach (GameConditionDef gameConditionDef in WhitelistGameConditionDefs)
+            //    //    {
+            //    //        //Log.Message($"{planetLayerDef.defName} WhitelistGameConditionDefs {gameConditionDef.defName} {gameConditionDef.canAffectAllPlanetLayers}");
+            //    //        if (!gameConditionDef.canAffectAllPlanetLayers)
+            //    //        {
+            //    //            if (gameConditionDef.layerWhitelist == null)
+            //    //            {
+            //    //                gameConditionDef.layerWhitelist = new List<PlanetLayerDef>();
+            //    //            }
+            //    //            gameConditionDef.layerWhitelist.AddDistinct(planetLayerDef);
+            //    //        }
+            //    //    }
+            //    //}
+            //    //if (!planetLayerDef.onlyAllowWhitelistedGameConditions)
+            //    //{
+            //    //    if (!BlacklistGameConditionDefs.NullOrEmpty())
+            //    //    {
+            //    //        foreach (GameConditionDef gameConditionDef in BlacklistGameConditionDefs)
+            //    //        {
+            //    //            //Log.Message($"{planetLayerDef.defName} BlacklistGameConditionDefs {gameConditionDef.defName}");
+            //    //            if (gameConditionDef.layerBlacklist == null)
+            //    //            {
+            //    //                gameConditionDef.layerBlacklist = new List<PlanetLayerDef>();
+            //    //            }
+            //    //            gameConditionDef.layerBlacklist.AddDistinct(planetLayerDef);
+            //    //        }
+            //    //    }
+            //    //}
+            //    ////QuestScriptDefs
+            //    //List<QuestScriptDef> WhitelistQuestScriptDefs = AllQuestScriptDefs.Where((QuestScriptDef qsd) => qsd.canOccurOnAllPlanetLayers || (qsd.layerWhitelist?.Contains(planetLayerDef) ?? false) || (qsd.everAcceptableInSpace && planetLayerDef.isSpace)).ToList();
+            //    //List<QuestScriptDef> BlacklistQuestScriptDefs = AllQuestScriptDefs.Where((QuestScriptDef qsd) => (qsd.layerBlacklist?.Contains(planetLayerDef) ?? false) || (qsd.everAcceptableInSpace && planetLayerDef.isSpace)).ToList();
+            //    //if (laoDefModExtension != null)
+            //    //{
+            //    //    if (laoDefModExtension.BlacklistQuestScriptDef != null)
+            //    //    {
+            //    //        BlacklistQuestScriptDefs.AddRangeUnique(laoDefModExtension.BlacklistQuestScriptDef);
+            //    //    }
+            //    //    if (!BlacklistQuestScriptDefs.NullOrEmpty())
+            //    //    {
+            //    //        WhitelistQuestScriptDefs.RemoveAll((QuestScriptDef bd) => BlacklistQuestScriptDefs.Contains(bd));
+            //    //    }
+            //    //    if (laoDefModExtension.WhitelistQuestScriptDef != null)
+            //    //    {
+            //    //        WhitelistQuestScriptDefs.AddRangeUnique(laoDefModExtension.WhitelistQuestScriptDef);
+            //    //    }
+            //    //    if (!BlacklistQuestScriptDefs.NullOrEmpty())
+            //    //    {
+            //    //        BlacklistQuestScriptDefs.RemoveAll((QuestScriptDef id) => WhitelistQuestScriptDefs.Contains(id));
+            //    //    }
+            //    //}
+            //    //if (!WhitelistQuestScriptDefs.NullOrEmpty())
+            //    //{
+            //    //    foreach (QuestScriptDef questScriptDef in WhitelistQuestScriptDefs)
+            //    //    {
+            //    //        //Log.Message($"{planetLayerDef.defName} WhitelistQuestScriptDefs {questScriptDef.defName} {questScriptDef.canOccurOnAllPlanetLayers} || {questScriptDef.everAcceptableInSpace} && {planetLayerDef.isSpace}");
+            //    //        if (!(questScriptDef.canOccurOnAllPlanetLayers || (questScriptDef.everAcceptableInSpace && planetLayerDef.isSpace)))
+            //    //        {
+            //    //            if (questScriptDef.layerWhitelist == null)
+            //    //            {
+            //    //                questScriptDef.layerWhitelist = new List<PlanetLayerDef>();
+            //    //            }
+            //    //            questScriptDef.layerWhitelist.AddDistinct(planetLayerDef);
+            //    //        }
+            //    //    }
+            //    //}
+            //    //if (!planetLayerDef.onlyAllowWhitelistedQuests)
+            //    //{
+            //    //    if (!BlacklistQuestScriptDefs.NullOrEmpty())
+            //    //    {
+            //    //        foreach (QuestScriptDef questScriptDef in BlacklistQuestScriptDefs)
+            //    //        {
+            //    //            //Log.Message($"{planetLayerDef.defName} BlacklistQuestScriptDefs {questScriptDef.defName}");
+            //    //            if (questScriptDef.layerBlacklist == null)
+            //    //            {
+            //    //                questScriptDef.layerBlacklist = new List<PlanetLayerDef>();
+            //    //            }
+            //    //            questScriptDef.layerBlacklist.AddDistinct(planetLayerDef);
+            //    //        }
+            //    //    }
+            //    //}
+            //    ////ArrivalFactionDefs
+            //    //List<FactionDef> WhitelistArrivalFactionDefs = PlanetLayerArrivalFactionDefs[planetLayerDef].Item1;
+            //    //List<FactionDef> BlacklistArrivalFactionDefs = PlanetLayerArrivalFactionDefs[planetLayerDef].Item2;
+            //    //if (laoDefModExtension != null)
+            //    //{
+            //    //    IEnumerable<FactionDef> WithinFactionDefs = AllFactionDefs.ToList();
+            //    //    IEnumerable<FactionDef> BellowFactionDefs = AllFactionDefs.ToList();
+            //    //    IEnumerable<FactionDef> AboveFactionDefs = AllFactionDefs.ToList();
+            //    //    if (laoDefModExtension.minArrivalFactionTechLevel != TechLevel.Undefined)
+            //    //    {
+            //    //        WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel >= laoDefModExtension.minArrivalFactionTechLevel);
+            //    //        BellowFactionDefs = BellowFactionDefs.Where((FactionDef fd) => fd.techLevel < laoDefModExtension.minArrivalFactionTechLevel);
+            //    //    }
+            //    //    if (laoDefModExtension.maxArrivalFactionTechLevel != TechLevel.Undefined)
+            //    //    {
+            //    //        WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel <= laoDefModExtension.maxArrivalFactionTechLevel);
+            //    //        AboveFactionDefs = AboveFactionDefs.Where((FactionDef fd) => fd.techLevel > laoDefModExtension.maxArrivalFactionTechLevel);
+            //    //    }
+            //    //    if (WithinFactionDefs != null)
+            //    //    {
+            //    //        WhitelistArrivalFactionDefs.AddRangeUnique(WithinFactionDefs);
+            //    //    }
+            //    //    if (BellowFactionDefs != null)
+            //    //    {
+            //    //        BlacklistArrivalFactionDefs.AddRangeUnique(BellowFactionDefs);
+            //    //    }
+            //    //    if (AboveFactionDefs != null)
+            //    //    {
+            //    //        BlacklistArrivalFactionDefs.AddRangeUnique(AboveFactionDefs);
+            //    //    }
+            //    //    if (laoDefModExtension.BlacklistArrivalFactionDef != null)
+            //    //    {
+            //    //        BlacklistArrivalFactionDefs.AddRangeUnique(laoDefModExtension.BlacklistArrivalFactionDef);
+            //    //    }
+            //    //    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
+            //    //    {
+            //    //        WhitelistArrivalFactionDefs.RemoveAll((FactionDef fd) => BlacklistArrivalFactionDefs.Contains(fd));
+            //    //    }
+            //    //    if (laoDefModExtension.WhitelistArrivalFactionDef != null)
+            //    //    {
+            //    //        WhitelistArrivalFactionDefs.AddRangeUnique(laoDefModExtension.WhitelistArrivalFactionDef);
+            //    //    }
+            //    //    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
+            //    //    {
+            //    //        BlacklistArrivalFactionDefs.RemoveAll((FactionDef fd) => WhitelistArrivalFactionDefs.Contains(fd));
+            //    //    }
+            //    //}
+            //    //PlanetLayerArrivalFactionDefs[planetLayerDef] = (WhitelistArrivalFactionDefs, BlacklistArrivalFactionDefs);
+            //    //FactionDefs
+            //    List<FactionDef> WhitelistFactionDefs = PlanetLayerFactionDefs[planetLayerDef].Item1;
+            //    List<FactionDef> BlacklistFactionDefs = PlanetLayerFactionDefs[planetLayerDef].Item2;
+            //    Log.Message($"Available FactionDef C0:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //    if (laoDefModExtension != null)
+            //    {
+            //        IEnumerable<FactionDef> WithinFactionDefs = AllFactionDefs.ToList();
+            //        IEnumerable<FactionDef> BellowFactionDefs = AllFactionDefs.ToList();
+            //        IEnumerable<FactionDef> AboveFactionDefs = AllFactionDefs.ToList();
+            //        bool isTechLevelLimit = false;
+            //        if (laoDefModExtension.minFactionTechLevel != TechLevel.Undefined)
+            //        {
+            //            WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel >= laoDefModExtension.minFactionTechLevel);
+            //            BellowFactionDefs = BellowFactionDefs.Where((FactionDef fd) => fd.techLevel < laoDefModExtension.minFactionTechLevel);
+            //            isTechLevelLimit = true;
+            //        }
+            //        if (laoDefModExtension.maxFactionTechLevel != TechLevel.Undefined)
+            //        {
+            //            WithinFactionDefs = WithinFactionDefs.Where((FactionDef fd) => fd.techLevel <= laoDefModExtension.maxFactionTechLevel);
+            //            AboveFactionDefs = AboveFactionDefs.Where((FactionDef fd) => fd.techLevel > laoDefModExtension.maxFactionTechLevel);
+            //            isTechLevelLimit = true;
+            //        }
+            //        Log.Message($"Available FactionDef C1 ({laoDefModExtension.minFactionTechLevel} {laoDefModExtension.maxFactionTechLevel}) {isTechLevelLimit}:\n   {planetLayerDef.defName}:\n{string.Join("\n", WithinFactionDefs.Select((fd) => $"++++++{fd.defName}"))}\n/---\\\n{string.Join("\n", BellowFactionDefs.Select((fd) => $"******{fd.defName}"))}\n|---|\n{string.Join("\n", AboveFactionDefs.Select((fd) => $"------{fd.defName}"))}\n\\---/\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //        if (isTechLevelLimit)
+            //        {
+            //            if (WithinFactionDefs != null)
+            //            {
+            //                WhitelistFactionDefs.AddRangeUnique(WithinFactionDefs);
+            //            }
+            //            if (BellowFactionDefs != null)
+            //            {
+            //                BlacklistFactionDefs.AddRangeUnique(BellowFactionDefs);
+            //            }
+            //            if (AboveFactionDefs != null)
+            //            {
+            //                BlacklistFactionDefs.AddRangeUnique(AboveFactionDefs);
+            //            }
+            //        }
+            //        Log.Message($"Available FactionDef C2:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //        if (laoDefModExtension.BlacklistFactionDef != null)
+            //        {
+            //            Log.Message($"Available FactionDef C2+:\n   {planetLayerDef.defName}\n{string.Join("\n", laoDefModExtension.BlacklistFactionDef.Select((fd) => $"------{fd.defName}"))}");
+            //            BlacklistFactionDefs.AddRangeUnique(laoDefModExtension.BlacklistFactionDef);
+            //        }
+            //        Log.Message($"Available FactionDef C3:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //        if (!BlacklistFactionDefs.NullOrEmpty())
+            //        {
+            //            WhitelistFactionDefs.RemoveAll((FactionDef fd) => BlacklistFactionDefs.Contains(fd));
+            //        }
+            //        Log.Message($"Available FactionDef C4:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //        if (laoDefModExtension.WhitelistFactionDef != null)
+            //        {
+            //            Log.Message($"Available FactionDef C4+:\n   {planetLayerDef.defName}\n{string.Join("\n", laoDefModExtension.WhitelistFactionDef.Select((fd) => $"++++++{fd.defName}"))}");
+            //            WhitelistFactionDefs.AddRangeUnique(laoDefModExtension.WhitelistFactionDef);
+            //        }
+            //        Log.Message($"Available FactionDef C5:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //        if (!BlacklistFactionDefs.NullOrEmpty())
+            //        {
+            //            BlacklistFactionDefs.RemoveAll((FactionDef fd) => WhitelistFactionDefs.Contains(fd));
+            //        }
+            //        Log.Message($"Available FactionDef C6:\n   {planetLayerDef.defName}\n{string.Join("\n", WhitelistFactionDefs.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", BlacklistFactionDefs.Select((fd) => $"      {fd.defName}"))}");
+            //    }
+            //    PlanetLayerFactionDefs[planetLayerDef] = (WhitelistFactionDefs, BlacklistFactionDefs, PlanetLayerFactionDefs[planetLayerDef].Item3 || (laoDefModExtension?.onlyAllowWhitelistedFactions ?? false));
+            //}
+            ////Log.Message($"Available arrival FactionDef C:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", PlanetLayerArrivalFactionDefs[pl].Item1.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", PlanetLayerArrivalFactionDefs[pl].Item2.Select((fd) => $"      {fd.defName}"))}"))}");
+            //Log.Message($"Available FactionDef C:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", PlanetLayerFactionDefs[pl].Item1.Select((fd) => $"      {fd.defName}"))}\n<--->\n\n{string.Join("\n", PlanetLayerFactionDefs[pl].Item2.Select((fd) => $"      {fd.defName}"))}"))}");
+            //foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
+            //{
+            //    //(List<FactionDef> WhitelistArrivalFactionDefs, List<FactionDef> BlacklistArrivalFactionDefs) = PlanetLayerArrivalFactionDefs[planetLayerDef];
+            //    //if (!WhitelistArrivalFactionDefs.NullOrEmpty())
+            //    //{
+            //    //    foreach (FactionDef factionDef in WhitelistArrivalFactionDefs)
+            //    //    {
+            //    //        Log.Message($"{planetLayerDef.defName} WhitelistArrivalFactionDefs {factionDef.defName} {factionDef.arrivalLayerWhitelist.Contains(planetLayerDef)}");
+            //    //        if (factionDef.arrivalLayerWhitelist == null)
+            //    //        {
+            //    //            factionDef.arrivalLayerWhitelist = new List<PlanetLayerDef>();
+            //    //        }
+            //    //        factionDef.arrivalLayerWhitelist.AddDistinct(planetLayerDef);
+            //    //    }
+            //    //}
+            //    //if (!planetLayerDef.onlyAllowWhitelistedArrivalModes)
+            //    //{
+            //    //    if (!BlacklistArrivalFactionDefs.NullOrEmpty())
+            //    //    {
+            //    //        foreach (FactionDef factionDef in BlacklistArrivalFactionDefs)
+            //    //        {
+            //    //            Log.Message($"{planetLayerDef.defName} BlacklistArrivalFactionDefs {factionDef.defName} {factionDef.arrivalLayerBlacklist.Contains(planetLayerDef)}");
+            //    //            if (factionDef.arrivalLayerBlacklist == null)
+            //    //            {
+            //    //                factionDef.arrivalLayerBlacklist = new List<PlanetLayerDef>();
+            //    //            }
+            //    //            factionDef.arrivalLayerBlacklist.AddDistinct(planetLayerDef);
+            //    //        }
+            //    //    }
+            //    //}
+            //    (List<FactionDef> WhitelistFactionDefs, List<FactionDef> BlacklistFactionDefs, bool onlyAllowWhitelistedFactions) = PlanetLayerFactionDefs[planetLayerDef];
+            //    if (!WhitelistFactionDefs.NullOrEmpty())
+            //    {
+            //        foreach (FactionDef factionDef in WhitelistFactionDefs)
+            //        {
+            //            Log.Message($"{planetLayerDef.defName} WhitelistFactionDefs {factionDef.defName} {factionDef.layerWhitelist.Contains(planetLayerDef)}");
+            //            if (factionDef.layerWhitelist == null)
+            //            {
+            //                factionDef.layerWhitelist = new List<PlanetLayerDef>();
+            //            }
+            //            factionDef.layerWhitelist.AddDistinct(planetLayerDef);
+            //        }
+            //    }
+            //    if (!(onlyAllowWhitelistedFactions))
+            //    {
+            //        if (!BlacklistFactionDefs.NullOrEmpty())
+            //        {
+            //            foreach (FactionDef factionDef in BlacklistFactionDefs)
+            //            {
+            //                Log.Message($"{planetLayerDef.defName} BlacklistFactionDefs {factionDef.defName} {factionDef.layerBlacklist.Contains(planetLayerDef)}");
+            //                if (factionDef.layerBlacklist == null)
+            //                {
+            //                    factionDef.layerBlacklist = new List<PlanetLayerDef>();
+            //                }
+            //                factionDef.layerBlacklist.AddDistinct(planetLayerDef);
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         public static IEnumerable<CodeInstruction> WG_GetGizmos_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)

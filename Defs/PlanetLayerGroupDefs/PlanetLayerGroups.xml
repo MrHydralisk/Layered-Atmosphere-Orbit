@@ -29,6 +29,11 @@
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isPreventQuestMapIfNotWhitelisted>true</isPreventQuestMapIfNotWhitelisted>
+				<onlyAllowWhitelistedFactions>true</onlyAllowWhitelistedFactions>
+				<minFactionTechLevel>Industrial</minFactionTechLevel>
+				<WhitelistFactionDef>
+					<li>Insect</li>
+				</WhitelistFactionDef>
 				<minArrivalFactionTechLevel>Industrial</minArrivalFactionTechLevel>
 				<WhitelistArrivalFactionDef>
 					<li>Insect</li>
@@ -114,6 +119,7 @@
 		</planetLayerGroupsDirectConnection>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<onlyAllowWhitelistedFactions>true</onlyAllowWhitelistedFactions>
 				<WhitelistIncidentDef>
 					<li>OrbitalDebris</li>
 				</WhitelistIncidentDef>
@@ -132,12 +138,17 @@
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isPreventQuestMapIfNotWhitelisted>true</isPreventQuestMapIfNotWhitelisted>
+				<onlyAllowWhitelistedFactions>true</onlyAllowWhitelistedFactions>
 				<minFactionTechLevel>Spacer</minFactionTechLevel>
 				<BlacklistFactionDef>
+					<li>Mechanoid</li>
+					<li>TradersGuild</li>
 					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
 				</BlacklistFactionDef>
 				<minArrivalFactionTechLevel>Spacer</minArrivalFactionTechLevel>
 				<BlacklistArrivalFactionDef>
+					<li>Mechanoid</li>
+					<li>TradersGuild</li>
 					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
 				</BlacklistArrivalFactionDef>
 				<WhitelistGameConditionDef>

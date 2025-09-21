@@ -8,6 +8,7 @@
 		<isSpace>false</isSpace>
 		<settlementWorldObjectDef>SpaceSettlement</settlementWorldObjectDef>
 		<destroyedSettlementWorldObjectDef>DestroyedSpaceSettlement</destroyedSettlementWorldObjectDef>
+		<onlyAllowWhitelistedArrivals>false</onlyAllowWhitelistedArrivals>
 		<lineWidthFactor>3.25</lineWidthFactor>
 		<worldGenSteps Inherit="False">
 			<li>Tiles</li>
@@ -29,7 +30,7 @@
 				<elevation>20</elevation>
 				<tempOffest>-10</tempOffest>
 				<planetLayerGroup>LAO_Atmosphere</planetLayerGroup>
-				<maxArrivalFactionTechLevel>Industrial</maxArrivalFactionTechLevel>
+				<minArrivalFactionTechLevel>Industrial</minArrivalFactionTechLevel>
 			</li>
 		</modExtensions>
 	</PlanetLayerDef>
@@ -49,7 +50,7 @@
 				<elevation>50</elevation>
 				<tempOffest>-20</tempOffest>
 				<planetLayerGroup>LAO_Atmosphere</planetLayerGroup>
-				<maxArrivalFactionTechLevel>Industrial</maxArrivalFactionTechLevel>
+				<minArrivalFactionTechLevel>Industrial</minArrivalFactionTechLevel>
 			</li>
 		</modExtensions>
 	</PlanetLayerDef>
@@ -68,10 +69,12 @@
 				<elevation>80</elevation>
 				<tempOffest>-40</tempOffest>
 				<planetLayerGroup>LAO_Atmosphere</planetLayerGroup>
-				<maxArrivalFactionTechLevel>Spacer</maxArrivalFactionTechLevel>
-				<WhitelistArrivalFactionDef>
-					<li>Mechanoid</li>
-				</WhitelistArrivalFactionDef>
+				<minArrivalFactionTechLevel>Spacer</minArrivalFactionTechLevel>
+				<BlacklistArrivalFactionDef>
+					<li>TradersGuild</li>
+					<li>Salvagers</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
+				</BlacklistArrivalFactionDef>
 			</li>
 		</modExtensions>
 	</PlanetLayerDef>
@@ -93,12 +96,11 @@
 				<tempOffest>-95</tempOffest>
 				<planetLayerGroup>LAO_Orbit</planetLayerGroup>
 				<minArrivalFactionTechLevel>Spacer</minArrivalFactionTechLevel>
-				<WhitelistArrivalFactionDef>
-					<li>Mechanoid</li>
-					<li>TradersGuild</li>
-					<li>Salvagers</li>
-					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
-				</WhitelistArrivalFactionDef>
+				<BlacklistArrivalFactionDef>
+					<li>Ancients</li>
+					<li>AncientsHostile</li>
+					<li>Pirate</li>
+				</BlacklistArrivalFactionDef>
 			</li>
 		</modExtensions>
 	</PlanetLayerDef>

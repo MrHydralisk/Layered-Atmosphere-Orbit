@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using RimWorld.Planet;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -301,13 +302,29 @@ namespace LayeredAtmosphereOrbit
 
 
 
+        public static bool TestArrivalFactionDefOnLayerDef(this PlanetLayerDef layer, FactionDef f)
+        {
+            if (!f.arrivalLayerWhitelist.NullOrEmpty() && !f.arrivalLayerWhitelist.Contains(layer))
+            {
+                return false;
+            }
+            if (!f.arrivalLayerBlacklist.NullOrEmpty() && f.arrivalLayerBlacklist.Contains(layer))
+            {
+                return false;
+            }
+            if (layer.onlyAllowWhitelistedArrivals && (f.arrivalLayerWhitelist.NullOrEmpty() || !f.arrivalLayerWhitelist.Contains(layer)))
+            {
+                return false;
+            }
+            return true;
+        }
         public static bool TestFactionDefOnLayerDef(this PlanetLayerDef layer, FactionDef f)
         {
             if (!f.layerBlacklist.NullOrEmpty() && f.layerBlacklist.Contains(layer))
             {
                 return false;
             }
-            if (!f.layerWhitelist.NullOrEmpty())
+            if (!f.layerWhitelist.NullOrEmpty() || layer != PlanetLayerDefOf.Surface)
             {
                 return f.layerWhitelist.Contains(layer);
             }
