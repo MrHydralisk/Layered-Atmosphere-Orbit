@@ -303,6 +303,23 @@ namespace LayeredAtmosphereOrbit
 
 
 
+        public static bool TestGameConditionDefOnLayerDef(this PlanetLayerDef layer, GameConditionDef def)
+        {
+            if (!def.layerWhitelist.NullOrEmpty() && !def.layerWhitelist.Contains(layer))
+            {
+                return false;
+            }
+            if (!def.layerBlacklist.NullOrEmpty() && def.layerBlacklist.Contains(layer))
+            {
+                return false;
+            }
+            if (!def.canAffectAllPlanetLayers && layer.onlyAllowWhitelistedGameConditions && (def.layerWhitelist.NullOrEmpty() || !def.layerWhitelist.Contains(layer)))
+            {
+                return false;
+            }
+            return true;
+        }
+
         public static bool TestQuestScriptDefOnLayerDef(this PlanetLayerDef layer, QuestScriptDef quest)
         {
             if (!quest.layerWhitelist.NullOrEmpty() && !quest.layerWhitelist.Contains(layer))

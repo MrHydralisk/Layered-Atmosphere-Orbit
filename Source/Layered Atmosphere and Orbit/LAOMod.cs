@@ -104,18 +104,32 @@ namespace LayeredAtmosphereOrbit
             if (Prefs.DevMode)
             {
                 options.GapLine();
+                if (options.ButtonText("GameConditionDef Per PlanetLayer"))
+                {
+                    List<GameConditionDef> AllGameConditionDefs = DefDatabase<GameConditionDef>.AllDefs.ToList();
+                    if (Find.WorldGrid != null)
+                    {
+                        List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
+                        Log.Message($"Available GameConditionDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName} {pl.Def.onlyAllowWhitelistedGameConditions}\n{string.Join("\n", AllGameConditionDefs.Select((gcd) => $"      {gcd.defName} {pl.Def.TestGameConditionDefOnLayerDef(gcd)} {gcd.canAffectAllPlanetLayers}"))}"))}");
+                    }
+                    else
+                    {
+                        List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
+                        Log.Message($"Available GameConditionDef:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName} {pl.onlyAllowWhitelistedGameConditions}\n{string.Join("\n", AllGameConditionDefs.Select((gcd) => $"      {gcd.defName} {pl.TestGameConditionDefOnLayerDef(gcd)} {gcd.canAffectAllPlanetLayers}"))}"))}");
+                    }
+                }
                 if (options.ButtonText("QuestScriptDef Per PlanetLayer"))
                 {
                     List<QuestScriptDef> AllQuestScriptDefs = DefDatabase<QuestScriptDef>.AllDefs.ToList();
                     if (Find.WorldGrid != null)
                     {
                         List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
-                        Log.Message($"Available arrival FactionDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName}\n{string.Join("\n", AllQuestScriptDefs.Select((qsd) => $"      {qsd.defName} {pl.Def.TestQuestScriptDefOnLayerDef(qsd)} {qsd.everAcceptableInSpace} {qsd.neverPossibleInSpace}"))}"))}");
+                        Log.Message($"Available QuestScriptDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName} {pl.Def.onlyAllowWhitelistedQuests}\n{string.Join("\n", AllQuestScriptDefs.Select((qsd) => $"      {qsd.defName} {pl.Def.TestQuestScriptDefOnLayerDef(qsd)} {qsd.everAcceptableInSpace} {qsd.neverPossibleInSpace}"))}"))}");
                     }
                     else
                     {
                         List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
-                        Log.Message($"Available arrival FactionDef:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName}\n{string.Join("\n", AllQuestScriptDefs.Select((qsd) => $"      {qsd.defName} {pl.TestQuestScriptDefOnLayerDef(qsd)} {qsd.everAcceptableInSpace} {qsd.neverPossibleInSpace}"))}"))}");
+                        Log.Message($"Available QuestScriptDef:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName} {pl.onlyAllowWhitelistedQuests}\n{string.Join("\n", AllQuestScriptDefs.Select((qsd) => $"      {qsd.defName} {pl.TestQuestScriptDefOnLayerDef(qsd)} {qsd.everAcceptableInSpace} {qsd.neverPossibleInSpace}"))}"))}");
                     }
                 }
                 if (options.ButtonText("FactionDefs arrival Per PlanetLayer"))
