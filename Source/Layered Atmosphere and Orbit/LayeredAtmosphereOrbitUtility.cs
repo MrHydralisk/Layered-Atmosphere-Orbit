@@ -299,6 +299,22 @@ namespace LayeredAtmosphereOrbit
             return 0;
         }
 
+        public static float Vacuum(this PlanetLayerDef planetLayer)
+        {
+            float vacuum = 0;
+            LayeredAtmosphereOrbitDefModExtension laoLayerDefModExtension = planetLayer.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+            if (laoLayerDefModExtension != null && laoLayerDefModExtension.vacuum > -1)
+            {
+                vacuum = laoLayerDefModExtension.vacuum;
+            }
+            LayeredAtmosphereOrbitDefModExtension laoGroupDefModExtension = planetLayer.LayerGroup()?.GetModExtension<LayeredAtmosphereOrbitDefModExtension>();
+            if (laoGroupDefModExtension != null && laoGroupDefModExtension.vacuum > -1)
+            {
+                vacuum = laoGroupDefModExtension.vacuum;
+            }
+            return vacuum;
+        }
+
 
 
         public static bool TestIncidentDefOnLayerDef(this PlanetLayerDef layer, IncidentDef def)

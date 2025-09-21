@@ -34,6 +34,7 @@ namespace LayeredAtmosphereOrbit
             }
             val.Patch(AccessTools.Method(typeof(WorldGrid), "GetGizmos"), postfix: new HarmonyMethod(patchType, "WG_GetGizmos_Postfix"));
             val.Patch(AccessTools.Method(typeof(StorytellerComp), "IncidentChanceFinal"), transpiler: new HarmonyMethod(patchType, "SC_IncidentChanceFinal_Transpiler"));
+            val.Patch(AccessTools.Method(typeof(PawnApparelGenerator), "NeedVacuumResistance"), transpiler: new HarmonyMethod(patchType, "PAG_NeedVacuumResistance_Transpiler"));
             if (LAOMod.Settings.ShowLayerInGroup)
             {
                 val.Patch(AccessTools.Method(typeof(ExpandableWorldObjectsUtility), "TransitionPct"), postfix: new HarmonyMethod(patchType, "EWOU_TransitionPct_Postfix"));
@@ -830,6 +831,40 @@ namespace LayeredAtmosphereOrbit
                 }
             }
             return 1f;
+        }
+
+        public static IEnumerable<CodeInstruction> PAG_NeedVacuumResistance_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
+        {
+            int startIndex = -1;
+            int endIndex = -1;
+            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count; i++)
+            {
+                if (codes[i].opcode == OpCodes.Brfalse_S)
+                {
+                    startIndex = i;
+                }
+                if (codes[i].opcode == OpCodes.Brtrue_S && startIndex > -1)
+                {
+                    endIndex = i;
+                    break;
+                }
+            }
+            if (startIndex > -1 && endIndex > -1)
+            {
+                List<CodeInstruction> instructionsToInsert = new List<CodeInstruction>();
+                instructionsToInsert.Add(new CodeInstruction(OpCodes.Brtrue_S, (Label)codes[startIndex].operand));
+                instructionsToInsert.Add(new CodeInstruction(OpCodes.Ldarg_1));
+                instructionsToInsert.Add(new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HarmonyPatches), "NeedVacuumResistance_PlanetLayer")));
+                codes.InsertRange(endIndex, instructionsToInsert);
+            }
+            return codes.AsEnumerable();
+        }
+
+        public static bool NeedVacuumResistance_PlanetLayer(PawnGenerationRequest request)
+        {
+            Log.Message($"NeedVacuumResistance_PlanetLayer {request.Tile.LayerDef.Vacuum()}");
+            return request.Tile.LayerDef.Vacuum() >= 0.5f;
         }
 
         public static void EWOU_TransitionPct_Postfix(ref float __result, WorldObject wo)

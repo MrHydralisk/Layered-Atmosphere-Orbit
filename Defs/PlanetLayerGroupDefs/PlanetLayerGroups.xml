@@ -119,6 +119,7 @@
 		</planetLayerGroupsDirectConnection>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<vacuum>1</vacuum>
 				<onlyAllowWhitelistedFactions>true</onlyAllowWhitelistedFactions>
 				<WhitelistIncidentDef>
 					<li>OrbitalDebris</li>
@@ -137,6 +138,7 @@
 		<planet>LAO_Luna</planet>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<vacuum>1</vacuum>
 				<isPreventQuestMapIfNotWhitelisted>true</isPreventQuestMapIfNotWhitelisted>
 				<onlyAllowWhitelistedFactions>true</onlyAllowWhitelistedFactions>
 				<minFactionTechLevel>Spacer</minFactionTechLevel>
