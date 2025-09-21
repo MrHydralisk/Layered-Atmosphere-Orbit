@@ -104,6 +104,20 @@ namespace LayeredAtmosphereOrbit
             if (Prefs.DevMode)
             {
                 options.GapLine();
+                if (options.ButtonText("BiomeDef Per PlanetLayer"))
+                {
+                    List<BiomeDef> AllBiomeDefs = DefDatabase<BiomeDef>.AllDefs.ToList();
+                    if (Find.WorldGrid != null)
+                    {
+                        List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
+                        Log.Message($"Available BiomeDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName} {pl.Def.onlyAllowWhitelistedBiomes}\n{string.Join("\n", AllBiomeDefs.Select((bd) => $"      {bd.defName} {pl.Def.TestBiomeDefOnLayerDef(bd)}"))}"))}");
+                    }
+                    else
+                    {
+                        List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
+                        Log.Message($"Available BiomeDef:\n{string.Join("\n", AllPlanetLayerDefs.Select((pl) => $"   {pl.defName} {pl.onlyAllowWhitelistedBiomes}\n{string.Join("\n", AllBiomeDefs.Select((bd) => $"      {bd.defName} {pl.TestBiomeDefOnLayerDef(bd)}"))}"))}");
+                    }
+                }
                 if (options.ButtonText("GameConditionDef Per PlanetLayer"))
                 {
                     List<GameConditionDef> AllGameConditionDefs = DefDatabase<GameConditionDef>.AllDefs.ToList();

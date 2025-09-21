@@ -303,6 +303,23 @@ namespace LayeredAtmosphereOrbit
 
 
 
+        public static bool TestBiomeDefOnLayerDef(this PlanetLayerDef layer, BiomeDef biome)
+        {
+            if (!biome.layerWhitelist.NullOrEmpty() && !biome.layerWhitelist.Contains(layer))
+            {
+                return false;
+            }
+            if (!biome.layerBlacklist.NullOrEmpty() && biome.layerBlacklist.Contains(layer))
+            {
+                return false;
+            }
+            if (layer.onlyAllowWhitelistedBiomes && (biome.layerWhitelist.NullOrEmpty() || !biome.layerWhitelist.Contains(layer)))
+            {
+                return false;
+            }
+            return true;
+        }
+
         public static bool TestGameConditionDefOnLayerDef(this PlanetLayerDef layer, GameConditionDef def)
         {
             if (!def.layerWhitelist.NullOrEmpty() && !def.layerWhitelist.Contains(layer))
