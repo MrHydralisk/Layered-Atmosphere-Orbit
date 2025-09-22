@@ -22,8 +22,8 @@
 		<backgroundBiome>LAO_Luna</backgroundBiome>
 		<worldGenSteps>
 			<li>LAO_TerrainLuna</li>
-			<!-- <li>Mutators</li> -->
-			<!-- <li MayRequire="Ludeon.RimWorld.Odyssey">Landmarks</li> -->
+			<li>Mutators</li>
+			<li MayRequire="Ludeon.RimWorld.Odyssey">Landmarks</li>
 			<!-- <li>AncientSites</li> -->
 			<!-- <li>AncientRoads</li> -->
 			<li>Factions</li>
@@ -39,7 +39,7 @@
 			<li>WorldDrawLayer_WorldObjects_Expandable</li>
 			<li>WorldDrawLayer_WorldObjects_NonExpandable</li>
 			<li>WorldDrawLayer_DebugNoise</li>
-			<!-- <li>WorldDrawLayer_Landmarks</li> -->
+			<li>WorldDrawLayer_Landmarks</li>
 			<!-- <li>WorldDrawLayer_Glow</li> -->
 			<li>WorldDrawLayer_Hills</li>
 			<li>WorldDrawLayer_Terrain</li>
@@ -59,8 +59,11 @@
 					<OrbitalDebris>5</OrbitalDebris>
 					<SolarFlare>2.3</SolarFlare>
 					<MeteoriteImpact>4</MeteoriteImpact>
+					<Infestation>1.5</Infestation>
 				</IncidentChanceMultipliers>
 				<WhitelistIncidentDef>
+					<li>Infestation</li>
+					<li>DeepDrillInfestation</li>
 					<li>Ambush</li>
 					<li>CaravanMeeting</li>
 					<li>CaravanDemand</li>
@@ -76,6 +79,32 @@
 					<li MayRequire="Ludeon.RimWorld.Royalty">Disease_BloodRot</li>
 					<li>GiveQuest_MechanoidSignal</li>
 				</WhitelistIncidentDef>
+				<WhitelistQuestScriptDef>
+					<li>ThreatReward_Raid_Joiner</li>
+					<li>DelayedRewardDropPods</li>
+					<li>OpportunitySite_ItemStash</li>
+					<li>LongRangeMineralScannerLump</li>
+					<li>OpportunitySite_PrisonerWillingToJoin</li>
+					<li>TradeRequest</li>
+					<li>RefugeePodCrash</li>
+					<li>OpportunitySite_AncientMercenaries</li>
+					<li>Opportunity_AncientStructureLaunchSite</li>
+					<li>Opportunity_AncientStructureGarrison</li>
+					<li>Opportunity_AncientStructureChemfuelRefinery</li>
+					<li>Opportunity_AncientStructureWarehouse</li>
+					<li>Opportunity_AncientInfestedSettlement</li>
+					<li>OpportunitySite_BanditCamp_Giver</li>
+					<li>MechanoidSignal</li>
+					<li>GravEngine</li>
+					<li>Gravcore_MechanoidRelay</li>
+					<li>Gravcore_InsectLair</li>
+					<li>Gravcore_AncientReactor</li>
+					<li>Gravcore_AncientStockpile</li>
+					<li>Gravcore_CrashedMechanoidPlatform</li>
+					<li>GravshipWreckage</li>
+					<li>OpportunitySite_ItemStash_Giver</li>
+					<li>SurveySite</li>
+				</WhitelistQuestScriptDef>
 			</li>
 		</modExtensions>
 	</PlanetLayerDef>
