@@ -61,6 +61,7 @@ namespace LayeredAtmosphereOrbit
                 }
                 val.Patch(AccessTools.Property(typeof(WorldSelector), "SelectedLayer").GetSetMethod(), postfix: new HarmonyMethod(patchType, "WS_SelectedLayer_Postfix"));
                 val.Patch(AccessTools.Method(typeof(Map), "FinalizeInit"), postfix: new HarmonyMethod(patchType, "M_FinalizeInit_Postfix"));
+                val.Patch(AccessTools.Property(typeof(Game), "CurrentMap").GetSetMethod(), postfix: new HarmonyMethod(patchType, "G_CurrentMap_Postfix"));
                 val.Patch(AccessTools.Method(typeof(CameraJumper), "TryHideWorld"), postfix: new HarmonyMethod(patchType, "CJ_TryHideWorld_Postfix"));
                 val.Patch(AccessTools.Method(typeof(WorldInterface), "Reset"), postfix: new HarmonyMethod(patchType, "WI_Reset_Postfix"));
                 val.Patch(AccessTools.Method(typeof(Page_SelectStartingSite), "PreOpen"), postfix: new HarmonyMethod(patchType, "PSSS_PreOpen_Postfix"));
@@ -1089,6 +1090,15 @@ namespace LayeredAtmosphereOrbit
             foreach (GameConditionDef gameConditionDef in permamentGameConditionDefs)
             {
                 __instance.GameConditionManager.RegisterCondition(GameConditionMaker.MakeConditionPermanent(gameConditionDef));
+            }
+        }
+
+        public static void G_CurrentMap_Postfix(Map value)
+        {
+            PlanetLayer planetLayer = value?.Tile.Layer;
+            if (planetLayer != null && GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef != planetLayer.Def.Planet())
+            {
+                Find.WorldSelector.SelectedLayer = planetLayer;
             }
         }
 
