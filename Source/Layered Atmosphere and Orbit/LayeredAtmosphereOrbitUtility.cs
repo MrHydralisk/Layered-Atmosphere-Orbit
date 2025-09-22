@@ -176,6 +176,10 @@ namespace LayeredAtmosphereOrbit
                         scenPart_PlanetLayer = spPlanetLayer.Item1;
                     }
                 }
+                if (scenPart_PlanetLayer == null)
+                {
+                    continue;
+                }
                 planetWells.Add((planetDef, scenPart_PlanetLayer));
             }
             for (int i = 1; i < planetWells.Count; i++)
