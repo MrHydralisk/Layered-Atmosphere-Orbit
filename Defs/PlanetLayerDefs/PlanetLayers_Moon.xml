@@ -52,6 +52,7 @@
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isReplaceConnections>true</isReplaceConnections>
 				<isOptionToAutoAdd>true</isOptionToAutoAdd>
+				<isSurface>true</isSurface>
 				<elevation>0</elevation>
 				<planetLayerGroup>LAO_Surface_Luna</planetLayerGroup>
 				<IncidentChanceMultipliers>

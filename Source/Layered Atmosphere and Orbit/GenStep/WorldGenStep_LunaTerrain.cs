@@ -9,15 +9,15 @@ namespace LayeredAtmosphereOrbit
     public class WorldGenStep_LunaTerrain : WorldGenStep_Terrain
     {
         public override int SeedPart => 17111970;
-        public float cratersPercent = 0.005f;
-        public FloatRange cratersRadiusRange = new FloatRange(4, 6);
+        public float cratersPercent = 0.01f;
+        public FloatRange cratersRadiusRange = new FloatRange(4, 8);
 
         public override void GenerateFresh(string seed, PlanetLayer layer)
         {
+            SetupLunaHillinessNoise(layer);
             SetupLunaElevationNoise(layer);
             SetupTemperatureOffsetNoise();
             SetupRainfallNoise();
-            SetupLunaHillinessNoise(layer);
             SetupSwampinessNoise();
             layer.Tiles.Clear();
             for (int i = 0; i < layer.TilesCount; i++)
@@ -30,37 +30,8 @@ namespace LayeredAtmosphereOrbit
 
         private void SetupLunaElevationNoise(PlanetLayer layer)
         {
-            float freqMultiplier = FreqMultiplier;
-            ModuleBase lhs = new Perlin(0.035f * freqMultiplier, 2.0, 0.4000000059604645, 6, Rand.Range(0, int.MaxValue), QualityMode.High);
-            ModuleBase lhs2 = new RidgedMultifractal(0.012f * freqMultiplier, 2.0, 6, Rand.Range(0, int.MaxValue), QualityMode.High);
-            ModuleBase input = new Perlin(0.12f * freqMultiplier, 2.0, 0.5, 5, Rand.Range(0, int.MaxValue), QualityMode.High);
-            ModuleBase moduleBase = new Perlin(0.01f * freqMultiplier, 2.0, 0.5, 5, Rand.Range(0, int.MaxValue), QualityMode.High);
-            float num;
-            if (Find.World.PlanetCoverage < 0.55f)
-            {
-                ModuleBase input2 = new DistanceFromPlanetViewCenter(layer.ViewCenter, Find.WorldGrid.SurfaceViewAngle, invert: true);
-                input2 = new ScaleBias(2.0, -1.0, input2);
-                moduleBase = new Blend(moduleBase, input2, new Const(0.4000000059604645));
-                num = Rand.Range(-0.4f, -0.35f);
-            }
-            else
-            {
-                num = Rand.Range(0.15f, 0.25f);
-            }
-            NoiseDebugUI.StorePlanetNoise(moduleBase, "elevContinents");
-            input = new ScaleBias(0.5, 0.5, input);
-            lhs2 = new Multiply(lhs2, input);
-            float num2 = Rand.Range(0.4f, 0.6f);
-            noiseElevation = new Blend(lhs, lhs2, new Const(num2));
-            noiseElevation = new Blend(noiseElevation, moduleBase, new Const(num));
-            if (Find.World.PlanetCoverage < 0.9999f)
-            {
-                noiseElevation = new ConvertToIsland(Find.WorldGrid.SurfaceViewCenter, Find.WorldGrid.SurfaceViewAngle, noiseElevation);
-            }
-            noiseElevation = new ScaleBias(0.5, 0.5, noiseElevation);
-            noiseElevation = new Power(noiseElevation, new Const(3.0));
+            noiseElevation = new ScaleBias(ElevationRange.Span, ElevationRange.min, noiseMountainLines);
             NoiseDebugUI.StorePlanetNoise(noiseElevation, "noiseElevation");
-            noiseElevation = new ScaleBias(ElevationRange.Span, ElevationRange.min, noiseElevation);
         }
 
         private void SetupLunaHillinessNoise(PlanetLayer layer)

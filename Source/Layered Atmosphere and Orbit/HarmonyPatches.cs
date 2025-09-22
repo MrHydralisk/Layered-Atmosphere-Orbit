@@ -63,6 +63,7 @@ namespace LayeredAtmosphereOrbit
                 val.Patch(AccessTools.Method(typeof(Map), "FinalizeInit"), postfix: new HarmonyMethod(patchType, "M_FinalizeInit_Postfix"));
                 val.Patch(AccessTools.Method(typeof(CameraJumper), "TryHideWorld"), postfix: new HarmonyMethod(patchType, "CJ_TryHideWorld_Postfix"));
                 val.Patch(AccessTools.Method(typeof(Page_SelectStartingSite), "PreOpen"), postfix: new HarmonyMethod(patchType, "PSSS_PreOpen_Postfix"));
+                val.Patch(AccessTools.Property(typeof(Tile), "OnSurface").GetGetMethod(), postfix: new HarmonyMethod(patchType, "T_OnSurface_Postfix"));
             }
             if (LAOMod.Settings.GravshipRoute)
             {
@@ -1099,6 +1100,11 @@ namespace LayeredAtmosphereOrbit
         public static void PSSS_PreOpen_Postfix()
         {
             GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef = Find.GameInitData.startingTile.LayerDef.Planet();
+        }
+
+        public static void T_OnSurface_Postfix(ref bool __result, Tile __instance)
+        {
+            __result = __result ||( __instance.Layer.Def.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.isSurface ?? false);
         }
 
         //Gravship Route

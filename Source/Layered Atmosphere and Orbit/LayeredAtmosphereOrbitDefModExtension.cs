@@ -9,6 +9,7 @@ namespace LayeredAtmosphereOrbit
         public bool isReplaceConnections = false;
         public bool isOptionToAutoAdd = false;
         public bool isRockColored = false;
+        public bool isSurface = false;
         public bool isPreventQuestMapIfNotWhitelisted = false;
         public bool onlyAllowWhitelistedFactions = false;
         public float elevation = 200;
