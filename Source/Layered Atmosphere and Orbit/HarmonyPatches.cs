@@ -62,6 +62,7 @@ namespace LayeredAtmosphereOrbit
                 val.Patch(AccessTools.Property(typeof(WorldSelector), "SelectedLayer").GetSetMethod(), postfix: new HarmonyMethod(patchType, "WS_SelectedLayer_Postfix"));
                 val.Patch(AccessTools.Method(typeof(Map), "FinalizeInit"), postfix: new HarmonyMethod(patchType, "M_FinalizeInit_Postfix"));
                 val.Patch(AccessTools.Method(typeof(CameraJumper), "TryHideWorld"), postfix: new HarmonyMethod(patchType, "CJ_TryHideWorld_Postfix"));
+                val.Patch(AccessTools.Method(typeof(WorldInterface), "Reset"), postfix: new HarmonyMethod(patchType, "WI_Reset_Postfix"));
                 val.Patch(AccessTools.Method(typeof(Page_SelectStartingSite), "PreOpen"), postfix: new HarmonyMethod(patchType, "PSSS_PreOpen_Postfix"));
                 val.Patch(AccessTools.Property(typeof(Tile), "OnSurface").GetGetMethod(), postfix: new HarmonyMethod(patchType, "T_OnSurface_Postfix"));
             }
@@ -1089,6 +1090,15 @@ namespace LayeredAtmosphereOrbit
         }
 
         public static void CJ_TryHideWorld_Postfix()
+        {
+            PlanetLayer planetLayer = Find.CurrentMap?.Tile.Layer;
+            if (planetLayer != null && GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef != planetLayer.Def.Planet())
+            {
+                Find.WorldSelector.SelectedLayer = planetLayer;
+            }
+        }
+
+        public static void WI_Reset_Postfix()
         {
             PlanetLayer planetLayer = Find.CurrentMap?.Tile.Layer;
             if (planetLayer != null && GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef != planetLayer.Def.Planet())
