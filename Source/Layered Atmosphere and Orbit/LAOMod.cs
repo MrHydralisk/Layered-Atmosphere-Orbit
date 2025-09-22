@@ -103,6 +103,21 @@ namespace LayeredAtmosphereOrbit
             //debug
             if (Prefs.DevMode)
             {
+                //options.GapLine();
+                //PlanetLayer planetLayer = Find.WorldSelector?.SelectedLayer;
+                //if (planetLayer != null)
+                //{
+                //    if (options.ButtonText($"Remove current {planetLayer.Def.defName}"))
+                //    {
+                //        Find.WorldSelector.SelectedLayer = Find.WorldGrid.PlanetLayers.Values.FirstOrDefault(pl => pl != planetLayer);
+                //        List<WorldObject> worldObjects = Find.WorldObjects.AllWorldObjectsOnLayer(planetLayer);
+                //        for (int i = worldObjects.Count - 1; i > -1; i--)
+                //        {
+                //            worldObjects[i].Destroy();
+                //        }
+                //        Find.WorldGrid.RemovePlanetLayer(planetLayer);
+                //    }
+                //}
                 options.GapLine();
                 if (options.ButtonText("IncidentDef Per PlanetLayer"))
                 {
