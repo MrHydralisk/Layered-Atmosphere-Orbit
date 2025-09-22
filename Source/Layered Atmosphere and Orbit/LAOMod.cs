@@ -75,6 +75,7 @@ namespace LayeredAtmosphereOrbit
             options.GapLine();
             options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.PlanetPatches".Translate().RawText, ref Settings.PlanetPatches);
             //options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.HideOtherPlanets".Translate().RawText, ref Settings.HideOtherPlanets);
+            options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.HideWorldTabs".Translate().RawText, ref Settings.HideWorldTabs);
             options.GapLine();
             options.Label("LayeredAtmosphereOrbit.Settings.AutoAddLayersDefName.Total".Translate());
             foreach (PlanetLayerDef planetLayerDef in AutoAddLayerOptions)

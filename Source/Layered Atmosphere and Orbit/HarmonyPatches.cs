@@ -65,6 +65,9 @@ namespace LayeredAtmosphereOrbit
                 val.Patch(AccessTools.Method(typeof(WorldInterface), "Reset"), postfix: new HarmonyMethod(patchType, "WI_Reset_Postfix"));
                 val.Patch(AccessTools.Method(typeof(Page_SelectStartingSite), "PreOpen"), postfix: new HarmonyMethod(patchType, "PSSS_PreOpen_Postfix"));
                 val.Patch(AccessTools.Property(typeof(Tile), "OnSurface").GetGetMethod(), postfix: new HarmonyMethod(patchType, "T_OnSurface_Postfix"));
+                val.Patch(AccessTools.Property(typeof(WITab_Terrain), "IsVisible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "WITT_IsVisible_Prefix"));
+                val.Patch(AccessTools.Property(typeof(WITab_Planet), "IsVisible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "WITT_IsVisible_Prefix"));
+                val.Patch(AccessTools.Property(typeof(WITab_Orbit), "IsVisible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "WITT_IsVisible_Prefix"));
             }
             if (LAOMod.Settings.GravshipRoute)
             {
@@ -1115,6 +1118,12 @@ namespace LayeredAtmosphereOrbit
         public static void T_OnSurface_Postfix(ref bool __result, Tile __instance)
         {
             __result = __result ||( __instance.Layer.Def.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.isSurface ?? false);
+        }
+
+        public static bool WITT_IsVisible_Prefix(ref bool __result)
+        {
+            __result = !LAOMod.Settings.HideWorldTabs;
+            return __result;
         }
 
         //Gravship Route
