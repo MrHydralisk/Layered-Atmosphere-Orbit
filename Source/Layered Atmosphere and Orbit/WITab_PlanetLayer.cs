@@ -12,6 +12,10 @@ namespace LayeredAtmosphereOrbit
 
         private float lastDrawnHeight;
 
+        private bool isShowPlanetLayerGroup = false;
+        private bool isShowPlanet = false;
+        private bool isShowBiome = false;
+
         private static readonly Vector2 WinSize = new Vector2(432f, 540f);
 
         public PlanetLayer planetLayer => SelPlanetTile.Layer;
@@ -50,17 +54,43 @@ namespace LayeredAtmosphereOrbit
             if (planetLayerGroup != null)
             {
                 Text.Font = GameFont.Medium;
-                listing_Standard.Label($"{planetLayerGroup.LabelCap} [{planetLayer.Def.LabelCap}]");
+                if (listing_Standard.LabelInvisButton($"{planetLayerGroup.LabelCap} [{planetLayer.Def.LabelCap}]", tooltip: "DefInfoTip".Translate(), labelIcon: TexButton.Info))
+                {
+                    isShowPlanetLayerGroup = !isShowPlanetLayerGroup;
+                }
                 Text.Font = GameFont.Small;
-                listing_Standard.Label(planetLayerGroup.description);
+                if (isShowPlanetLayerGroup)
+                {
+                    listing_Standard.Label(planetLayerGroup.description);
+                }
                 listing_Standard.GapLine();
+                if (planetLayerGroup.planet != null)
+                {
+                    Text.Font = GameFont.Medium;
+                    if (listing_Standard.LabelInvisButton($"LayeredAtmosphereOrbit.TabPlanetLayer.PlanetTag.{planetLayerGroup.planet.typeTag}".Translate(planetLayerGroup.planet.LabelCap), tooltip: "DefInfoTip".Translate(), labelIcon: TexButton.Info))
+                    {
+                        isShowPlanet = !isShowPlanet;
+                    }
+                    Text.Font = GameFont.Small;
+                    if (isShowPlanet)
+                    {
+                        listing_Standard.Label(planetLayerGroup.planet.description);
+                    }
+                    listing_Standard.GapLine();
+                }
             }
             if (selTile.PrimaryBiome != null)
             {
                 Text.Font = GameFont.Medium;
-                listing_Standard.Label(selTile.PrimaryBiome.LabelCap);
+                if (listing_Standard.LabelInvisButton("LayeredAtmosphereOrbit.TabPlanetLayer.Biome".Translate(selTile.PrimaryBiome.LabelCap), tooltip: "DefInfoTip".Translate(), labelIcon: TexButton.Info))
+                {
+                    isShowBiome = !isShowBiome;
+                }
                 Text.Font = GameFont.Small;
-                listing_Standard.Label(selTile.PrimaryBiome.description);
+                if (isShowBiome)
+                {
+                    listing_Standard.Label(selTile.PrimaryBiome.description);
+                }
                 listing_Standard.GapLine();
                 if (!selTile.PrimaryBiome.implemented)
                 {

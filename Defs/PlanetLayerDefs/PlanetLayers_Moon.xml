@@ -17,7 +17,7 @@
 		<defName>LAO_Surface_Luna</defName>
 		<label>Luna moon</label>
 		<viewGizmoTooltip>View locations that are on the Luna moon surface.</viewGizmoTooltip>
-		<viewGizmoTexPath>UI/Commands/ViewPlanet</viewGizmoTexPath>
+		<viewGizmoTexPath>UI/Commands/LAO_ViewLuna</viewGizmoTexPath>
 		<defaultBiome>LAO_Luna</defaultBiome>
 		<backgroundBiome>LAO_Luna</backgroundBiome>
 		<worldGenSteps>

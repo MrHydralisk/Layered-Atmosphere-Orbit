@@ -327,6 +327,29 @@ namespace LayeredAtmosphereOrbit
 
 
 
+        public static bool LabelInvisButton(this Listing_Standard listing_Standard, string label, string tooltip = null, Texture2D labelIcon = null, float sizeIcon = 19)
+        {
+            Rect rect = listing_Standard.GetRect(0);
+            listing_Standard.Label(label);
+            rect.height = Text.CalcHeight(label, listing_Standard.ColumnWidth);
+            if (labelIcon != null)
+            {
+                GUI.DrawTexture(new Rect(rect.xMax - sizeIcon, rect.y + (31 - sizeIcon) / 2, sizeIcon, sizeIcon), labelIcon);
+            }
+            bool isPressed = Widgets.ButtonInvisible(rect);
+            if (!tooltip.NullOrEmpty())
+            {
+                if (Mouse.IsOver(rect))
+                {
+                    Widgets.DrawHighlight(rect);
+                }
+                TooltipHandler.TipRegion(rect, tooltip);
+            }
+            return isPressed;
+        }
+
+
+        //Debug
         public static bool TestIncidentDefOnLayerDef(this PlanetLayerDef layer, IncidentDef def)
         {
             if (!def.layerWhitelist.NullOrEmpty() && !def.layerWhitelist.Contains(layer))
