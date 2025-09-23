@@ -10,7 +10,7 @@
 		<li>1.6</li>
 	</supportedVersions>
 	<modIconPath IgnoreIfNoMatchingField="True">UI/Icons/LAOModIcon</modIconPath>
-	<description>Adding multi-layered atmosphere and orbit. Includes automatic support for connection between planet layers based on it elevation.</description>
+	<description>Adding multi-layered atmosphere and orbit. Adding Luna moon and support for new Planets and Moons. Universal planet layer framework. Includes automatic support for connection between planet layers based on it elevation.</description>
 	<modDependencies>
 		<li>
 			<packageId>Ludeon.RimWorld.Odyssey</packageId>
