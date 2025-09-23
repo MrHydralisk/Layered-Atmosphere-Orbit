@@ -4,7 +4,7 @@
 	<BiomeDef Name="LAO_LunaBiomeBase">
 		<defName>LAO_Luna</defName>
 		<label>luna</label>
-		<description>Barren wastes scoured clean by vacuum and radiation. Periodic meteorite impacts can destroy people and buildings, but also unearth valuable mineral deposits.</description>
+		<description>Barren wastes scoured clean by vacuum and radiation. Periodic meteorite impacts can harm people and destroy buildings, but also unearth valuable mineral deposits.</description>
 		<settleWarning>This area has no atmosphere and no signs of life. It is threatened by meteorite impacts, as well as periodic solar flares.</settleWarning>
 		<workerClass>LayeredAtmosphereOrbit.BiomeWorker_MoonBase</workerClass>
 		<texture>World/Biomes/LAO_VacstoneFields</texture>

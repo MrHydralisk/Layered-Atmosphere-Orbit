@@ -65,7 +65,7 @@ namespace LayeredAtmosphereOrbit
             Scribe_Values.Look(ref GravshipRoute, "GravshipRoute", defaultValue: true);
             Scribe_Values.Look(ref PlanetPatches, "PlanetPatches", defaultValue: true);
             Scribe_Values.Look(ref HideOtherPlanets, "HideOtherPlanets", defaultValue: true);
-            Scribe_Values.Look(ref HideWorldTabs, "HideWorldTabs", defaultValue: true);
+            Scribe_Values.Look(ref HideWorldTabs, "HideWorldTabs", defaultValue: false);
             Scribe_Collections.Look(ref AutoAddLayersDefNames, "AutoAddLayersDefNames", LookMode.Value);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
