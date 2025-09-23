@@ -7,6 +7,7 @@ namespace LayeredAtmosphereOrbit
     public class PlanetLayerGroupDef : Def
     {
         public PlanetLayerDef defaultPlanetLayer;
+        public PlanetDef planet;
         public List<PlanetLayerGroupDef> planetLayerGroupsToShowToo = new List<PlanetLayerGroupDef>();
         public List<PlanetLayerGroupDef> planetLayerGroupsDirectConnection = new List<PlanetLayerGroupDef>();
     }

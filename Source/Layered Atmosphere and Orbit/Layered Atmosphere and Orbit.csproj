@@ -37,12 +37,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Defs\PlanetDef.cs" />
+    <Compile Include="GenStep\WorldGenStep_LunaTerrain.cs" />
+    <Compile Include="GravshipRoute.cs" />
     <Compile Include="GenStep\GenStep_AsteroidGiantItemStash.cs" />
     <Compile Include="QuestNode_GetLAOLayers.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandScatterShrines.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandSleepingMechanoids.cs" />
     <Compile Include="GenStep\GenStep_FloatingIslandHives.cs" />
     <Compile Include="MapParent\FloatingIslandMapParent.cs" />
+    <Compile Include="BiomeWorker_MoonBase.cs" />
+    <Compile Include="IncidentChanceMultiplier.cs" />
+    <Compile Include="Crators.cs" />
+    <Compile Include="WorldDrawLayer_UngeneratedPlanetPartsBackgroundBiome.cs" />
     <Compile Include="WITab_PlanetLayer.cs" />
     <Compile Include="PlanetLayerGroupDefOfLocal.cs" />
     <Compile Include="DefOfLocal.cs" />
@@ -55,7 +62,7 @@
     <Compile Include="LAOSettings.cs" />
     <Compile Include="GenStep\GenStep_FloatingIsland.cs" />
     <Compile Include="MapParent\AtmosphereMapParent.cs" />
-    <Compile Include="PlanetLayerGroupDef.cs" />
+    <Compile Include="Defs\PlanetLayerGroupDef.cs" />
     <Compile Include="SectionLayer_TerrainEdgesFloatingIslands.cs" />
     <Compile Include="LayeredAtmosphereOrbitDefModExtension.cs" />
     <Compile Include="HarmonyPatches.cs" />
@@ -84,7 +91,9 @@
     <Publicize Include="Assembly-CSharp:RimWorld.GenStep_Asteroid.GenerateArcheanTree" />
     <Publicize Include="Assembly-CSharp:RimWorld.PlanetLayerDef.cachedTabs" />
     <Publicize Include="Assembly-CSharp:RimWorld.Planet.TileFinder.TryFillFindTile" />
-    <Publicize Include="Assembly-CSharp" MemberPattern="^RimWorld\.(Planet\.TileTemperaturesComp).*" />
+    <Publicize Include="Assembly-CSharp:RimWorld.Planet.Gravship.initialTile" />
+    <Publicize Include="Assembly-CSharp" MemberPattern="^RimWorld\.(Planet\.TileTemperaturesComp|Planet\.WorldGenStep_Terrain).*" />
+    <Publicize Include="Assembly-CSharp:RimWorld.FactionGenerator.CanExistOnLayer" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

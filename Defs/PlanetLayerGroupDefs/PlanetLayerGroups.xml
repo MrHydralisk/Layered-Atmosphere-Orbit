@@ -6,6 +6,7 @@
 		<label>surface</label>
 		<description>The foundational layer of rock and soil where life and landforms are found. This is the solid ground that forms the outermost shell of the planet. This crucial surface is where oceans meet land and where diverse ecosystems have taken root. It provides the base for all of the world's natural geography, from soaring mountains to deep valleys.</description>
 		<defaultPlanetLayer>Surface</defaultPlanetLayer>
+		<planet>LAO_Rimworld</planet>
 		<planetLayerGroupsToShowToo>
 			<li>LAO_Atmosphere</li>
 		</planetLayerGroupsToShowToo>
@@ -20,6 +21,7 @@
 		<label>atmosphere</label>
 		<description>A vast, breathable space dotted with floating islands that hover above the surface. The islands, suspended by a force of antigravity, create a layered geography where life can exist at multiple altitudes, far above the world's solid ground. It forms a complex, multi-level environment that bridges the gap between the world's core and the emptiness of space.</description>
 		<defaultPlanetLayer>LAO_Troposphere</defaultPlanetLayer>
+		<planet>LAO_Rimworld</planet>
 		<planetLayerGroupsDirectConnection>
 			<li>LAO_Surface</li>
 			<li>LAO_Orbit</li>
@@ -27,9 +29,14 @@
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
 				<isPreventQuestMapIfNotWhitelisted>true</isPreventQuestMapIfNotWhitelisted>
+				<onlyAllowWhitelistedFactions>true</onlyAllowWhitelistedFactions>
+				<minFactionTechLevel>Industrial</minFactionTechLevel>
+				<WhitelistFactionDef>
+					<li>Insect</li>
+				</WhitelistFactionDef>
+				<minArrivalFactionTechLevel>Industrial</minArrivalFactionTechLevel>
 				<WhitelistArrivalFactionDef>
-					<li>Mechanoid</li>
-					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
+					<li>Insect</li>
 				</WhitelistArrivalFactionDef>
 				<WhitelistGameConditionDef>
 					<li>SolarFlare</li>
@@ -105,19 +112,71 @@
 		<label>orbit</label>
 		<description>Empty space a few hundred kilometers above the surface of the world. This is the region where satellites, spacecraft and asteroids orbit the planet. In this harsh vacuum, objects are exposed to a complete lack of oxygen and brutally low temperatures.</description>
 		<defaultPlanetLayer>Orbit</defaultPlanetLayer>
+		<planet>LAO_Rimworld</planet>
 		<planetLayerGroupsDirectConnection>
 			<li>LAO_Surface</li>
 			<li>LAO_Atmosphere</li>
 		</planetLayerGroupsDirectConnection>
 		<modExtensions>
 			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
-				<WhitelistArrivalFactionDef>
+				<vacuum>1</vacuum>
+				<onlyAllowWhitelistedFactions>true</onlyAllowWhitelistedFactions>
+				<WhitelistIncidentDef>
+					<li>OrbitalDebris</li>
+				</WhitelistIncidentDef>
+			</li>
+		</modExtensions>
+	</LayeredAtmosphereOrbit.PlanetLayerGroupDef>
+	
+	
+  
+	<LayeredAtmosphereOrbit.PlanetLayerGroupDef>
+		<defName>LAO_Surface_Luna</defName>
+		<label>surface</label>
+		<description>The foundational layer of pulverized rock and dust where ancient impacts scar the terrain. This is the airless ground that forms the outermost shell of the Luna. This stark surface is where sunlight meets shadow and where vast, barren plains stretch endlessly. It provides the base for all of the Luna's natural geography, from towering peaks of crater rims to deep, shadowed chasms.</description>
+		<defaultPlanetLayer>LAO_Surface_Luna</defaultPlanetLayer>
+		<planet>LAO_Luna</planet>
+		<modExtensions>
+			<li Class="LayeredAtmosphereOrbit.LayeredAtmosphereOrbitDefModExtension">
+				<vacuum>1</vacuum>
+				<onlyAllowWhitelistedFactions>true</onlyAllowWhitelistedFactions>
+				<minFactionTechLevel>Spacer</minFactionTechLevel>
+				<WhitelistFactionDef>
+					<li>Insect</li>
+				</WhitelistFactionDef>
+				<BlacklistFactionDef>
 					<li>Mechanoid</li>
 					<li>TradersGuild</li>
-					<li>Salvagers</li>
 					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
+				</BlacklistFactionDef>
+				<minArrivalFactionTechLevel>Spacer</minArrivalFactionTechLevel>
+				<WhitelistArrivalFactionDef>
+					<li>Insect</li>
 				</WhitelistArrivalFactionDef>
+				<BlacklistArrivalFactionDef>
+					<li>Mechanoid</li>
+					<li>TradersGuild</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">Empire</li>
+				</BlacklistArrivalFactionDef>
+				<WhitelistGameConditionDef>
+					<li>SolarFlare</li>
+					<li>Planetkiller</li>
+					<li>PsychicDroner</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">SunBlocker</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">PsychicSuppression</li>
+					<li MayRequire="Ludeon.RimWorld.Royalty">EMIField</li>
+					<li MayRequire="Ludeon.RimWorld.Anomaly">GrayPall</li>
+					<li MayRequire="Ludeon.RimWorld.Anomaly">HateChantDrone</li>
+					<li MayRequire="Ludeon.RimWorld.Anomaly">UnnaturalDarkness</li>
+					<li MayRequire="MrHydralisk.AnomaliesExpected">AE_TemperatureDrop</li>
+					<li MayRequire="MrHydralisk.AnomaliesExpected">AE_UnnaturalCold</li>
+					<li MayRequire="MrHydralisk.AnomaliesExpected">AE_UnnaturalTemperature</li>
+				</WhitelistGameConditionDef>
 				<WhitelistIncidentDef>
+					<li>Disease_OrganDecay</li>
+					<li>RefugeePodCrash</li>
+					<li>PsychicEmanatorShipPartCrash</li>
+					<li>SolarFlare</li>
 					<li>OrbitalDebris</li>
 				</WhitelistIncidentDef>
 			</li>

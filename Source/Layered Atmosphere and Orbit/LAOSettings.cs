@@ -7,11 +7,16 @@ namespace LayeredAtmosphereOrbit
     {
         public bool UseFuelCostBetweenLayers = false;
         public float FuelPerKm = 1;
+        public float KmPerFuelSpace = 15;
         public bool ShowLayerInGroup = true;
         public bool AutoSwapLayerOnSelection = true;
         public float TransparentInGroup = 0.6f;
         public float TransparentInGroupSub = 0.3f;
         public bool ReplaceAllViewLayerGizmo = true;
+        public bool GravshipRoute = true;
+        public bool PlanetPatches = true;
+        public bool HideOtherPlanets = true;
+        public bool HideWorldTabs = false;
         public List<string> AutoAddLayersDefNames = new List<string>();
         //debug
         public bool isOpenDebugFloatingIslandMapGen = false;
@@ -51,11 +56,16 @@ namespace LayeredAtmosphereOrbit
             base.ExposeData();
             Scribe_Values.Look(ref UseFuelCostBetweenLayers, "UseFuelCostBetweenLayers", defaultValue: false);
             Scribe_Values.Look(ref FuelPerKm, "FuelPerKm", defaultValue: 1);
+            Scribe_Values.Look(ref KmPerFuelSpace, "KmPerFuelSpace", defaultValue: 15);
             Scribe_Values.Look(ref ShowLayerInGroup, "ShowLayerInGroup", defaultValue: true);
             Scribe_Values.Look(ref AutoSwapLayerOnSelection, "AutoSwapLayerOnSelection", defaultValue: true);
             Scribe_Values.Look(ref TransparentInGroup, "TransparentInGroup", defaultValue: 0.6f);
             Scribe_Values.Look(ref TransparentInGroupSub, "TransparentInGroupSub", defaultValue: 0.3f);
             Scribe_Values.Look(ref ReplaceAllViewLayerGizmo, "ReplaceAllViewLayerGizmo", defaultValue: true);
+            Scribe_Values.Look(ref GravshipRoute, "GravshipRoute", defaultValue: true);
+            Scribe_Values.Look(ref PlanetPatches, "PlanetPatches", defaultValue: true);
+            Scribe_Values.Look(ref HideOtherPlanets, "HideOtherPlanets", defaultValue: true);
+            Scribe_Values.Look(ref HideWorldTabs, "HideWorldTabs", defaultValue: false);
             Scribe_Collections.Look(ref AutoAddLayersDefNames, "AutoAddLayersDefNames", LookMode.Value);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
