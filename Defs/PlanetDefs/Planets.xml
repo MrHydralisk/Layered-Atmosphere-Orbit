@@ -4,7 +4,7 @@
 	<LayeredAtmosphereOrbit.PlanetDef>
 		<defName>LAO_Rimworld</defName>
 		<label>Rimworld</label>
-		<description>A distant, sparsely populated planet located at the edge of the known space. Lacking a centralized government or interstellar law enforcement, these worlds are defined by a unique blend of technological advancement and primal struggle.Each RimWorld is a self-contained ecosystem, featuring a wide array of diverse biomes—from scorching deserts to frozen wastelands. Inhabitants, often survivors of crashed starships, use advanced technology to navigate the planet's harsh environments, defend against hostile wildlife, and survive in a lawless, untamed landscape.\n\nGravity well elevation: 1000km.</description>
+		<description>A distant, sparsely populated planet located at the edge of the known space. Lacking a centralized government or interstellar law enforcement, these worlds are defined by a unique blend of technological advancement and primal struggle.Each RimWorld is a self-contained ecosystem, featuring a wide array of diverse biomes from scorching deserts to frozen wastelands. Inhabitants, often survivors of crashed starships, use advanced technology to navigate the planet's harsh environments, defend against hostile wildlife, and survive in a lawless, untamed landscape.\n\nGravity well elevation: 1000km.</description>
 		<typeTag>Planet</typeTag>
 		<gravityWellExitElevation>1000</gravityWellExitElevation>
 		<gravityWellRadius>200</gravityWellRadius>

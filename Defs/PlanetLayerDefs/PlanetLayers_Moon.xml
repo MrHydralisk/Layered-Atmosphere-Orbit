@@ -4,7 +4,7 @@
 	<PlanetLayerDef Name="LAO_MoonSurfaceBase" Abstract="True">
 		<layerType>SurfaceLayer</layerType>
 		<tileType>SurfaceTile</tileType>
-		<elevationString>{0}m</elevationString>
+		<elevationString>{0} m</elevationString>
 		<gerundLabel>on the</gerundLabel>
 		<backgroundBiome>LAO_Luna</backgroundBiome>
 		<onlyAllowWhitelistedIncidents>true</onlyAllowWhitelistedIncidents>

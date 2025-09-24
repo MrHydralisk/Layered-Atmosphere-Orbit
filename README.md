@@ -54,7 +54,7 @@ Should have no compatibility issues with other mods itself. Will work without is
 
 Supported languages:
 * English,
-* Russian (TBA),
+* Russian,
 * Japanese (available on JP mod database site),
 * Chinese (available on workshop by 天山螣老)
 
@@ -64,7 +64,6 @@ Layered Atmosphere and Orbit mod should be safe to add even to existing save. Ho
 
 ## To Do
 
-- RU TL.
 - More content to new planet layers and moon.
 - Create a new scenario for a tribal start on a floating island.
 - Possible support for underwater/underground planet layers.
