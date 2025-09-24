@@ -110,22 +110,23 @@ namespace LayeredAtmosphereOrbit
                 //{
                 //    if (options.ButtonText($"Remove current {planetLayer.Def.defName}"))
                 //    {
-                //        Find.WorldSelector.SelectedLayer = Find.WorldGrid.PlanetLayers.Values.FirstOrDefault(pl => pl != planetLayer);
+                //        Find.WorldSelector.SelectedLayer = worldGrid.PlanetLayers.Values.FirstOrDefault(pl => pl != planetLayer);
                 //        List<WorldObject> worldObjects = Find.WorldObjects.AllWorldObjectsOnLayer(planetLayer);
                 //        for (int i = worldObjects.Count - 1; i > -1; i--)
                 //        {
                 //            worldObjects[i].Destroy();
                 //        }
-                //        Find.WorldGrid.RemovePlanetLayer(planetLayer);
+                //        worldGrid.RemovePlanetLayer(planetLayer);
                 //    }
                 //}
                 options.GapLine();
+                WorldGrid worldGrid = Find.World?.grid;
                 if (options.ButtonText("IncidentDef Per PlanetLayer"))
                 {
                     List<IncidentDef> AllIncidentDefs = DefDatabase<IncidentDef>.AllDefs.ToList();
-                    if (Find.WorldGrid != null)
+                    if (worldGrid != null)
                     {
-                        List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
+                        List<PlanetLayer> AllPlanetLayers = worldGrid.PlanetLayers.Values.ToList();
                         Log.Message($"Available BiomeDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName} {pl.Def.onlyAllowWhitelistedIncidents}\n{string.Join("\n", AllIncidentDefs.Select((id) => $"      {id.defName} {pl.Def.TestIncidentDefOnLayerDef(id)} {id.canOccurOnAllPlanetLayers}"))}"))}");
                     }
                     else
@@ -137,9 +138,9 @@ namespace LayeredAtmosphereOrbit
                 if (options.ButtonText("BiomeDef Per PlanetLayer"))
                 {
                     List<BiomeDef> AllBiomeDefs = DefDatabase<BiomeDef>.AllDefs.ToList();
-                    if (Find.WorldGrid != null)
+                    if (worldGrid != null)
                     {
-                        List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
+                        List<PlanetLayer> AllPlanetLayers = worldGrid.PlanetLayers.Values.ToList();
                         Log.Message($"Available BiomeDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName} {pl.Def.onlyAllowWhitelistedBiomes}\n{string.Join("\n", AllBiomeDefs.Select((bd) => $"      {bd.defName} {pl.Def.TestBiomeDefOnLayerDef(bd)} {pl.Def.onlyAllowWhitelistedBiomes}"))}"))}");
                     }
                     else
@@ -151,9 +152,9 @@ namespace LayeredAtmosphereOrbit
                 if (options.ButtonText("GameConditionDef Per PlanetLayer"))
                 {
                     List<GameConditionDef> AllGameConditionDefs = DefDatabase<GameConditionDef>.AllDefs.ToList();
-                    if (Find.WorldGrid != null)
+                    if (worldGrid != null)
                     {
-                        List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
+                        List<PlanetLayer> AllPlanetLayers = worldGrid.PlanetLayers.Values.ToList();
                         Log.Message($"Available GameConditionDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName} {pl.Def.onlyAllowWhitelistedGameConditions}\n{string.Join("\n", AllGameConditionDefs.Select((gcd) => $"      {gcd.defName} {pl.Def.TestGameConditionDefOnLayerDef(gcd)} {gcd.canAffectAllPlanetLayers}"))}"))}");
                     }
                     else
@@ -165,9 +166,9 @@ namespace LayeredAtmosphereOrbit
                 if (options.ButtonText("QuestScriptDef Per PlanetLayer"))
                 {
                     List<QuestScriptDef> AllQuestScriptDefs = DefDatabase<QuestScriptDef>.AllDefs.ToList();
-                    if (Find.WorldGrid != null)
+                    if (worldGrid != null)
                     {
-                        List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
+                        List<PlanetLayer> AllPlanetLayers = worldGrid.PlanetLayers.Values.ToList();
                         Log.Message($"Available QuestScriptDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName} {pl.Def.onlyAllowWhitelistedQuests}\n{string.Join("\n", AllQuestScriptDefs.Select((qsd) => $"      {qsd.defName} {pl.Def.TestQuestScriptDefOnLayerDef(qsd)} {qsd.everAcceptableInSpace} {qsd.neverPossibleInSpace}"))}"))}");
                     }
                     else
@@ -179,9 +180,9 @@ namespace LayeredAtmosphereOrbit
                 if (options.ButtonText("FactionDefs arrival Per PlanetLayer"))
                 {
                     List<FactionDef> AllFactionDefs = DefDatabase<FactionDef>.AllDefs.ToList();
-                    if (Find.WorldGrid != null)
+                    if (worldGrid != null)
                     {
-                        List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
+                        List<PlanetLayer> AllPlanetLayers = worldGrid.PlanetLayers.Values.ToList();
                         Log.Message($"Available arrival FactionDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName}\n{string.Join("\n", AllFactionDefs.Select((fd) => $"      {fd.defName} {pl.Def.TestArrivalFactionDefOnLayerDef(fd)} {fd.techLevel}"))}"))}");
                     }
                     else
@@ -193,9 +194,9 @@ namespace LayeredAtmosphereOrbit
                 if (options.ButtonText("FactionDefs Per PlanetLayer"))
                 {
                     List<FactionDef> AllFactionDefs = DefDatabase<FactionDef>.AllDefs.ToList();
-                    if (Find.WorldGrid != null)
+                    if (worldGrid != null)
                     {
-                        List<PlanetLayer> AllPlanetLayers = Find.WorldGrid.PlanetLayers.Values.ToList();
+                        List<PlanetLayer> AllPlanetLayers = worldGrid.PlanetLayers.Values.ToList();
                         Log.Message($"Available FactionDef:\n{string.Join("\n", AllPlanetLayers.Select((pl) => $"   {pl.Def.defName}\n{string.Join("\n", AllFactionDefs.Select((fd) => $"      {fd.defName} {FactionGenerator.CanExistOnLayer(pl, fd)} {fd.techLevel}"))}"))}");
                     }
                     else
