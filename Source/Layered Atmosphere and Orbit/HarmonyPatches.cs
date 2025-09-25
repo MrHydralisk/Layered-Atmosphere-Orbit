@@ -37,6 +37,7 @@ namespace LayeredAtmosphereOrbit
             val.Patch(AccessTools.Method(typeof(PawnApparelGenerator), "NeedVacuumResistance"), transpiler: new HarmonyMethod(patchType, "PAG_NeedVacuumResistance_Transpiler"));
             //val.Patch(AccessTools.Method(typeof(TemperatureVacuumSaveLoad), "DoExposeWork"), transpiler: new HarmonyMethod(patchType, "TVSL_DoExposeWork_Transpiler"));
             //val.Patch(AccessTools.Property(typeof(Room), "Vacuum").GetGetMethod(), transpiler: new HarmonyMethod(patchType, "Room_Vacuum_Transpiler"));
+            val.Patch(AccessTools.Method(typeof(FactionGenerator), "InitializeFactions"), transpiler: new HarmonyMethod(patchType, "FG_InitializeFactions_Transpiler"));
             if (LAOMod.Settings.ShowLayerInGroup)
             {
                 val.Patch(AccessTools.Method(typeof(ExpandableWorldObjectsUtility), "TransitionPct"), postfix: new HarmonyMethod(patchType, "EWOU_TransitionPct_Postfix"));
@@ -933,6 +934,32 @@ namespace LayeredAtmosphereOrbit
         //    }
         //    return codes.AsEnumerable();
         //}
+
+        public static IEnumerable<CodeInstruction> FG_InitializeFactions_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
+        {
+            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count - 2; i++)
+            {
+                if (codes[i].opcode == OpCodes.Call && (codes[i].operand?.ToString().Contains("CanExistOnLayer") ?? false))
+                {
+                    List<CodeInstruction> instructionsToInsert = new List<CodeInstruction>();
+                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Ldarg_0));
+                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Ldloc_1));
+                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Ldarg_1));
+                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HarmonyPatches), "InitializeFactionsWoDuplicates")));
+                    instructionsToInsert.Add(new CodeInstruction(OpCodes.Brtrue_S, (Label)codes[i + 1].operand));
+                    codes.InsertRange(i+2, instructionsToInsert);
+                }
+            }
+            return codes.AsEnumerable();
+        }
+
+        public static bool InitializeFactionsWoDuplicates(PlanetLayer layer, FactionDef factionDef, List<FactionDef> factions)
+        {
+            return (layer?.Def.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.isAvoidFactionDuplication ?? false) && Find.FactionManager.AllFactions.Count((Faction f) => f.def == factionDef) >= factions.Count((FactionDef fd) => fd == factionDef);
+        }
+
+        //ShowLayerInGroup
 
         public static void EWOU_TransitionPct_Postfix(ref float __result, WorldObject wo)
         {

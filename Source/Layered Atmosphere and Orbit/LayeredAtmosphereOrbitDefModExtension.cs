@@ -12,6 +12,7 @@ namespace LayeredAtmosphereOrbit
         public bool isSurface = false;
         public bool isPreventQuestMapIfNotWhitelisted = false;
         public bool onlyAllowWhitelistedFactions = false;
+        public bool isAvoidFactionDuplication = true;
         public float elevation = 200;
         public float tempOffest = 0;
         public float vacuum = -1;
