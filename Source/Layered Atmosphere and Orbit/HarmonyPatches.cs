@@ -956,7 +956,13 @@ namespace LayeredAtmosphereOrbit
 
         public static bool InitializeFactionsWoDuplicates(PlanetLayer layer, FactionDef factionDef, List<FactionDef> factions)
         {
-            return (layer?.Def.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.isAvoidFactionDuplication ?? false) && Find.FactionManager.AllFactions.Count((Faction f) => f.def == factionDef) >= factions.Count((FactionDef fd) => fd == factionDef);
+            if ((layer?.LayerID ?? -1) > 0 && (layer.Def.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.isAvoidFactionDuplication ?? false))
+            {
+                int exist = Find.FactionManager.AllFactions.EnumerableNullOrEmpty() ? 0 : Find.FactionManager.AllFactions.Count((Faction f) => f?.def == factionDef);
+                int need = factions.NullOrEmpty() ? 0 : factions.Count((FactionDef fd) => fd == factionDef);
+                return exist >= need;
+            }
+            return false;
         }
 
         //ShowLayerInGroup
