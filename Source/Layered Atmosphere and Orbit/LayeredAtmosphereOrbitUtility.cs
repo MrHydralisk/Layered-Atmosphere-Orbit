@@ -10,13 +10,13 @@ namespace LayeredAtmosphereOrbit
     {
         public static List<ScenPart_PlanetLayer> planetLayersLAO;
         public static Dictionary<PlanetLayerGroupDef, List<PlanetLayerDef>> planetLayerGroups;
-        public static Dictionary<PlanetDef, List<PlanetLayerDef>> planets;
+        public static Dictionary<PlanetDef, List<PlanetLayerGroupDef>> planets;
         public static Dictionary<Map, float> mapVacuum = new Dictionary<Map, float>();
 
         public static void ResetLayerData()
         {
             planetLayerGroups = new Dictionary<PlanetLayerGroupDef, List<PlanetLayerDef>>();
-            planets = new Dictionary<PlanetDef, List<PlanetLayerDef>>();
+            planets = new Dictionary<PlanetDef, List<PlanetLayerGroupDef>>();
             List<PlanetLayerDef> AllPlanetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefs.ToList();
             foreach (PlanetLayerDef planetLayerDef in AllPlanetLayerDefs)
             {
@@ -32,16 +32,16 @@ namespace LayeredAtmosphereOrbit
                         planetLayerGroups.Add(planetLayerGroupDef, new List<PlanetLayerDef>() { planetLayerDef });
                     }
                 }
-                PlanetDef planetDef = planetLayerDef.Planet();
+                PlanetDef planetDef = planetLayerGroupDef.planet;
                 if (planetDef != null)
                 {
-                    if (planets.TryGetValue(planetDef, out List<PlanetLayerDef> subPlanetLayers))
+                    if (planets.TryGetValue(planetDef, out List<PlanetLayerGroupDef> subPlanetLayerGroups))
                     {
-                        subPlanetLayers.Add(planetLayerDef);
+                        subPlanetLayerGroups.Add(planetLayerGroupDef);
                     }
                     else
                     {
-                        planets.Add(planetDef, new List<PlanetLayerDef>() { planetLayerDef });
+                        planets.Add(planetDef, new List<PlanetLayerGroupDef>() { planetLayerGroupDef });
                     }
                 }
             }
@@ -284,6 +284,26 @@ namespace LayeredAtmosphereOrbit
         {
             List<PlanetLayerDef> subPlanetLayers = new List<PlanetLayerDef>();
             planetLayerGroups.TryGetValue(planetLayerGroup, out subPlanetLayers);
+            return subPlanetLayers;
+        }
+
+        public static List<PlanetLayerGroupDef> ContainedLayerGroups(this PlanetDef planet)
+        {
+            List<PlanetLayerGroupDef> subPlanetLayerGroups = new List<PlanetLayerGroupDef>();
+            planets.TryGetValue(planet, out subPlanetLayerGroups);
+            return subPlanetLayerGroups;
+        }
+
+        public static List<PlanetLayerDef> ContainedLayers(this PlanetDef planet)
+        {
+            List<PlanetLayerDef> subPlanetLayers = new List<PlanetLayerDef>();
+            foreach (PlanetLayerGroupDef planetLayerGroupDef in planet.ContainedLayerGroups())
+            {
+                if (planetLayerGroups.TryGetValue(planetLayerGroupDef, out List<PlanetLayerDef> planetLayers))
+                {
+                    subPlanetLayers.AddRange(planetLayers);
+                }
+            }
             return subPlanetLayers;
         }
 
