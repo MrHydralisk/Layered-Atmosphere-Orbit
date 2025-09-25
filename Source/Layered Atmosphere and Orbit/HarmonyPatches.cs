@@ -1151,7 +1151,7 @@ namespace LayeredAtmosphereOrbit
         public static void G_CurrentMap_Postfix(Map value)
         {
             PlanetLayer planetLayer = value?.Tile.Layer;
-            if (planetLayer != null && GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef != planetLayer.Def.Planet())
+            if (Current.ProgramState == ProgramState.Playing && planetLayer != null && GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef != planetLayer.Def.Planet())
             {
                 Find.WorldSelector.SelectedLayer = planetLayer;
             }
