@@ -16,6 +16,7 @@ namespace LayeredAtmosphereOrbit
         public float elevation = 200;
         public float tempOffest = 0;
         public float vacuum = -1;
+        public float multScatterLumpsMineable = 1f;
         public PlanetLayerGroupDef planetLayerGroup;
         public List<PlanetLayerDef> forcedConnectToPlanetLayer = new List<PlanetLayerDef>();
         public List<BiomeDef> availableBiomes = new List<BiomeDef>();

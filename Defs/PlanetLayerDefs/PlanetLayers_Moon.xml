@@ -55,6 +55,7 @@
 				<isSurface>true</isSurface>
 				<elevation>0</elevation>
 				<planetLayerGroup>LAO_Surface_Luna</planetLayerGroup>
+				<multScatterLumpsMineable>2</multScatterLumpsMineable>
 				<IncidentChanceMultipliers>
 					<OrbitalDebris>5</OrbitalDebris>
 					<SolarFlare>2.3</SolarFlare>

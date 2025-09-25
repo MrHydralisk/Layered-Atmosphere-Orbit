@@ -38,6 +38,7 @@ namespace LayeredAtmosphereOrbit
             //val.Patch(AccessTools.Method(typeof(TemperatureVacuumSaveLoad), "DoExposeWork"), transpiler: new HarmonyMethod(patchType, "TVSL_DoExposeWork_Transpiler"));
             //val.Patch(AccessTools.Property(typeof(Room), "Vacuum").GetGetMethod(), transpiler: new HarmonyMethod(patchType, "Room_Vacuum_Transpiler"));
             val.Patch(AccessTools.Method(typeof(FactionGenerator), "InitializeFactions"), transpiler: new HarmonyMethod(patchType, "FG_InitializeFactions_Transpiler"));
+            val.Patch(AccessTools.Method(typeof(GenStep_ScatterLumpsMineable), "CalculateFinalCount"), postfix: new HarmonyMethod(patchType, "GSSLM_CalculateFinalCount_Postfix"));
             if (LAOMod.Settings.ShowLayerInGroup)
             {
                 val.Patch(AccessTools.Method(typeof(ExpandableWorldObjectsUtility), "TransitionPct"), postfix: new HarmonyMethod(patchType, "EWOU_TransitionPct_Postfix"));
@@ -963,6 +964,15 @@ namespace LayeredAtmosphereOrbit
                 return exist >= need;
             }
             return false;
+        }
+
+        public static void GSSLM_CalculateFinalCount_Postfix(ref int __result, Map map)
+        {
+            float mult = map.Tile.LayerDef.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.multScatterLumpsMineable ?? 1f;
+            if (mult != 1f)
+            {
+                __result = Mathf.RoundToInt(__result * mult);
+            }
         }
 
         //ShowLayerInGroup
