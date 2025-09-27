@@ -32,7 +32,7 @@ namespace LayeredAtmosphereOrbit
                         planetLayerGroups.Add(planetLayerGroupDef, new List<PlanetLayerDef>() { planetLayerDef });
                     }
                 }
-                PlanetDef planetDef = planetLayerGroupDef.planet;
+                PlanetDef planetDef = planetLayerGroupDef?.planet;
                 if (planetDef != null)
                 {
                     if (planets.TryGetValue(planetDef, out List<PlanetLayerGroupDef> subPlanetLayerGroups))
