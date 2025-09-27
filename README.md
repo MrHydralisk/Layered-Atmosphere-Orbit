@@ -31,6 +31,7 @@ Layered Atmosphere and Orbit (LAO) mod adds new planet layers with their own poi
 ### Features of Mod Settings:
 
 * Option to hide "view ***" buttons for individual planet layers, which is especially useful when many modded layers clutter the interface. Leaving only LAO's compact button.
+* Option to group "view ***" in LAO's compact button by planet layer groups and planets, which is usefull when more than one planet.
 * Option to hide Terrain, Planet and Orbit world interface tabs. Leaving only LAO's Layer tab combining all that info.
 * Option for additional fuel cost to fly from a lower layer to a higher layer. It makes it more logical that you need more fuel to counter the force of gravity. Have an adjustable fuel per km ratio.
 * Option to adjust fuel cost for Grav Jump between planets and moons. Have an adjustable km per fuel ratio.

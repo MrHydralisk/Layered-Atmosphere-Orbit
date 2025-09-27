@@ -126,7 +126,7 @@ namespace LayeredAtmosphereOrbit
                     {
                         generatedLocationDef.worldObjectDef.inspectorTabsResolved = new List<InspectTabBase>() { (InspectTabBase)Activator.CreateInstance(typeof(WITab_PlanetLayer)) };
                     }
-                    else if(!generatedLocationDef.worldObjectDef.inspectorTabsResolved.Any((InspectTabBase itb) => itb is WITab_PlanetLayer))
+                    else if (!generatedLocationDef.worldObjectDef.inspectorTabsResolved.Any((InspectTabBase itb) => itb is WITab_PlanetLayer))
                     {
                         generatedLocationDef.worldObjectDef.inspectorTabsResolved.Add((InspectTabBase)Activator.CreateInstance(typeof(WITab_PlanetLayer)));
                     }
@@ -786,24 +786,33 @@ namespace LayeredAtmosphereOrbit
                     icon = currentLayer.Def.ViewGizmoTexture,
                     action = delegate
                     {
-                        List<FloatMenuOption> floatMenuOptions = new List<FloatMenuOption>();
-
-                        for (int i = 0; i < ___planetLayers.Count; i++)
+                        if (LAOMod.Settings.GroupedAllViewLayerGizmo)
                         {
-                            PlanetLayer planetLayer = ___planetLayers[i];
-                            AcceptanceReport acceptanceReportPL = planetLayer.CanSelectLayer();
-                            FloatMenuOption floatMenuOption = new FloatMenuOption("WorldSelectLayer".Translate(planetLayer.Def.Named("LAYER")), delegate
-                            {
-                                PlanetLayer.Selected = planetLayer;
-                            }, planetLayer.Def.ViewGizmoTexture, Color.white, orderInPriority: (int)planetLayer.Def.Elevation());
-                            if (!acceptanceReportPL.Accepted)
-                            {
-                                floatMenuOption.Disabled = true;
-                                floatMenuOption.Label += $"[{acceptanceReportPL.Reason}]";
-                            }
-                            floatMenuOptions.Add(floatMenuOption);
+                            Find.WindowStack.Add(new PlanetLayerSelectionFloatMenu(currentLayer, ___planetLayers.Values.ToList()));
                         }
-                        Find.WindowStack.Add(new FloatMenu(floatMenuOptions));
+                        else
+                        {
+                            List<FloatMenuOption> floatMenuOptions = new List<FloatMenuOption>();
+                            for (int i = 0; i < ___planetLayers.Count; i++)
+                            {
+                                PlanetLayer planetLayer = ___planetLayers[i];
+                                AcceptanceReport acceptanceReportPL = planetLayer.CanSelectLayer();
+                                FloatMenuOption floatMenuOption = new FloatMenuOption("WorldSelectLayer".Translate(planetLayer.Def.Named("LAYER")), delegate
+                                {
+                                    PlanetLayer.Selected = planetLayer;
+                                }, planetLayer.Def.ViewGizmoTexture, Color.white, orderInPriority: (int)planetLayer.Def.Elevation())
+                                {
+                                    tooltip = new TipSignal(planetLayer.Def.viewGizmoTooltip, planetLayer.Def.index ^ 0x1241961)
+                                };
+                                if (!acceptanceReportPL.Accepted)
+                                {
+                                    floatMenuOption.Disabled = true;
+                                    floatMenuOption.Label += $"[{acceptanceReportPL.Reason}]";
+                                }
+                                floatMenuOptions.Add(floatMenuOption);
+                            }
+                            Find.WindowStack.Add(new FloatMenu(floatMenuOptions, "Title"));
+                        }
                     }
                 };
                 NGizmos.Insert(LAOMod.Settings.ReplaceAllViewLayerGizmo ? 0 : 1, command_Action);
@@ -950,7 +959,7 @@ namespace LayeredAtmosphereOrbit
                     instructionsToInsert.Add(new CodeInstruction(OpCodes.Ldarg_1));
                     instructionsToInsert.Add(new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HarmonyPatches), "InitializeFactionsWoDuplicates")));
                     instructionsToInsert.Add(new CodeInstruction(OpCodes.Brtrue_S, (Label)codes[i + 1].operand));
-                    codes.InsertRange(i+2, instructionsToInsert);
+                    codes.InsertRange(i + 2, instructionsToInsert);
                 }
             }
             return codes.AsEnumerable();
@@ -1191,7 +1200,7 @@ namespace LayeredAtmosphereOrbit
 
         public static void T_OnSurface_Postfix(ref bool __result, Tile __instance)
         {
-            __result = __result ||( __instance.Layer.Def.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.isSurface ?? false);
+            __result = __result || (__instance.Layer.Def.GetModExtension<LayeredAtmosphereOrbitDefModExtension>()?.isSurface ?? false);
         }
 
         public static bool WITT_IsVisible_Prefix(ref bool __result)

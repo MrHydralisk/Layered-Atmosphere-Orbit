@@ -49,6 +49,7 @@
     <Compile Include="BiomeWorker_MoonBase.cs" />
     <Compile Include="IncidentChanceMultiplier.cs" />
     <Compile Include="Crators.cs" />
+    <Compile Include="PlanetLayerSelectionFloatMenu.cs" />
     <Compile Include="WorldDrawLayer_UngeneratedPlanetPartsBackgroundBiome.cs" />
     <Compile Include="WITab_PlanetLayer.cs" />
     <Compile Include="PlanetLayerGroupDefOfLocal.cs" />

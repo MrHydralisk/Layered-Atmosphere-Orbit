@@ -72,6 +72,7 @@ namespace LayeredAtmosphereOrbit
             options.Label("LayeredAtmosphereOrbit.Settings.TransparentInGroupSub".Translate(Settings.TransparentInGroupSub.ToStringPercent()));
             Settings.TransparentInGroupSub = Mathf.Round(options.Slider(Settings.TransparentInGroupSub, 0f, 1f) * 100f) / 100f;
             options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.ReplaceAllViewLayerGizmo".Translate().RawText, ref Settings.ReplaceAllViewLayerGizmo);
+            options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.GroupedAllViewLayerGizmo".Translate().RawText, ref Settings.GroupedAllViewLayerGizmo);
             options.GapLine();
             options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.PlanetPatches".Translate().RawText, ref Settings.PlanetPatches);
             //options.CheckboxLabeled("LayeredAtmosphereOrbit.Settings.HideOtherPlanets".Translate().RawText, ref Settings.HideOtherPlanets);
