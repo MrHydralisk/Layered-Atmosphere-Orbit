@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
+using Verse.Profile;
 
 namespace LayeredAtmosphereOrbit
 {
@@ -39,6 +40,7 @@ namespace LayeredAtmosphereOrbit
             //val.Patch(AccessTools.Property(typeof(Room), "Vacuum").GetGetMethod(), transpiler: new HarmonyMethod(patchType, "Room_Vacuum_Transpiler"));
             val.Patch(AccessTools.Method(typeof(FactionGenerator), "InitializeFactions"), transpiler: new HarmonyMethod(patchType, "FG_InitializeFactions_Transpiler"));
             val.Patch(AccessTools.Method(typeof(GenStep_ScatterLumpsMineable), "CalculateFinalCount"), postfix: new HarmonyMethod(patchType, "GSSLM_CalculateFinalCount_Postfix"));
+            val.Patch(AccessTools.Method(typeof(Game), "InitNewGame"), prefix: new HarmonyMethod(patchType, "G_InitNewGame_Prefix"));
             if (LAOMod.Settings.ShowLayerInGroup)
             {
                 val.Patch(AccessTools.Method(typeof(ExpandableWorldObjectsUtility), "TransitionPct"), postfix: new HarmonyMethod(patchType, "EWOU_TransitionPct_Postfix"));
@@ -983,6 +985,85 @@ namespace LayeredAtmosphereOrbit
             {
                 __result = Mathf.RoundToInt(__result * mult);
             }
+        }
+
+        public static bool G_InitNewGame_Prefix(Game __instance, List<Map> ___maps, GameInitData ___initData, GameInfo ___info, World ___worldInt)
+        {
+            Scenario scenario = __instance.Scenario;
+            ScenPart_StartWorldObjectMap scenPart_StartWorldObjectMap = __instance.Scenario.parts.FirstOrDefault((ScenPart p) => p is ScenPart_StartWorldObjectMap) as ScenPart_StartWorldObjectMap;
+            if (scenPart_StartWorldObjectMap == null)
+            {
+                return true;
+            }
+            string text = LoadedModManager.RunningMods.Select((ModContentPack mod) => mod.PackageIdPlayerFacing + ((!mod.ModMetaData.VersionCompatible) ? " (incompatible version)" : "")).ToLineList("  - ");
+            Log.Message("Initializing new game with mods:\n" + text);
+            if (___maps.Any())
+            {
+                Log.Error("Called InitNewGame() but there already is a map. There should be 0 maps...");
+                return false;
+            }
+            if (___initData == null)
+            {
+                Log.Error("Called InitNewGame() but init data is null. Create it first.");
+                return false;
+            }
+            Game.ClearCaches();
+            MemoryUtility.UnloadUnusedUnityAssets();
+            try
+            {
+                Current.ProgramState = ProgramState.MapInitializing;
+                IntVec3 size = new IntVec3(___initData.mapSize, 1, ___initData.mapSize);
+                ___worldInt.info.initialMapSize = size;
+                if (scenPart_StartWorldObjectMap.worldObjectDef?.overrideMapSize.HasValue ?? false)
+                {
+                    size = scenPart_StartWorldObjectMap.worldObjectDef.overrideMapSize.Value;
+                }
+                __instance.tickManager.gameStartAbsTick = GenTicks.ConfiguredTicksAbsAtGameStart;
+                PlanetLayer planetLayer = Find.WorldGrid.FirstLayerOfDef(scenPart_StartWorldObjectMap.layerDef);
+                if (planetLayer != null)
+                {
+                    ___initData.startingTile = planetLayer.GetClosestTile_NewTemp(___initData.startingTile);
+                }
+                ___info.startingTile = ___initData.startingTile;
+                ___info.startingAndOptionalPawns = ___initData.startingAndOptionalPawns;
+                MapParent mapParent = WorldObjectMaker.MakeWorldObject(scenPart_StartWorldObjectMap.worldObjectDef) as MapParent;
+                if (mapParent is INameableWorldObject nameableWorldObject)
+                {
+                    nameableWorldObject.Name = NameGenerator.GenerateName(mapParent.def.nameMaker, null, appendNumberIfNameUsed: false, "r_name", null, null);
+                }
+                mapParent.isGeneratedLocation = false;
+                mapParent.Tile = ___info.startingTile;
+                mapParent.SetFaction(Faction.OfPlayer);
+                ___worldInt.worldObjects.Add(mapParent);
+                Map currentMap = MapGenerator.GenerateMap(size, mapParent, scenPart_StartWorldObjectMap.mapGenerator ?? scenPart_StartWorldObjectMap.worldObjectDef.mapGenerator, new List<GenStepWithParams>() { new GenStepWithParams(DefDatabase<GenStepDef>.GetNamed("FindPlayerStartSpot"), new GenStepParams())});
+                if (___initData.permadeath)
+                {
+                    ___info.permadeathMode = true;
+                    ___info.permadeathModeUniqueName = PermadeathModeUtility.GeneratePermadeathSaveName();
+                }
+                PawnUtility.GiveAllStartingPlayerPawnsThought(ThoughtDefOf.NewColonyOptimism);
+                __instance.FinalizeInit();
+                Current.Game.CurrentMap = currentMap;
+                Find.CameraDriver.JumpToCurrentMapLoc(MapGenerator.PlayerStartSpot);
+                Find.CameraDriver.ResetSize();
+                if (Prefs.PauseOnLoad && ___initData.startedFromEntry)
+                {
+                    LongEventHandler.ExecuteWhenFinished(delegate
+                    {
+                        __instance.tickManager.DoSingleTick();
+                        __instance.tickManager.CurTimeSpeed = TimeSpeed.Paused;
+                    });
+                }
+                Find.Scenario.PostGameStart();
+                __instance.history.FinalizeInit();
+                ResearchUtility.ApplyPlayerStartingResearch();
+                GameComponentUtility.StartedNewGame();
+                ___initData = null;
+            }
+            finally
+            {
+            }
+            return false;
         }
 
         //ShowLayerInGroup
