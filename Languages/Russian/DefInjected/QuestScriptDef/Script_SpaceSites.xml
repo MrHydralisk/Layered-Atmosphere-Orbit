@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <LanguageData>
 
+	<OpportunitySite_LAO_GiantAsteroidMiningSite.questDescriptionRules.rulesStrings.0>questDescription->[discoveryMethod] местоположение гигантского астероида на орбите планеты. В нем в больших количествах содержится [resource] и, возможно, другие ресурсы.\n\nОрбитальные шахтеры направляют ценные астероиды на орбиту планеты, чтобы их было легче добывать и продавать орбитальным торговцам. Признаков жизни на астероиде не обнаружено, однако улавливаются сигналы механоидов.\n\nДобраться до астероида можно на транспортных капсулах, шаттлах или гравикорабле. Перед вылетом оснастите поселенцев подходящей орбитальной одеждой.</OpportunitySite_LAO_GiantAsteroidMiningSite.questDescriptionRules.rulesStrings.0>
 	<OpportunitySite_LAO_GiantAsteroidMiningSite.questNameRules.rulesStrings>
 		<li>questName->[size] [resource] Астероид</li>
 		<li>size->Гигантский</li>

@@ -6,7 +6,7 @@
 		<label>Stranded Above Tribe</label>
 		<description>You were separated from your nomadic tribe by being raised high into the sky on a floating island. Now, it's time to survive in isolation and find your way back to the surface.\n\nNote: Since you'll start poor, lack technology and can't use caravans, but isolated from some surface threats, this is a scenario of moderate difficulty.</description>
 		<scenario>
-			<summary>Five tribespeople carried away into the sky. Difficult.</summary>
+			<summary>Five tribespeople carried away into the sky. Moderately difficult.</summary>
 			<playerFaction>
 				<factionDef>PlayerTribe</factionDef>
 			</playerFaction>

@@ -22,6 +22,7 @@ Layered Atmosphere and Orbit (LAO) mod adds new planet layers with their own poi
 * Introduces Luna moon as proof of concept.
 * Adds numerous natural and quest-generated world objects to the new planet layers.
 * A dedicated tab now describes the currently selected world object, its associated planet layer, biome and planet/moon.
+* Scenario of five tribespeople carried away into the sky on a giant floating island. Can be edited to any non surface planet layer and any world objects as a starting map.
 
 ![Text](/Mod%20Page/Images/Content/LAODesc1.png)
 ![Text](/Mod%20Page/Images/Content/LAODesc2.png)
@@ -52,6 +53,9 @@ Was intended to be part of [Complementary Odyssey](https://steamcommunity.com/sh
 ## Mod Compatibility
 
 Should have no compatibility issues with other mods itself. Will work without issues even with mods that adds unrelated new planet layers, but for better integration request additional compatibility patch for such mod. This would insert new layer within LAO's planet layer groups. Process is very simple, so refer to **For Modders**.
+
+Deeper integration with:
+[url=https://steamcommunity.com/workshop/filedetails/?id=3569410532] Mod Collection [/url]
 
 Supported languages:
 * English,
