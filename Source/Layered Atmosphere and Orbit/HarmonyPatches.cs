@@ -1018,6 +1018,15 @@ namespace LayeredAtmosphereOrbit
                 {
                     size = scenPart_StartWorldObjectMap.worldObjectDef.overrideMapSize.Value;
                 }
+                List<Settlement> settlements = Find.WorldObjects.Settlements;
+                for (int i = 0; i < settlements.Count; i++)
+                {
+                    if (settlements[i].Faction == Faction.OfPlayer)
+                    {
+                        Find.WorldObjects.Remove(settlements[i]);
+                        break;
+                    }
+                }
                 __instance.tickManager.gameStartAbsTick = GenTicks.ConfiguredTicksAbsAtGameStart;
                 PlanetLayer planetLayer = Find.WorldGrid.FirstLayerOfDef(scenPart_StartWorldObjectMap.layerDef);
                 if (planetLayer != null)
@@ -1035,7 +1044,17 @@ namespace LayeredAtmosphereOrbit
                 mapParent.Tile = ___info.startingTile;
                 mapParent.SetFaction(Faction.OfPlayer);
                 ___worldInt.worldObjects.Add(mapParent);
-                Map currentMap = MapGenerator.GenerateMap(size, mapParent, scenPart_StartWorldObjectMap.mapGenerator ?? scenPart_StartWorldObjectMap.worldObjectDef.mapGenerator, new List<GenStepWithParams>() { new GenStepWithParams(DefDatabase<GenStepDef>.GetNamed("FindPlayerStartSpot"), new GenStepParams())});
+                Map currentMap = MapGenerator.GenerateMap(size, mapParent, scenPart_StartWorldObjectMap.mapGenerator ?? scenPart_StartWorldObjectMap.worldObjectDef.mapGenerator, new List<GenStepWithParams>() { new GenStepWithParams(DefDatabase<GenStepDef>.GetNamed("FindPlayerStartSpot"), new GenStepParams()) });
+                MapParent parent = currentMap.Parent;
+                Settlement settlement = SettleUtility.AddNewHome(currentMap.Tile, Faction.OfPlayer);
+                currentMap.info.parent = settlement;
+                if (parent != null)
+                {
+                    settlement.questTags = parent.questTags;
+                    parent.Notify_MyMapSettled(currentMap);
+                    parent.Destroy();
+                }
+                settlement.Notify_MyMapSettled(currentMap);
                 if (___initData.permadeath)
                 {
                     ___info.permadeathMode = true;

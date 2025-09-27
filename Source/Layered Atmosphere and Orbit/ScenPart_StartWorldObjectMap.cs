@@ -1,11 +1,8 @@
-﻿using RimWorld.Planet;
-using RimWorld;
-using RimWorld.QuestGen;
+﻿using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
-using UnityEngine.Tilemaps;
 
 namespace LayeredAtmosphereOrbit
 {
