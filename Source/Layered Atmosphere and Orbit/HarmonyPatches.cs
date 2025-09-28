@@ -66,7 +66,7 @@ namespace LayeredAtmosphereOrbit
                 val.Patch(AccessTools.Property(typeof(WorldSelector), "SelectedLayer").GetSetMethod(), postfix: new HarmonyMethod(patchType, "WS_SelectedLayer_Postfix"));
                 val.Patch(AccessTools.Method(typeof(Map), "FinalizeInit"), postfix: new HarmonyMethod(patchType, "M_FinalizeInit_Postfix"));
                 val.Patch(AccessTools.Property(typeof(Game), "CurrentMap").GetSetMethod(), postfix: new HarmonyMethod(patchType, "G_CurrentMap_Postfix"));
-                val.Patch(AccessTools.Method(typeof(CameraJumper), "TryHideWorld"), postfix: new HarmonyMethod(patchType, "CJ_TryHideWorld_Postfix"));
+                //val.Patch(AccessTools.Method(typeof(CameraJumper), "TryHideWorld"), postfix: new HarmonyMethod(patchType, "CJ_TryHideWorld_Postfix"));
                 val.Patch(AccessTools.Method(typeof(WorldInterface), "Reset"), postfix: new HarmonyMethod(patchType, "WI_Reset_Postfix"));
                 val.Patch(AccessTools.Method(typeof(MainButtonWorker_ToggleWorld), "Activate"), postfix: new HarmonyMethod(patchType, "MBWTW_Activate_Postfix"));
                 val.Patch(AccessTools.Method(typeof(Page_SelectStartingSite), "PreOpen"), postfix: new HarmonyMethod(patchType, "PSSS_PreOpen_Postfix"));
@@ -1266,14 +1266,14 @@ namespace LayeredAtmosphereOrbit
             }
         }
 
-        public static void CJ_TryHideWorld_Postfix()
-        {
-            PlanetLayer planetLayer = Find.CurrentMap?.Tile.Layer;
-            if (planetLayer != null && GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef != planetLayer.Def.Planet())
-            {
-                Find.WorldSelector.SelectedLayer = planetLayer;
-            }
-        }
+        //public static void CJ_TryHideWorld_Postfix()
+        //{
+        //    PlanetLayer planetLayer = Find.CurrentMap?.Tile.Layer;
+        //    if (planetLayer != null && GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef != planetLayer.Def.Planet())
+        //    {
+        //        Find.WorldSelector.SelectedLayer = planetLayer;
+        //    }
+        //}
 
         public static void WI_Reset_Postfix()
         {
