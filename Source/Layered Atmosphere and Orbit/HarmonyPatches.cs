@@ -74,6 +74,7 @@ namespace LayeredAtmosphereOrbit
                 val.Patch(AccessTools.Property(typeof(WITab_Terrain), "IsVisible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "WITT_IsVisible_Prefix"));
                 val.Patch(AccessTools.Property(typeof(WITab_Planet), "IsVisible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "WITT_IsVisible_Prefix"));
                 val.Patch(AccessTools.Property(typeof(WITab_Orbit), "IsVisible").GetGetMethod(), prefix: new HarmonyMethod(patchType, "WITT_IsVisible_Prefix"));
+                val.Patch(AccessTools.Method(typeof(MainButtonsRoot), "HandleLowPriorityShortcuts"), transpiler: new HarmonyMethod(patchType, "MBR_HandleLowPriorityShortcuts_Transpiler"));
             }
             if (LAOMod.Settings.GravshipRoute)
             {
@@ -1277,20 +1278,12 @@ namespace LayeredAtmosphereOrbit
 
         public static void WI_Reset_Postfix()
         {
-            PlanetLayer planetLayer = Find.CurrentMap?.Tile.Layer;
-            if (planetLayer != null && GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef != planetLayer.Def.Planet())
-            {
-                Find.WorldSelector.SelectedLayer = planetLayer;
-            }
+            TryResetPlanet();
         }
 
         public static void MBWTW_Activate_Postfix()
         {
-            PlanetLayer planetLayer = Find.CurrentMap?.Tile.Layer;
-            if (planetLayer != null && GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef != planetLayer.Def.Planet())
-            {
-                Find.WorldSelector.SelectedLayer = planetLayer;
-            }
+            TryResetPlanet();
         }
 
         public static void PSSS_PreOpen_Postfix()
@@ -1307,6 +1300,28 @@ namespace LayeredAtmosphereOrbit
         {
             __result = !LAOMod.Settings.HideWorldTabs;
             return __result;
+        }
+
+        public static IEnumerable<CodeInstruction> MBR_HandleLowPriorityShortcuts_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
+        {
+            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count - 1; i++)
+            {
+                if (codes[i].opcode == OpCodes.Stfld && (codes[i].operand?.ToString().Contains("wantedMode") ?? false))
+                {
+                    codes.Insert(i + 1, new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HarmonyPatches), "TryResetPlanet")));
+                }
+            }
+            return codes.AsEnumerable();
+        }
+
+        public static void TryResetPlanet()
+        {
+            PlanetLayer planetLayer = Find.CurrentMap?.Tile.Layer;
+            if (planetLayer != null && GameComponent_LayeredAtmosphereOrbit.instance.currentPlanetDef != planetLayer.Def.Planet())
+            {
+                Find.WorldSelector.SelectedLayer = planetLayer;
+            }
         }
 
         //Gravship Route
