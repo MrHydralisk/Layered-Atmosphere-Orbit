@@ -70,5 +70,4 @@ Layered Atmosphere and Orbit mod should be safe to add even to existing save. Ho
 ## To Do
 
 - More content to new planet layers and moon.
-- Create a new scenario for a tribal start on a floating island.
 - Possible support for underwater/underground planet layers.
